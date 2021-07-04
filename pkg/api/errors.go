@@ -30,7 +30,7 @@ func IsErrorCodeAttribute(err error, code string, attribute string) bool {
 		return false
 	}
 	for _, errDetail := range bad.ErrorDetails {
-		if errDetail.Code == code {
+		if errDetail.Code == code && errDetail.Attribute == attribute {
 			return true
 		}
 	}
