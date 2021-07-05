@@ -121,6 +121,7 @@ func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchPar
 
 	// authorized
 	req.Header.Add("Authorization", "Bearer "+c.Token)
+	req.Header.Add("Content-Type", "application/json")
 	client := &http.Client{}
 
 	// request
