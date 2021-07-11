@@ -12,6 +12,27 @@ import (
 
 const DefaultEndpoint = "https://api.dns-platform.jp/dpf/v1"
 
+type ClientInterface interface {
+	SetWatchInterval(d time.Duration) error
+	SetWatchTimeout(d time.Duration) error
+	Do(spec Spec, action Action, body interface{}, params SearchParams) (requestId string, err error)
+	Read(s Spec) (requestId string, err error)
+	List(s ListSpec, keywords SearchParams) (requestId string, err error)
+	ListALL(s CountableListSpec, keywords SearchParams) (requestId string, err error)
+	Count(s CountableListSpec, keywords SearchParams) (requestId string, err error)
+	Update(s Spec, body interface{}) (requestId string, err error)
+	Create(s Spec, body interface{}) (requestId string, err error)
+	Apply(s Spec, body interface{}) (requestId string, err error)
+	Delete(s Spec) (requestId string, err error)
+	Cancel(s Spec) (requestId string, err error)
+	Watch(ctx context.Context, f func() (keep bool, err error)) error
+	WatchRead(ctx context.Context, s Spec) error
+	WatchList(ctx context.Context, s ListSpec, keyword SearchParams) error
+	WatchListAll(ctx context.Context, s CountableListSpec, keyword SearchParams) error
+}
+
+var _ ClientInterface = &Client{}
+
 type Client struct {
 	Endpoint string
 	Token    string

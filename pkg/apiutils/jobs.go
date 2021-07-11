@@ -10,7 +10,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
 )
 
-func WaitJob(c *api.Client, jobId string) (*core.Job, error) {
+func WaitJob(c api.ClientInterface, jobId string) (*core.Job, error) {
 	job := &core.Job{
 		RequestId: jobId,
 	}
