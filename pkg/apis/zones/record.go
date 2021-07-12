@@ -62,6 +62,10 @@ type RecordRDATA struct {
 	Value string `read:"value" create:"value" update:"value"`
 }
 
+func (c *RecordRDATA) String() string {
+	return c.Value
+}
+
 var _ Spec = &Record{}
 
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
