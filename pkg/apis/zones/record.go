@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/url"
 
+	"strings"
+
 	"github.com/google/go-querystring/query"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
@@ -66,6 +68,16 @@ func (c *RecordRDATA) String() string {
 	return c.Value
 }
 
+type RecordRDATAs []RecordRDATA
+
+func (c RecordRDATAs) String() string {
+	var res []string
+	for _, value := range c {
+		res = append(res, value.String())
+	}
+	return strings.Join(res, ",")
+}
+
 var _ Spec = &Record{}
 
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
@@ -73,14 +85,14 @@ var _ Spec = &Record{}
 type Record struct {
 	AttributeMeta
 
-	Id          string        `read:"id"`
-	Name        string        `read:"name" create:"name"`
-	TTL         int32         `read:"ttl"  create:"ttl" update:"ttl"`
-	RRType      Type          `read:"rrtype"  create:"rrtype"`
-	RData       []RecordRDATA `read:"rdata"  create:"rdata" update:"rdata"`
-	State       RecordState   `read:"state"`
-	Description string        `read:"description"  create:"description" update:"description"`
-	Operator    string        `read:"operator"`
+	Id          string       `read:"id"`
+	Name        string       `read:"name" create:"name"`
+	TTL         int32        `read:"ttl"  create:"ttl" update:"ttl"`
+	RRType      Type         `read:"rrtype"  create:"rrtype"`
+	RData       RecordRDATAs `read:"rdata"  create:"rdata" update:"rdata"`
+	State       RecordState  `read:"state"`
+	Description string       `read:"description"  create:"description" update:"description"`
+	Operator    string       `read:"operator"`
 }
 
 func (c *Record) GetName() string { return "records" }
