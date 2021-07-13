@@ -88,7 +88,7 @@ func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchPar
 		url += "?" + p.Encode()
 	}
 	c.LastRequest.Url = url
-	c.logger.Debugf("request-url: %s", url)
+	c.logger.Debugf("method: %s request-url: %s", method, url)
 	// make request body
 	if body != nil {
 		var (
@@ -121,6 +121,7 @@ func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchPar
 
 	// authorized
 	req.Header.Add("Authorization", "Bearer "+c.Token)
+	req.Header.Add("Content-Type", "application/json")
 	client := &http.Client{}
 
 	// request

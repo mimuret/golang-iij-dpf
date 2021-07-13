@@ -20,6 +20,7 @@ func WaitJob(c *api.Client, jobId string) (*core.Job, error) {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 	for job.Status == core.JobStatusRunning {
+		job.RequestId = jobId
 		if err := c.WatchRead(ctx, job); err != nil {
 			return nil, err
 		}
