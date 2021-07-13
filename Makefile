@@ -1,5 +1,9 @@
-all: deepcopy
-	go test ./...
+all: deepcopy test fmt
+
+test:
+	go test -race -coverprofile="coverage.txt" -covermode=atomic ./...
+
+fmt:
 	go fmt ./...
 
 deepcopy: deepcopy-gen

@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/go-querystring/query"
 	"github.com/jarcoal/httpmock"
+	"github.com/miekg/dns"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
 	"github.com/mimuret/golang-iij-dpf/pkg/test"
@@ -696,4 +697,38 @@ func TestRecordListSearchKeywords(t *testing.T) {
 			assert.Equal(t, s, tc.values)
 		}
 	}
+}
+
+func TestRRDatas(t *testing.T) {
+	mx11, _ := dns.NewRR("example.jp. 300 IN MX 1 mx1.example.jp.")
+	mx12, _ := dns.NewRR("example.jp. 300 IN MX 2 mx2.example.jp.")
+	mx13, _ := dns.NewRR("example.jp. 300 IN MX 3 mx3.example.jp.")
+
+	testcase := []struct {
+		rrs    []dns.RR
+		rdatas zones.RecordRDATAs
+	}{
+		{
+			[]dns.RR{mx11, mx12, mx13},
+			zones.RecordRDATAs{
+				{Value: "1 mx1.example.jp."},
+				{Value: "2 mx2.example.jp."},
+				{Value: "3 mx3.example.jp."},
+			},
+		},
+	}
+	for _, tc := range testcase {
+		r := zones.Record{}
+		r.AddRRs(tc.rrs)
+		assert.Equal(t, r.RData, tc.rdatas)
+	}
+}
+
+func TestType(t *testing.T) {
+	assert.Equal(t, zones.TypeANAME.Uint16(), uint16(65280))
+	assert.Equal(t, zones.TypeA.Uint16(), dns.TypeA)
+	assert.Equal(t, zones.TypeA.String(), "A")
+	assert.Equal(t, zones.TypeANAME.String(), "ANAME")
+	assert.Equal(t, zones.Uint16ToType(dns.TypeA), zones.TypeA)
+	assert.Equal(t, zones.Uint16ToType(65280), zones.TypeANAME)
 }

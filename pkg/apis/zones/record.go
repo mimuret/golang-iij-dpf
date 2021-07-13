@@ -7,11 +7,17 @@ import (
 	"strings"
 
 	"github.com/google/go-querystring/query"
+	"github.com/miekg/dns"
+	"github.com/mimuret/dnsutils"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
 )
 
 type RecordState int
+
+var (
+	TypeANAMECode uint16 = 65280
+)
 
 const (
 	RecordStateApplied      RecordState = 0
@@ -55,6 +61,20 @@ const (
 
 func (c Type) String() string {
 	return string(c)
+}
+
+func (c Type) Uint16() uint16 {
+	if c == TypeANAME {
+		return TypeANAMECode
+	}
+	return dns.StringToType[string(c)]
+}
+
+func Uint16ToType(t uint16) Type {
+	if t == TypeANAMECode {
+		return TypeANAME
+	}
+	return Type(dns.TypeToString[t])
 }
 
 // +k8s:deepcopy-gen=false
@@ -109,6 +129,12 @@ func (c *Record) GetPathMethod(action api.Action) (string, string) {
 }
 func (c *Record) SetParams(args ...interface{}) error {
 	return apis.SetParams(args, &c.ZoneId, &c.Id)
+}
+
+func (c *Record) AddRRs(rrs []dns.RR) {
+	for _, rr := range rrs {
+		c.RData = append(c.RData, RecordRDATA{Value: dnsutils.GetRDATA(rr)})
+	}
 }
 
 var _ CountableListSpec = &RecordList{}
