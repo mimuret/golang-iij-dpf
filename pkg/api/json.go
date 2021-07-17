@@ -7,15 +7,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/meta"
 )
 
-func MarshalMap(body interface{}) ([]byte, error) {
-	return jsoniter.Config{
-		EscapeHTML:             true,
-		SortMapKeys:            false,
-		ValidateJsonRawMessage: true,
-		OnlyTaggedField:        true,
-	}.Froze().Marshal(body)
-}
-
+// Unmarshal api response
 func UnmarshalRead(bs []byte, o interface{}) error {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -26,6 +18,7 @@ func UnmarshalRead(bs []byte, o interface{}) error {
 	}.Froze().Unmarshal(bs, o)
 }
 
+// Marshal for create request
 func MarshalCreate(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -36,6 +29,7 @@ func MarshalCreate(body interface{}) ([]byte, error) {
 	}.Froze().Marshal(body)
 }
 
+// Marshal for update request
 func MarshalUpdate(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -46,6 +40,7 @@ func MarshalUpdate(body interface{}) ([]byte, error) {
 	}.Froze().Marshal(body)
 }
 
+// Marshal for apply request
 func MarshalApply(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -56,11 +51,13 @@ func MarshalApply(body interface{}) ([]byte, error) {
 	}.Froze().Marshal(body)
 }
 
+// file format frame
 type OutputFrame struct {
 	meta.KindVersion `json:",inline"`
-	Spec             Spec `json:"spec"`
+	Spec             Object `json:"spec"`
 }
 
+// Marshal for file format
 func MarshalOutput(spec Spec) ([]byte, error) {
 	t := reflect.TypeOf(spec)
 	t = t.Elem()
@@ -80,15 +77,10 @@ func MarshalOutput(spec Spec) ([]byte, error) {
 	}.Froze().Marshal(out)
 }
 
-func UnMarshalInput(bs []byte, spec Spec) error {
-	t := reflect.TypeOf(spec)
-	t = t.Elem()
+// UnMarshal for file format
+func UnMarshalInput(bs []byte, obj Object) error {
 	out := &OutputFrame{
-		KindVersion: meta.KindVersion{
-			Kind:       t.Name(),
-			APIVersion: spec.GetGroup(),
-		},
-		Spec: spec,
+		Spec: obj,
 	}
 
 	return jsoniter.Config{

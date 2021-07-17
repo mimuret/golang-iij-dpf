@@ -29,6 +29,17 @@ type Job struct {
 	ErrorMessage string    `read:"error_message"`
 }
 
+func (c *Job) Error() string {
+	return "ErrorType: " + c.ErrorType + " Message: " + c.ErrorMessage
+}
+
+func (c *Job) GetError() error {
+	if c.Status == JobStatusFailed {
+		return c
+	}
+	return nil
+}
+
 func (c *Job) GetName() string { return "jobs" }
 func (c *Job) GetPathMethod(action api.Action) (string, string) {
 	switch action {

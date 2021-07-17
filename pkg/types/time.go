@@ -6,13 +6,11 @@ import (
 )
 
 func ParseTime(layout, value string) (Time, error) {
+	var err error
 	res := Time{}
-	if value != "" {
-		t, err := time.Parse(layout, value)
-		if err != nil {
-			return res, err
-		}
-		res.Time = t
+	res.Time, err = time.Parse(layout, value)
+	if err != nil {
+		return res, err
 	}
 	return res, nil
 }

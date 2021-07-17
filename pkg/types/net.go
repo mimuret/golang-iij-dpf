@@ -13,15 +13,6 @@ func ParseIPNet(str string) (*IPNet, error) {
 	return &IPNet{*ipnet}, nil
 }
 
-// for testing
-func MustParseIPNet(str string) *IPNet {
-	n, err := ParseIPNet(str)
-	if err != nil {
-		panic(err)
-	}
-	return n
-}
-
 // +k8s:deepcopy-gen=false
 type IPNet struct {
 	net.IPNet
@@ -36,6 +27,10 @@ func (i *IPNet) UnmarshalJSON(b []byte) error {
 	if err := json.Unmarshal(b, &s); err != nil {
 		return err
 	}
+	if s == "<nil>" {
+		i.IPNet = net.IPNet{}
+		return nil
+	}
 
 	_, ipnet, err := net.ParseCIDR(s)
 	if err != nil {
@@ -46,6 +41,8 @@ func (i *IPNet) UnmarshalJSON(b []byte) error {
 }
 
 func (i *IPNet) DeepCopyInto(in *IPNet) {
+	i.IPNet.IP = make(net.IP, len(in.IPNet.IP))
+	i.IPNet.Mask = make(net.IPMask, len(in.IPNet.Mask))
 	copy(i.IPNet.IP, in.IPNet.IP)
 	copy(i.IPNet.Mask, in.IPNet.Mask)
 }

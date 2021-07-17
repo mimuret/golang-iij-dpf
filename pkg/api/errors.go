@@ -1,38 +1,96 @@
 package api
 
-func IsNotFound(err error) (bool, string) {
-	return IsErrorCode(err, "not_found")
-}
-
-func IsErrorCode(err error, code string) (bool, string) {
-	bad, ok := err.(*BadResponse)
-	if !ok {
-		return false, ""
-	}
-	for _, errDetail := range bad.ErrorDetails {
-		if errDetail.Code == code {
-			return true, errDetail.Attribute
-		}
-	}
-	return false, ""
-}
-
-func IsAuthError(err error) bool {
-	return IsErrorCodeAttribute(err, "invalid", "access_token")
-}
-func IsInvalidSchema(err error) bool {
-	return IsErrorCodeAttribute(err, "invalid", "schema")
-}
-
-func IsErrorCodeAttribute(err error, code string, attribute string) bool {
+func IsBadResponse(err error, f func(b *BadResponse) bool) bool {
 	bad, ok := err.(*BadResponse)
 	if !ok {
 		return false
 	}
-	for _, errDetail := range bad.ErrorDetails {
-		if errDetail.Code == code && errDetail.Attribute == attribute {
-			return true
-		}
+	if f == nil {
+		return true
 	}
-	return false
+	return f(bad)
+}
+
+func IsStatusCode(err error, code int) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsStatusCode(code)
+	})
+}
+
+func IsErrType(err error, name string) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsErrType(name)
+	})
+}
+
+func IsErrMsg(err error, msg string) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsErrMsg(msg)
+	})
+}
+
+func IsErrorCode(err error, code string) (bool, string) {
+	var (
+		res       bool
+		attribute string
+	)
+	IsBadResponse(err, func(bad *BadResponse) bool {
+		res, attribute = bad.IsErrorCode(code)
+		return res
+	})
+	return res, attribute
+}
+
+func IsErrorCodeAttribute(err error, code string, attribute string) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsErrorCodeAttribute(code, attribute)
+	})
+}
+
+func IsAuthError(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsAuthError()
+	})
+}
+
+func IsRequestFormatError(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsRequestFormatError()
+	})
+}
+
+func IsParameterError(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsParameterError()
+	})
+}
+
+func IsNotFound(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsNotFound()
+	})
+}
+
+func IsTooManyRequests(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsTooManyRequests()
+	})
+}
+
+func IsSystemError(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsSystemError()
+	})
+}
+
+func IsGatewayTimeout(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsGatewayTimeout()
+	})
+}
+
+func IsInvalidSchema(err error) bool {
+	return IsBadResponse(err, func(bad *BadResponse) bool {
+		return bad.IsInvalidSchema()
+	})
 }
