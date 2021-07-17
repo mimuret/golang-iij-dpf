@@ -8,7 +8,6 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
-	"github.com/mimuret/golang-iij-dpf/pkg/test"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
@@ -67,7 +66,7 @@ func TestZoneProxy(t *testing.T) {
 	if assert.NoError(t, err) {
 		updateBody, err := api.MarshalUpdate(spec)
 		if assert.NoError(t, err) {
-			assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+			assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 		}
 	}
 }

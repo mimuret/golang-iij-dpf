@@ -10,7 +10,6 @@ import (
 	"github.com/miekg/dns"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
-	"github.com/mimuret/golang-iij-dpf/pkg/test"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/stretchr/testify/assert"
 )
@@ -283,7 +282,7 @@ func TestReord(t *testing.T) {
 		if assert.NoError(t, err) {
 			createBody, err := api.MarshalCreate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(createBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(createBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}
@@ -310,7 +309,7 @@ func TestReord(t *testing.T) {
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}

@@ -9,7 +9,6 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
-	"github.com/mimuret/golang-iij-dpf/pkg/test"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
@@ -199,7 +198,7 @@ func TestZone(t *testing.T) {
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}
@@ -239,7 +238,7 @@ func TestZoneApply(t *testing.T) {
 	if assert.NoError(t, err) {
 		applyBody, err := api.MarshalApply(tc)
 		if assert.NoError(t, err) {
-			assert.Equal(t, test.UnmarshalToMapString(applyBody), test.UnmarshalToMapString(bs))
+			assert.Equal(t, testtool.UnmarshalToMapString(applyBody), testtool.UnmarshalToMapString(bs))
 		}
 	}
 
@@ -275,11 +274,11 @@ func TeetZoneListSearchKeywords(t *testing.T) {
 				ServiceCode:      api.KeywordsString{"mxxxxxx", "mxxxxxx1"},
 				Name:             api.KeywordsString{"example.jp", "example.net"},
 				Network:          api.KeywordsString{"192.168.0.0/24"},
-				State:            api.KeywordsState{types.FavoriteHighPriority, types.FavoriteHighPriority},
+				State:            api.KeywordsState{types.StateBeforeStart, types.StateRunning},
 				Favorite:         api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
 				Description:      api.KeywordsString{"あああ", "🍺"},
 				CommonConfigId:   api.KeywordsId{100, 200},
-				ZoneProxyEnabled: api.KeywordsBoolean{types.FavoriteHighPriority, types.FavoriteLowPriority},
+				ZoneProxyEnabled: api.KeywordsBoolean{types.Enabled, types.Disabled},
 			},
 			/*
 				_keywords_full_text[]

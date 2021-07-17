@@ -7,9 +7,7 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/common_configs"
-	"github.com/mimuret/golang-iij-dpf/pkg/test"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
-	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -81,7 +79,7 @@ func TestCcSecTrabsferAcl(t *testing.T) {
 					CommonConfigId: 1,
 				},
 				Id:      1,
-				Network: types.MustParseIPNet("192.168.1.0/24"),
+				Network: testtool.MustParseIPNet("192.168.1.0/24"),
 				TsigId:  0,
 			},
 		},
@@ -92,7 +90,7 @@ func TestCcSecTrabsferAcl(t *testing.T) {
 					CommonConfigId: 1,
 				},
 				Id:      2,
-				Network: types.MustParseIPNet("2001:db8::/64"),
+				Network: testtool.MustParseIPNet("2001:db8::/64"),
 				TsigId:  2,
 			},
 		},
@@ -181,7 +179,7 @@ func TestCcSecTrabsferAcl(t *testing.T) {
 		if assert.NoError(t, err) {
 			createBody, err := api.MarshalCreate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(createBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(createBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}
@@ -199,7 +197,7 @@ func TestCcSecTrabsferAcl(t *testing.T) {
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}

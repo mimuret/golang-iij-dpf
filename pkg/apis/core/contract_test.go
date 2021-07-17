@@ -9,7 +9,6 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
-	"github.com/mimuret/golang-iij-dpf/pkg/test"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
@@ -165,7 +164,7 @@ func TestContract(t *testing.T) {
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}

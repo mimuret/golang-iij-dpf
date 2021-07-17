@@ -9,7 +9,6 @@ import (
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/contracts"
-	"github.com/mimuret/golang-iij-dpf/pkg/test"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
@@ -211,7 +210,7 @@ func TestCommonConfig(t *testing.T) {
 		if assert.NoError(t, err) {
 			createBody, err := api.MarshalCreate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(createBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(createBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}
@@ -230,7 +229,7 @@ func TestCommonConfig(t *testing.T) {
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {
-				assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+				assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 			}
 		}
 	}
@@ -271,7 +270,7 @@ func TestCommonConfigDefault(t *testing.T) {
 	if assert.NoError(t, err) {
 		updateBody, err := api.MarshalUpdate(tcDefault)
 		if assert.NoError(t, err) {
-			assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+			assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 		}
 	}
 }
@@ -313,7 +312,7 @@ func TestCommonConfigManagedDns(t *testing.T) {
 	if assert.NoError(t, err) {
 		updateBody, err := api.MarshalUpdate(tcManagedDns)
 		if assert.NoError(t, err) {
-			assert.Equal(t, test.UnmarshalToMapString(updateBody), test.UnmarshalToMapString(bs))
+			assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
 		}
 	}
 }

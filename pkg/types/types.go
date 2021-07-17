@@ -19,8 +19,8 @@ func (c Boolean) String() string {
 type State int
 
 const (
-	StateBeforeStart = 1
-	StateRunning     = 2
+	StateBeforeStart State = 1
+	StateRunning     State = 2
 )
 
 var StateToString = map[State]string{
@@ -35,8 +35,8 @@ func (c State) String() string {
 type Favorite int
 
 const (
-	FavoriteHighPriority = 1
-	FavoriteLowPriority  = 2
+	FavoriteHighPriority Favorite = 1
+	FavoriteLowPriority  Favorite = 2
 )
 
 var FavoriteToString = map[Favorite]string{
