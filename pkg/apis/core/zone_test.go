@@ -10,6 +10,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
 	"github.com/mimuret/golang-iij-dpf/pkg/test"
+	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -194,7 +195,7 @@ func TestZone(t *testing.T) {
 		},
 	}
 	for i, tc := range updateTestCase {
-		bs, err := api.MarshalMap(tc)
+		bs, err := testtool.MarshalMap(tc)
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {
@@ -234,7 +235,7 @@ func TestZoneApply(t *testing.T) {
 	applyTestCase := map[string]interface{}{
 		"description": "hogehoge",
 	}
-	bs, err := api.MarshalMap(applyTestCase)
+	bs, err := testtool.MarshalMap(applyTestCase)
 	if assert.NoError(t, err) {
 		applyBody, err := api.MarshalApply(tc)
 		if assert.NoError(t, err) {

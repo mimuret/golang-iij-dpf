@@ -9,6 +9,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
 	"github.com/mimuret/golang-iij-dpf/pkg/test"
+	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -62,7 +63,7 @@ func TestZoneProxy(t *testing.T) {
 	updateTestCase := map[string]interface{}{
 		"enabled": 1,
 	}
-	bs, err := api.MarshalMap(updateTestCase)
+	bs, err := testtool.MarshalMap(updateTestCase)
 	if assert.NoError(t, err) {
 		updateBody, err := api.MarshalUpdate(spec)
 		if assert.NoError(t, err) {

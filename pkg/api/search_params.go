@@ -121,16 +121,6 @@ func (s SearchLimit) Validate() bool {
 type SearchDate time.Time
 
 // +k8s:deepcopy-gen=false
-type SearchTimeZone string
-
-func (s SearchTimeZone) Validate() bool {
-	return false
-}
-func (s SearchTimeZone) Sec() int {
-	return 0
-}
-
-// +k8s:deepcopy-gen=false
 type SearchOrder string
 
 var (

@@ -11,6 +11,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
 	"github.com/mimuret/golang-iij-dpf/pkg/test"
+	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -122,7 +123,7 @@ func TestDelegationApply(t *testing.T) {
 	applyTestCase := map[string]interface{}{
 		"zone_ids": []string{"m1", "m2"},
 	}
-	bs, err := api.MarshalMap(applyTestCase)
+	bs, err := testtool.MarshalMap(applyTestCase)
 	if assert.NoError(t, err) {
 		applyBody, err := api.MarshalApply(apply)
 		if assert.NoError(t, err) {

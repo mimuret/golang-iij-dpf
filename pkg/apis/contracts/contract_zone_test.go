@@ -9,6 +9,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/contracts"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
 	"github.com/mimuret/golang-iij-dpf/pkg/test"
+	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -154,7 +155,7 @@ func TestContractZoneCommonConfig(t *testing.T) {
 		"common_config_id": 1,
 		"zone_ids":         []string{"m1", "m2"},
 	}
-	bs, err := api.MarshalMap(updateTestCase)
+	bs, err := testtool.MarshalMap(updateTestCase)
 	if assert.NoError(t, err) {
 		updateBody, err := api.MarshalUpdate(tc)
 		if assert.NoError(t, err) {

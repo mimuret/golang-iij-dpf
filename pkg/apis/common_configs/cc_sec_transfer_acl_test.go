@@ -8,6 +8,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/common_configs"
 	"github.com/mimuret/golang-iij-dpf/pkg/test"
+	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -176,7 +177,7 @@ func TestCcSecTrabsferAcl(t *testing.T) {
 		},
 	}
 	for i, tc := range createTestCase {
-		bs, err := api.MarshalMap(tc)
+		bs, err := testtool.MarshalMap(tc)
 		if assert.NoError(t, err) {
 			createBody, err := api.MarshalCreate(testcase[i].Spec)
 			if assert.NoError(t, err) {
@@ -194,7 +195,7 @@ func TestCcSecTrabsferAcl(t *testing.T) {
 		},
 	}
 	for i, tc := range updateTestCase {
-		bs, err := api.MarshalMap(tc)
+		bs, err := testtool.MarshalMap(tc)
 		if assert.NoError(t, err) {
 			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
 			if assert.NoError(t, err) {

@@ -1,7 +1,8 @@
 all: deepcopy test fmt
 
 test:
-	go test -race -coverprofile="coverage.txt" -covermode=atomic ./...
+	go test -coverprofile="cover.out" ./...
+	go tool cover -html=cover.out -o cover.html
 
 fmt:
 	go fmt ./...

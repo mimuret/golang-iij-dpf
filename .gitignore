@@ -16,4 +16,5 @@
 
 bin/
 .vscode
-coverage.txt
+cover.html
+cover.out
