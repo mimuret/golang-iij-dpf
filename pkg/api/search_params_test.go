@@ -167,6 +167,12 @@ var _ = Describe("search_params", func() {
 			})
 		})
 		Context("GetLimit", func() {
+			When("if limit not set", func() {
+				It("returns 100", func() {
+					params.SetLimit(0)
+					Expect(params.GetLimit()).To(Equal(int32(100)))
+				})
+			})
 			It("returns limit", func() {
 				Expect(params.GetLimit()).To(Equal(int32(50)))
 			})

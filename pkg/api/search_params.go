@@ -77,8 +77,13 @@ func (k *CommonSearchParams) GetType() SearchType    { return k.Type }
 func (k *CommonSearchParams) SetType(t SearchType)   { k.Type = t }
 func (k *CommonSearchParams) GetOffset() int32       { return k.Offset }
 func (k *CommonSearchParams) SetOffset(offset int32) { k.Offset = offset }
-func (k *CommonSearchParams) GetLimit() int32        { return k.Limit }
-func (k *CommonSearchParams) SetLimit(limit int32)   { k.Limit = limit }
+func (k *CommonSearchParams) GetLimit() int32 {
+	if k.Limit == 0 {
+		return 100
+	}
+	return k.Limit
+}
+func (k *CommonSearchParams) SetLimit(limit int32) { k.Limit = limit }
 
 // +k8s:deepcopy-gen=false
 type SearchType string

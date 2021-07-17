@@ -3,6 +3,7 @@ package api
 import (
 	"io"
 	"log"
+	"os"
 )
 
 // logger interface
@@ -13,6 +14,8 @@ type Logger interface {
 	Errorf(format string, args ...interface{})
 }
 
+var _ Logger = &StdLogger{}
+
 // simple logger
 // change better logger as you like.
 type StdLogger struct {
@@ -21,6 +24,12 @@ type StdLogger struct {
 }
 
 func NewStdLogger(out io.Writer, prefix string, flag int, level int) *StdLogger {
+	if out == nil {
+		out = os.Stderr
+	}
+	if prefix == "" {
+		prefix = "dpf-client"
+	}
 	return &StdLogger{
 		Logger:   log.New(out, prefix, flag),
 		LogLevel: level,
