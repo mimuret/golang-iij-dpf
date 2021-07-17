@@ -1,4 +1,6 @@
 # IIJ DNS Platform Service API for Go
+[![codecov](https://codecov.io/gh/mimuret/golang-iij-dpf/branch/main/graph/badge.svg?token=CTIBL2M5YD)](https://codecov.io/gh/mimuret/golang-iij-dpf)
+
 - API Library for [IIJ DNS Platform Service](https://www.iij.ad.jp/en/biz/dns-pfm/).
 - This is not an official IIJ software.
 
