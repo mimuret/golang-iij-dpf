@@ -54,7 +54,7 @@ func MarshalApply(body interface{}) ([]byte, error) {
 // file format frame
 type OutputFrame struct {
 	meta.KindVersion `json:",inline"`
-	Spec             Spec `json:"spec"`
+	Spec             Object `json:"spec"`
 }
 
 // Marshal for file format
@@ -78,15 +78,9 @@ func MarshalOutput(spec Spec) ([]byte, error) {
 }
 
 // UnMarshal for file format
-func UnMarshalInput(bs []byte, spec Spec) error {
-	t := reflect.TypeOf(spec)
-	t = t.Elem()
+func UnMarshalInput(bs []byte, obj Object) error {
 	out := &OutputFrame{
-		KindVersion: meta.KindVersion{
-			Kind:       t.Name(),
-			APIVersion: spec.GetGroup(),
-		},
-		Spec: spec,
+		Spec: obj,
 	}
 
 	return jsoniter.Config{

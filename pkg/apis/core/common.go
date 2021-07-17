@@ -4,7 +4,7 @@ import "github.com/mimuret/golang-iij-dpf/pkg/schema"
 
 var (
 	groupName = "core"
-	Register  = schema.Register{Group: groupName}
+	Register  = schema.NewRegister(groupName)
 )
 
 type AttributeMeta struct {

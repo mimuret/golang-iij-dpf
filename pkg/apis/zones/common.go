@@ -11,7 +11,7 @@ import (
 
 var (
 	groupName = "zones"
-	Register  = schema.Register{Group: groupName}
+	Register  = schema.NewRegister(groupName)
 )
 
 type Spec interface {

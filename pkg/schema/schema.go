@@ -18,6 +18,10 @@ type Register struct {
 	Group string
 }
 
+func NewRegister(groupName string) *Register {
+	return &Register{Group: groupName}
+}
+
 func (r *Register) Add(items ...apis.Spec) {
 	SchemaSet.Add(r.Group, items)
 }
@@ -44,11 +48,12 @@ func (s *schema) Add(items []apis.Spec) {
 	for _, item := range items {
 		st := reflect.TypeOf(item)
 		if st.Kind() != reflect.Ptr {
-			panic(fmt.Sprintf("schema.Add name: `%s` is not ptr %v", st.Name(), item))
+			name := st.Elem().Name()
+			panic(fmt.Sprintf("schema.Add name: `%s` is not ptr %v", name, item))
 		}
 		name := st.Elem().Name()
 		if v, ok := s.objectMap[name]; ok {
-			panic(fmt.Sprintf("schema.Add name: `%s` is duplicated, old: %v, new: %v", st.Name(), v, item))
+			panic(fmt.Sprintf("schema.Add name: `%s` is duplicated, old: %v, new: %v", name, v, item))
 		}
 		s.objectMap[name] = item
 	}
@@ -67,7 +72,7 @@ func (s schemaSet) Parse(bs []byte) (api.Object, error) {
 	}
 	gs, ok := s[kv.APIVersion]
 	if !ok {
-		return nil, fmt.Errorf("apiVersion `%s`  is not support", kv.APIVersion)
+		return nil, fmt.Errorf("apiVersion `%s` is not support", kv.APIVersion)
 	}
 
 	spec, ok := gs.objectMap[kv.Kind]
@@ -75,8 +80,8 @@ func (s schemaSet) Parse(bs []byte) (api.Object, error) {
 		return nil, fmt.Errorf("kind value `%s` is not supported", kv.Kind)
 	}
 	obj := spec.DeepCopyObject()
-	if err := api.UnmarshalRead(bs, obj); err != nil {
-		return nil, err
+	if err := api.UnMarshalInput(bs, obj); err != nil {
+		return nil, fmt.Errorf("failed to parse spec: %w", err)
 	}
 	return obj, nil
 }

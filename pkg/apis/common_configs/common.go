@@ -10,7 +10,7 @@ import (
 
 var (
 	groupName = "common_configs"
-	Register  = schema.Register{Group: groupName}
+	Register  = schema.NewRegister(groupName)
 )
 
 type Spec interface {
