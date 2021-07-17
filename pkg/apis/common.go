@@ -17,20 +17,20 @@ func SetParams(args []interface{}, ids ...interface{}) error {
 		return nil
 	}
 	if len(args) != len(ids) {
-		return fmt.Errorf("SetParams: require %d but args %d", len(ids), len(args))
+		return fmt.Errorf("SetParams: args need %d items", len(ids))
 	}
 	for i := range ids {
 		switch v := ids[i].(type) {
 		case *int64:
 			val, err := utils.ToInt64(args[i])
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to cast to int64 `%s`: %w", args[i], err)
 			}
 			*v = val
 		case *string:
 			val, err := utils.ToString(args[i])
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to cast to string `%s`: %w", args[i], err)
 			}
 			*v = val
 		}
