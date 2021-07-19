@@ -11,14 +11,14 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
 )
 
-func WaitJob(c api.ClientInterface, jobId string, interval time.Duration) (*core.Job, error) {
+func WaitJob(ctx context.Context, c api.ClientInterface, jobId string, interval time.Duration) (*core.Job, error) {
 	job := &core.Job{
 		RequestId: jobId,
 	}
 	if _, err := c.Read(job); err != nil {
 		return nil, fmt.Errorf("failed to read Job: %w", err)
 	}
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
 	for job.Status == core.JobStatusRunning {
 		job.RequestId = jobId

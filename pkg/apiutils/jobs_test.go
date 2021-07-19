@@ -1,6 +1,7 @@
 package apiutils_test
 
 import (
+	"context"
 	"net/http"
 	"testing"
 	"time"
@@ -36,7 +37,7 @@ var _ = Describe("jobs", func() {
 	Context("WaitJob", func() {
 		When("failed to read", func() {
 			It("return err", func() {
-				_, err := apiutils.WaitJob(c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
+				_, err := apiutils.WaitJob(context.Background(), c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(MatchRegexp("failed to read Job"))
 			})
@@ -70,7 +71,7 @@ var _ = Describe("jobs", func() {
 					Status:    core.JobStatusSuccessful,
 				}
 				Eventually(func() (*core.Job, error) {
-					return apiutils.WaitJob(c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
+					return apiutils.WaitJob(context.Background(), c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
 				}, time.Second*10).Should(Equal(eq))
 			})
 		})
@@ -100,7 +101,7 @@ var _ = Describe("jobs", func() {
 			It("can add first time", func() {
 				var err error
 				Eventually(func() error {
-					_, err = apiutils.WaitJob(c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
+					_, err = apiutils.WaitJob(context.Background(), c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
 					return err
 				}, time.Second*10).Should(HaveOccurred())
 				Expect(err.Error()).To(MatchRegexp("JobId 9BCFE2E9C10D4D9A8444CB0B48C72830 job failed"))
