@@ -706,11 +706,11 @@ func TestRRDatas(t *testing.T) {
 
 	testcase := []struct {
 		rrs    []dns.RR
-		rdatas zones.RecordRDATAs
+		rdatas zones.RecordRDATASlice
 	}{
 		{
 			[]dns.RR{mx11, mx12, mx13},
-			zones.RecordRDATAs{
+			zones.RecordRDATASlice{
 				{Value: "1 mx1.example.jp."},
 				{Value: "2 mx2.example.jp."},
 				{Value: "3 mx3.example.jp."},
