@@ -8,16 +8,16 @@ import (
 )
 
 type Params interface {
-	SetParams(...interface{}) error
+	SetPathParams(...interface{}) error
 }
 
 // for ctl
-func SetParams(args []interface{}, ids ...interface{}) error {
+func SetPathParams(args []interface{}, ids ...interface{}) error {
 	if len(args) == 0 {
 		return nil
 	}
 	if len(args) != len(ids) {
-		return fmt.Errorf("SetParams: args need %d items", len(ids))
+		return fmt.Errorf("SetPathParams: args need %d items, but args len is %d", len(ids), len(args))
 	}
 	for i := range ids {
 		switch v := ids[i].(type) {
@@ -33,6 +33,8 @@ func SetParams(args []interface{}, ids ...interface{}) error {
 				return fmt.Errorf("failed to cast to string `%s`: %w", args[i], err)
 			}
 			*v = val
+		default:
+			panic(fmt.Sprintf("ids[%d] is not int64 or string", i))
 		}
 	}
 	return nil

@@ -12,9 +12,9 @@ type JobStatus string
 var _ apis.Spec = &Job{}
 
 const (
-	JobStatusRunning    = "RUNNING"
-	JobStatusSuccessful = "SUCCESSFUL"
-	JobStatusFailed     = "FAILED"
+	JobStatusRunning    JobStatus = "RUNNING"
+	JobStatusSuccessful JobStatus = "SUCCESSFUL"
+	JobStatusFailed     JobStatus = "FAILED"
 )
 
 func (c JobStatus) String() string { return string(c) }
@@ -29,13 +29,9 @@ type Job struct {
 	ErrorMessage string    `read:"error_message"`
 }
 
-func (c *Job) Error() string {
-	return "ErrorType: " + c.ErrorType + " Message: " + c.ErrorMessage
-}
-
 func (c *Job) GetError() error {
 	if c.Status == JobStatusFailed {
-		return c
+		return fmt.Errorf("ErrorType: %s Messages %s", c.ErrorType, c.ErrorMessage)
 	}
 	return nil
 }
@@ -48,8 +44,8 @@ func (c *Job) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (c *Job) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.RequestId)
+func (c *Job) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.RequestId)
 }
 
 func init() {

@@ -13,6 +13,7 @@ import (
 
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
+	. "github.com/mimuret/golang-iij-dpf/pkg/testtool"
 )
 
 var _ api.SearchParams = &TestParams{}
@@ -57,101 +58,6 @@ func (t *ErrSpec) UnmarshalJSON(bs []byte) error {
 
 }
 
-var _ api.Spec = &TestSpec{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-
-type TestSpec struct {
-	Id     string `read:"id"`
-	Name   string `read:"name"`
-	Number int64  `read:"number"`
-}
-
-func (t *TestSpec) GetGroup() string { return "test" }
-func (t *TestSpec) GetName() string  { return "tests" }
-func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionCreate:
-		return action.ToMethod(), "/tests"
-	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/tests/%s", t.Id)
-	case api.ActionCancel:
-		return action.ToMethod(), fmt.Sprintf("/tests/%s/cancel", t.Id)
-	case api.ActionApply:
-		return action.ToMethod(), fmt.Sprintf("/tests/%s/apply", t.Id)
-	}
-	return "", ""
-}
-func (t *TestSpec) DeepCopyTestSpec() *TestSpec {
-	res := &TestSpec{}
-	*res = *t
-	return res
-}
-
-func (t *TestSpec) DeepCopyObject() api.Object {
-	return t.DeepCopyTestSpec()
-}
-
-var _ api.ListSpec = &TestSpecList{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-
-type TestSpecList struct {
-	Items []TestSpec `read:"items"`
-}
-
-func (t *TestSpecList) DeepCopyObject() api.Object {
-	res := &TestSpecList{}
-	for _, item := range t.Items {
-		s := item.DeepCopyTestSpec()
-		res.Items = append(res.Items, *s)
-	}
-	return res
-}
-
-func (t *TestSpecList) GetGroup() string        { return "test" }
-func (t *TestSpecList) GetName() string         { return "tests" }
-func (t *TestSpecList) GetItems() interface{}   { return &t.Items }
-func (c *TestSpecList) Len() int                { return len(c.Items) }
-func (c *TestSpecList) Index(i int) interface{} { return c.Items[i] }
-func (c *TestSpecList) GetMaxLimit() int32      { return 10000 }
-func (c *TestSpecList) ClearItems()             { c.Items = []TestSpec{} }
-func (c *TestSpecList) AddItem(v interface{}) bool {
-	if a, ok := v.(TestSpec); ok {
-		c.Items = append(c.Items, a)
-		return true
-	}
-	return false
-}
-
-var _ api.CountableListSpec = &TestSpecCountableList{}
-
-type TestSpecCountableList struct {
-	api.Count
-	TestSpecList
-}
-
-func (t *TestSpecCountableList) DeepCopyObject() api.Object {
-	res := &TestSpecCountableList{}
-	for _, item := range t.Items {
-		s := item.DeepCopyTestSpec()
-		res.Items = append(res.Items, *s)
-	}
-	res.Count = t.Count
-	return res
-}
-
-func (t *TestSpecList) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionList:
-		return action.ToMethod(), "/tests"
-	case api.ActionCount:
-		return action.ToMethod(), "/tests/count"
-	}
-	return "", ""
-}
-func (t *TestSpecList) Init() {}
-
 var _ = Describe("Client", func() {
 	var (
 		testSpec      *TestSpec
@@ -162,12 +68,6 @@ var _ = Describe("Client", func() {
 		reqId         string
 		err           error
 	)
-	BeforeSuite(func() {
-		httpmock.Activate()
-	})
-	AfterSuite(func() {
-		httpmock.DeactivateAndReset()
-	})
 	BeforeEach(func() {
 		testSpec = &TestSpec{}
 		errSpec = &ErrSpec{}
@@ -202,8 +102,8 @@ var _ = Describe("Client", func() {
 		AfterEach(func() {
 			httpmock.Reset()
 		})
-		Context("When the API succesfully", func() {
-			JustBeforeEach(func() {
+		When("the API succesfully", func() {
+			BeforeEach(func() {
 				testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
 				reqId, err = c.Do(testSpec, api.ActionRead, nil, nil)
 			})
@@ -214,9 +114,9 @@ var _ = Describe("Client", func() {
 				Expect(err).To(Succeed())
 			})
 		})
-		Context("action is ActionCount", func() {
+		When("action is ActionCount", func() {
 			When("spec is not CountableListSpec", func() {
-				JustBeforeEach(func() {
+				BeforeEach(func() {
 					reqId, err = c.Do(listTestSpec, api.ActionCount, nil, nil)
 				})
 				It("reqId is empty", func() {
@@ -229,8 +129,8 @@ var _ = Describe("Client", func() {
 
 			})
 		})
-		Context("when spec.GetPathMethod is empty", func() {
-			JustBeforeEach(func() {
+		When("spec.GetPathMethod is empty", func() {
+			BeforeEach(func() {
 				reqId, err = c.Do(listTestSpec, api.ActionApply, nil, nil)
 			})
 			It("reqId is empty", func() {
@@ -241,8 +141,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("not support action"))
 			})
 		})
-		Context("when SearchParams.GetValues() is error", func() {
-			JustBeforeEach(func() {
+		When("SearchParams.GetValues() is error", func() {
+			BeforeEach(func() {
 				param := &TestParams{Err: fmt.Errorf("err")}
 				reqId, err = c.Do(testSpec, api.ActionApply, nil, param)
 			})
@@ -254,8 +154,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to get search params:"))
 			})
 		})
-		Context("when body is not nil, but action is not any of ActionCreate, ActionUpdate and ActionApply.", func() {
-			JustBeforeEach(func() {
+		When("body is not nil, but action is not any of ActionCreate, ActionUpdate and ActionApply.", func() {
+			BeforeEach(func() {
 				reqId, err = c.Do(testSpec, api.ActionRead, testSpec, nil)
 			})
 			It("reqId is empty", func() {
@@ -266,8 +166,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("not support action"))
 			})
 		})
-		Context("when action is ActionCreate. body is not nil,but failed to encode to json", func() {
-			JustBeforeEach(func() {
+		When("action is ActionCreate. body is not nil,but failed to encode to json", func() {
+			BeforeEach(func() {
 				errSpec.ErrMarshalJSON = fmt.Errorf("fail")
 				reqId, err = c.Do(errSpec, api.ActionCreate, errSpec, nil)
 			})
@@ -279,8 +179,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to encode body to json"))
 			})
 		})
-		Context("when action is ActionUpdate. body is not nil. but but failed to encode to json", func() {
-			JustBeforeEach(func() {
+		When("action is ActionUpdate. body is not nil. but but failed to encode to json", func() {
+			BeforeEach(func() {
 				errSpec.ErrMarshalJSON = fmt.Errorf("fail")
 				reqId, err = c.Do(errSpec, api.ActionUpdate, errSpec, nil)
 			})
@@ -292,8 +192,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to encode body to json"))
 			})
 		})
-		Context("when action ActionApply. body is not nil. but failed to encode to json", func() {
-			JustBeforeEach(func() {
+		When("action ActionApply. body is not nil. but failed to encode to json", func() {
+			BeforeEach(func() {
 				errSpec.ErrMarshalJSON = fmt.Errorf("fail")
 				reqId, err = c.Do(errSpec, api.ActionApply, errSpec, nil)
 			})
@@ -305,8 +205,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to encode body to json"))
 			})
 		})
-		Context("when endpoint url is invalid", func() {
-			JustBeforeEach(func() {
+		When("endpoint url is invalid", func() {
+			BeforeEach(func() {
 				cl := api.NewClient("", "", nil)
 				cl.Endpoint = "\n"
 				reqId, err = cl.Do(errSpec, api.ActionRead, nil, nil)
@@ -319,8 +219,8 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to create http request"))
 			})
 		})
-		Context("when failed to get http response", func() {
-			JustBeforeEach(func() {
+		When("failed to get http response", func() {
+			BeforeEach(func() {
 				httpmock.Reset()
 				cl := api.NewClient("", "https://localhost/hoge", nil)
 				reqId, err = cl.Do(errSpec, api.ActionRead, nil, nil)
@@ -333,9 +233,9 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to get http response"))
 			})
 		})
-		Context("when status code >= 400", func() {
-			When("when recv body is not json format", func() {
-				JustBeforeEach(func() {
+		Context("status code >= 400", func() {
+			When("recv body is not json format", func() {
+				BeforeEach(func() {
 					httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/Unavailable", httpmock.NewBytesResponder(503, []byte(`Service Unavailable`)))
 					testSpec.Id = "Unavailable"
 					reqId, err = c.Do(testSpec, api.ActionRead, nil, nil)
@@ -348,8 +248,8 @@ var _ = Describe("Client", func() {
 					Expect(err.Error()).To(MatchRegexp("failed to request: status code"))
 				})
 			})
-			When("when recv body is json format", func() {
-				JustBeforeEach(func() {
+			When("recv body is json format", func() {
+				BeforeEach(func() {
 					httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/ERROR-BAD_REQUEST", httpmock.NewBytesResponder(400, []byte(`{
 						"request_id": "F96C25C6B13E49E59F0093BCD8D731AB",
 						"error_type": "fail",
@@ -378,17 +278,48 @@ var _ = Describe("Client", func() {
 					"number": 1
 				}
 			}`)))
+			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/86E5EB52E2294614B35F01943AB7239A", httpmock.NewBytesResponder(200, []byte(`{
+				"request_id": "86E5EB52E2294614B35F01943AB7239A",
+				"result": {
+					"id": "86E5EB52E2294614B35F01943AB7239A",
+					"name": "failed",
+					"number": "1"
+				}
+			}`)))
 			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/NOTFOUND", httpmock.NewBytesResponder(404, []byte(`{
 				"request_id": "F96C25C6B13E49E59F0093BCD8D731AB",
 				"error_type": "NotFound",
 				"error_message": "Specified resource not found."
 			}`)))
+			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/41874381FD914D88B24A759155B5F0F8", httpmock.NewBytesResponder(200, []byte(`{
+				"request_id": "41874381FD914D88B24A759155B5F0F8",
+				"results": [
+					{
+						"id": "86E5EB52E2294614B35F01943AB7239A",
+						"name": "failed",
+						"number": "1"	
+					}
+				]
+			}`)))
+			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/83870F11B3F24AE89888C86F497EF697", httpmock.NewBytesResponder(200, []byte(`{
+				"request_id": "83870F11B3F24AE89888C86F497EF697",
+				"id": "83870F11B3F24AE89888C86F497EF697",
+				"name": "failed",
+				"number": 1
+			}`)))
+			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/72AA019055524D09A4C367DD96DCE0F9", httpmock.NewBytesResponder(200, []byte(`{
+				"request_id": "72AA019055524D09A4C367DD96DCE0F9",
+				"id": "72AA019055524D09A4C367DD96DCE0F9",
+				"name": "failed",
+				"number": "1"
+			}`)))
+			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/NOT_JSON", httpmock.NewBytesResponder(200, []byte(`{1}`)))
 		})
 		AfterEach(func() {
 			httpmock.Reset()
 		})
 		When("resource is exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
 				reqId, err = c.Read(testSpec)
 			})
@@ -404,8 +335,61 @@ var _ = Describe("Client", func() {
 				Expect(testSpec.Number).To(Equal(int64(1)))
 			})
 		})
+		When("resource is exist, but schema error", func() {
+			BeforeEach(func() {
+				testSpec.Id = "86E5EB52E2294614B35F01943AB7239A"
+				reqId, err = c.Read(testSpec)
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("86E5EB52E2294614B35F01943AB7239A"))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse response result"))
+			})
+		})
+		When("resource is exist, but response is list format", func() {
+			BeforeEach(func() {
+				testSpec.Id = "41874381FD914D88B24A759155B5F0F8"
+				reqId, err = c.Read(testSpec)
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("41874381FD914D88B24A759155B5F0F8"))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("not support ListSpec"))
+			})
+		})
+		When("response is no frame format", func() {
+			BeforeEach(func() {
+				testSpec.Id = "83870F11B3F24AE89888C86F497EF697"
+				reqId, err = c.Read(testSpec)
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("83870F11B3F24AE89888C86F497EF697"))
+			})
+			It("err is not empty", func() {
+				Expect(testSpec.Id).To(Equal("83870F11B3F24AE89888C86F497EF697"))
+				Expect(testSpec.Name).To(Equal("failed"))
+				Expect(testSpec.Number).To(Equal(int64(1)))
+			})
+		})
+		When("response is no frame format, but invalid schema", func() {
+			BeforeEach(func() {
+				testSpec.Id = "72AA019055524D09A4C367DD96DCE0F9"
+				reqId, err = c.Read(testSpec)
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("72AA019055524D09A4C367DD96DCE0F9"))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse response result"))
+			})
+		})
 		When("resource is not exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				testSpec.Id = "NOTFOUND"
 				reqId, err = c.Read(testSpec)
 			})
@@ -417,29 +401,40 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("ErrorType: NotFound"))
 			})
 		})
+		When("response is not json", func() {
+			BeforeEach(func() {
+				testSpec.Id = "NOT_JSON"
+				reqId, err = c.Read(testSpec)
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse get response"))
+			})
+		})
 
 	})
 	Context("List", func() {
-		BeforeEach(func() {
-			httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(200, []byte(`{
-				"request_id": "0CAC3AEFB6334ECCA7B70AF76D73508B",
-				"results": [
-					{
-						"id": "F2246BD8617444329A40470AEC7B00B9",
-						"name": "test1",
-						"number": 1
-					},
-					{
-						"id": "C79CE3B1C87B47FA9BC618E6C40C3BD1",
-						"name": "test2",
-						"number": 2
-					}
-				]
-			}`)))
-		})
 		When("resource exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "0CAC3AEFB6334ECCA7B70AF76D73508B",
+					"results": [
+						{
+							"id": "F2246BD8617444329A40470AEC7B00B9",
+							"name": "test1",
+							"number": 1
+						},
+						{
+							"id": "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+							"name": "test2",
+							"number": 2
+						}
+					]
+				}`)))
 				reqId, err = c.List(listTestSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("0CAC3AEFB6334ECCA7B70AF76D73508B"))
@@ -464,14 +459,47 @@ var _ = Describe("Client", func() {
 				}))
 			})
 		})
+		When("resource exist, but schema invalid", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "0CAC3AEFB6334ECCA7B70AF76D73508B",
+					"results": [
+						{
+							"id": "F2246BD8617444329A40470AEC7B00B9",
+							"name": "test1",
+							"number": "1"
+						},
+						{
+							"id": "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+							"name": "test2",
+							"number": "2"
+						}
+					]
+				}`)))
+				reqId, err = c.List(listTestSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("0CAC3AEFB6334ECCA7B70AF76D73508B"))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse list response results"))
+			})
+		})
 		When("resource not exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(404, []byte(`{
 					"request_id": "F96C25C6B13E49E59F0093BCD8D731AB",
 					"error_type": "NotFound",
 					"error_message": "Specified resource not found."
 				}`)))
 				reqId, err = c.List(listTestSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("F96C25C6B13E49E59F0093BCD8D731AB"))
@@ -515,8 +543,8 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		When("resource exist", func() {
-			JustBeforeEach(func() {
-				reqId, err = c.ListALL(countableList, &api.CommonSearchParams{Limit: 1})
+			BeforeEach(func() {
+				reqId, err = c.ListAll(countableList, &api.CommonSearchParams{Limit: 1})
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("5F234DDF1D8E47D1BB26745D13FAE459"))
@@ -545,13 +573,13 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("resource not exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(404, []byte(`{
 					"request_id": "F96C25C6B13E49E59F0093BCD8D731AB",
 					"error_type": "NotFound",
 					"error_message": "Specified resource not found."
 				}`)))
-				reqId, err = c.ListALL(countableList, nil)
+				reqId, err = c.ListAll(countableList, nil)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("F96C25C6B13E49E59F0093BCD8D731AB"))
@@ -561,13 +589,27 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("ErrorType: NotFound"))
 			})
 		})
+		When("count value is invalid", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/count", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "E5173B43AE7F4F8AB71168CDBEC75605",
+					"result": {
+						"count": "2"
+					}
+				}`)))
+				reqId, err = c.ListAll(countableList, nil)
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("E5173B43AE7F4F8AB71168CDBEC75605"))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+			})
+		})
 	})
 	Context("Count", func() {
-		AfterEach(func() {
-			httpmock.Reset()
-		})
 		When("resource exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/count?limit=1", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "0CAC3AEFB6334ECCA7B70AF76D73508B",
 					"result": {
@@ -575,6 +617,9 @@ var _ = Describe("Client", func() {
 					}
 				}`)))
 				reqId, err = c.Count(countableList, &api.CommonSearchParams{Limit: 1})
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("0CAC3AEFB6334ECCA7B70AF76D73508B"))
@@ -586,8 +631,29 @@ var _ = Describe("Client", func() {
 				Expect(countableList.Count.Count).To(Equal(int32(4)))
 			})
 		})
+		When("resource exist, but count format invalid", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/count?limit=1", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "0CAC3AEFB6334ECCA7B70AF76D73508B",
+					"result": {
+						"count": "4"
+					}
+				}`)))
+				reqId, err = c.Count(countableList, &api.CommonSearchParams{Limit: 1})
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			It("reqId is not empty", func() {
+				Expect(reqId).Should(Equal("0CAC3AEFB6334ECCA7B70AF76D73508B"))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse count response result"))
+			})
+		})
 		When("resource not exist", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				reqId, err = c.Count(countableList, nil)
 			})
 			It("reqId is not empty", func() {
@@ -604,12 +670,15 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		When("request is successful", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/tests", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "8C246D4DF69F4473AD9F90ADE0D4DAF2",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/8C246D4DF69F4473AD9F90ADE0D4DAF2"
 				}`)))
 				reqId, err = c.Create(testSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("8C246D4DF69F4473AD9F90ADE0D4DAF2"))
@@ -619,7 +688,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("request is failed", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/tests", httpmock.NewBytesResponder(400, []byte(`{
 					"request_id": "61AC452CA8164E768D69BD878D2E0479",
 					"error_type": "ParamaterError",
@@ -632,6 +701,9 @@ var _ = Describe("Client", func() {
 					]				
 				}`)))
 				reqId, err = c.Create(testSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("61AC452CA8164E768D69BD878D2E0479"))
@@ -650,12 +722,15 @@ var _ = Describe("Client", func() {
 			testSpec.Id = "F2BF2DCC-D94C-4436-B199-7C7377184D06"
 		})
 		When("request is successful", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/tests/F2BF2DCC-D94C-4436-B199-7C7377184D06", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "70F6B7C158BE4D31AB5201CEB9175185",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/70F6B7C158BE4D31AB5201CEB9175185"
 				}`)))
 				reqId, err = c.Update(testSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("70F6B7C158BE4D31AB5201CEB9175185"))
@@ -665,7 +740,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("request is failed", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/tests/F2BF2DCC-D94C-4436-B199-7C7377184D06", httpmock.NewBytesResponder(400, []byte(`{
 					"request_id": "9732ACCB6C09406AB7961AAC7241DA8F",
 					"error_type": "ParamaterError",
@@ -678,6 +753,9 @@ var _ = Describe("Client", func() {
 					]				
 				}`)))
 				reqId, err = c.Update(testSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("9732ACCB6C09406AB7961AAC7241DA8F"))
@@ -696,12 +774,15 @@ var _ = Describe("Client", func() {
 			testSpec.Id = "665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B"
 		})
 		When("request is successful", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/tests/665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "64D5485D09F2440C880609406F2257DE",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/64D5485D09F2440C880609406F2257DE"
 				}`)))
 				reqId, err = c.Delete(testSpec)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("64D5485D09F2440C880609406F2257DE"))
@@ -711,7 +792,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("request is failed", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/tests/665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B", httpmock.NewBytesResponder(400, []byte(`{
 					"request_id": "C33C12FCF7B3466EBA729981630A09E5",
 					"error_type": "ParamaterError",
@@ -724,6 +805,9 @@ var _ = Describe("Client", func() {
 					]				
 				}`)))
 				reqId, err = c.Delete(testSpec)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("C33C12FCF7B3466EBA729981630A09E5"))
@@ -742,12 +826,15 @@ var _ = Describe("Client", func() {
 			testSpec.Id = "BD1BC291-5763-408B-9D2E-A70434E4A810"
 		})
 		When("request is successful", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/tests/BD1BC291-5763-408B-9D2E-A70434E4A810/cancel", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "EE891520C5894EC2B75B6002F01AA76F",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/EE891520C5894EC2B75B6002F01AA76F"
 				}`)))
 				reqId, err = c.Cancel(testSpec)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("EE891520C5894EC2B75B6002F01AA76F"))
@@ -757,7 +844,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("request is failed", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/tests/BD1BC291-5763-408B-9D2E-A70434E4A810/cancel", httpmock.NewBytesResponder(400, []byte(`{
 					"request_id": "86D4FEC9B34A4C1F9DE3E48285C860DB",
 					"error_type": "ParamaterError",
@@ -770,6 +857,9 @@ var _ = Describe("Client", func() {
 					]				
 				}`)))
 				reqId, err = c.Cancel(testSpec)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("86D4FEC9B34A4C1F9DE3E48285C860DB"))
@@ -788,12 +878,15 @@ var _ = Describe("Client", func() {
 			testSpec.Id = "BD1BC291-5763-408B-9D2E-A70434E4A810"
 		})
 		When("request is successful", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/tests/BD1BC291-5763-408B-9D2E-A70434E4A810/apply", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "EE891520C5894EC2B75B6002F01AA76F",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/EE891520C5894EC2B75B6002F01AA76F"
 				}`)))
 				reqId, err = c.Apply(testSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("EE891520C5894EC2B75B6002F01AA76F"))
@@ -803,7 +896,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("request is failed", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/tests/BD1BC291-5763-408B-9D2E-A70434E4A810/apply", httpmock.NewBytesResponder(400, []byte(`{
 					"request_id": "86D4FEC9B34A4C1F9DE3E48285C860DB",
 					"error_type": "ParamaterError",
@@ -816,6 +909,9 @@ var _ = Describe("Client", func() {
 					]				
 				}`)))
 				reqId, err = c.Apply(testSpec, nil)
+			})
+			AfterEach(func() {
+				httpmock.Reset()
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("86D4FEC9B34A4C1F9DE3E48285C860DB"))
@@ -846,7 +942,7 @@ var _ = Describe("Client", func() {
 			cancel context.CancelFunc
 		)
 		When("change value", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchRead(ctx, time.Second, testSpec)
@@ -861,7 +957,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("timeout", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				_, err = c.Read(testSpec)
 				Expect(err).To(Succeed())
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
@@ -874,7 +970,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("interval less than 1s", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchRead(ctx, time.Microsecond, testSpec)
@@ -885,7 +981,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("read error", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				testSpec.Id = "NOT_FOUND"
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
@@ -923,7 +1019,7 @@ var _ = Describe("Client", func() {
 			cancel context.CancelFunc
 		)
 		When("change value", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchList(ctx, time.Second, listTestSpec, nil)
@@ -947,7 +1043,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("timeout", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				_, err = c.List(listTestSpec, nil)
 				Expect(err).To(Succeed())
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
@@ -960,7 +1056,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("read error", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(404, []byte(`{
 					"request_id": "F96C25C6B13E49E59F0093BCD8D731AB",
 					"error_type": "NotFound",
@@ -1013,7 +1109,7 @@ var _ = Describe("Client", func() {
 			cancel context.CancelFunc
 		)
 		When("change value", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchListAll(ctx, time.Second, countableList, &api.CommonSearchParams{Limit: 1})
@@ -1040,8 +1136,8 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("timeout", func() {
-			JustBeforeEach(func() {
-				_, err = c.ListALL(countableList, &api.CommonSearchParams{Limit: 1})
+			BeforeEach(func() {
+				_, err = c.ListAll(countableList, &api.CommonSearchParams{Limit: 1})
 				Expect(err).To(Succeed())
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
@@ -1053,7 +1149,7 @@ var _ = Describe("Client", func() {
 			})
 		})
 		When("read error", func() {
-			JustBeforeEach(func() {
+			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests?limit=1&offset=1", httpmock.NewBytesResponder(404, []byte(`{
 					"request_id": "F96C25C6B13E49E59F0093BCD8D731AB",
 					"error_type": "NotFound",

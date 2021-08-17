@@ -17,8 +17,8 @@ type CcSecTransferAcl struct {
 	TsigId  int64        `read:"tsig_id,omitempty"  create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
 }
 
-func (c *CcSecTransferAcl) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.CommonConfigId, &c.Id)
+func (c *CcSecTransferAcl) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.CommonConfigId, &c.Id)
 }
 
 func (c *CcSecTransferAcl) GetId() int64    { return c.Id }
@@ -37,8 +37,8 @@ type CcSecTransferAclList struct {
 	Items []CcSecTransferAcl `read:"items"`
 }
 
-func (c *CcSecTransferAclList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.CommonConfigId)
+func (c *CcSecTransferAclList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.CommonConfigId)
 }
 
 func (c *CcSecTransferAclList) GetName() string         { return "cc_sec_transfer_acls" }

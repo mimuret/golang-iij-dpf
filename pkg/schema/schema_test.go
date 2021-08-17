@@ -2,7 +2,6 @@ package schema_test
 
 import (
 	"fmt"
-	"testing"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
@@ -47,7 +46,7 @@ func (t *TestSpec) DeepCopyObject() api.Object {
 	return t.DeepCopyTestSpec()
 }
 
-func (t *TestSpec) SetParams(...interface{}) error {
+func (t *TestSpec) SetPathParams(...interface{}) error {
 	return nil
 }
 
@@ -70,17 +69,12 @@ func (t ErrSpec) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (t ErrSpec) SetParams(...interface{}) error {
+func (t ErrSpec) SetPathParams(...interface{}) error {
 	return nil
 }
 
 func (t ErrSpec) DeepCopyObject() api.Object {
 	return nil
-}
-
-func TestSchema(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "types Suite")
 }
 
 var _ = Describe("Register", func() {

@@ -33,8 +33,8 @@ func (c *QpsHistoryList) Index(i int) interface{} { return c.Items[i] }
 func (c *QpsHistoryList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
-func (c *QpsHistoryList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ContractId)
+func (c *QpsHistoryList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ContractId)
 }
 
 func (c *QpsHistoryList) Init() {}

@@ -2,13 +2,10 @@ package zones
 
 import (
 	"fmt"
-	"net/url"
 
 	"strings"
 
-	"github.com/google/go-querystring/query"
 	"github.com/miekg/dns"
-	"github.com/mimuret/dnsutils"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
 )
@@ -127,14 +124,8 @@ func (c *Record) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (c *Record) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId, &c.Id)
-}
-
-func (c *Record) AddRRs(rrs []dns.RR) {
-	for _, rr := range rrs {
-		c.RData = append(c.RData, RecordRDATA{Value: dnsutils.GetRDATA(rr)})
-	}
+func (c *Record) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId, &c.Id)
 }
 
 var _ CountableListSpec = &RecordList{}
@@ -164,8 +155,8 @@ func (c *RecordList) AddItem(v interface{}) bool {
 func (c *RecordList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
-func (c *RecordList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *RecordList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
 func (c *RecordList) Init() {
 	for i := range c.Items {
@@ -205,76 +196,11 @@ func (c *CurrentRecordList) Init() {
 		c.Items[i].AttributeMeta = c.AttributeMeta
 	}
 }
-func (c *CurrentRecordList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *CurrentRecordList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
-
-type RecordDiff struct {
-	New *Record `read:"new"`
-	Old *Record `read:"old"`
-}
-
-var _ CountableListSpec = &RecordDiffList{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-
-type RecordDiffList struct {
-	AttributeMeta
-	api.Count
-	Items []RecordDiff `read:"items"`
-}
-
-func (c *RecordDiffList) GetName() string         { return "records/diffs" }
-func (c *RecordDiffList) GetItems() interface{}   { return &c.Items }
-func (c *RecordDiffList) Len() int                { return len(c.Items) }
-func (c *RecordDiffList) Index(i int) interface{} { return c.Items[i] }
-func (c *RecordDiffList) GetMaxLimit() int32      { return 10000 }
-func (c *RecordDiffList) ClearItems()             { c.Items = []RecordDiff{} }
-func (c *RecordDiffList) AddItem(v interface{}) bool {
-	if a, ok := v.(RecordDiff); ok {
-		c.Items = append(c.Items, a)
-		return true
-	}
-	return false
-}
-
-func (c *RecordDiffList) GetPathMethod(action api.Action) (string, string) {
-	return GetPathMethodForListSpec(action, c)
-}
-func (c *RecordDiffList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
-}
-
-func (c *RecordDiffList) Init() {
-	for i := range c.Items {
-		if c.Items[i].New != nil {
-			c.Items[i].New.AttributeMeta = c.AttributeMeta
-		}
-		if c.Items[i].Old != nil {
-			c.Items[i].Old.AttributeMeta = c.AttributeMeta
-		}
-	}
-}
-
-var _ api.SearchParams = &RecordListSearchKeywords{}
-
-// +k8s:deepcopy-gen=false
-
-type RecordListSearchKeywords struct {
-	api.CommonSearchParams
-	FullText    api.KeywordsString `url:"_keywords_full_text[],omitempty"`
-	Name        api.KeywordsString `url:"_keywords_name[],omitempty"`
-	TTL         []int32            `url:"_keywords_ttl[],omitempty"`
-	RRType      KeywordsType       `url:"_keywords_rrtype[],omitempty"`
-	RData       api.KeywordsString `url:"_keywords_rdata[],omitempty"`
-	Description api.KeywordsString `url:"_keywords_description[],omitempty"`
-	Operator    api.KeywordsString `url:"_keywords_operator[],omitempty"`
-}
-
-func (s *RecordListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
 	Register.Add(&Record{}, &RecordList{})
 	Register.Add(&CurrentRecordList{})
-	Register.Add(&RecordDiffList{})
 }

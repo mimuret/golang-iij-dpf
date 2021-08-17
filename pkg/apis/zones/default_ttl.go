@@ -46,8 +46,8 @@ func (c *DefaultTTL) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (c *DefaultTTL) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *DefaultTTL) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 type DefaultTTLDiff struct {
@@ -82,8 +82,8 @@ func (c *DefaultTTLDiffList) Init() {
 		}
 	}
 }
-func (c *DefaultTTLDiffList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *DefaultTTLDiffList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {

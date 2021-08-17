@@ -20,8 +20,8 @@ type CcPrimary struct {
 	Enabled types.Boolean `read:"enabled" update:"enabled"`
 }
 
-func (c *CcPrimary) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.CommonConfigId, &c.Id)
+func (c *CcPrimary) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.CommonConfigId, &c.Id)
 }
 
 func (c *CcPrimary) GetId() int64    { return c.Id }
@@ -40,8 +40,8 @@ type CcPrimaryList struct {
 	Items []CcPrimary `read:"items"`
 }
 
-func (c *CcPrimaryList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.CommonConfigId)
+func (c *CcPrimaryList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.CommonConfigId)
 }
 func (c *CcPrimaryList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)

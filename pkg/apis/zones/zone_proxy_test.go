@@ -1,124 +1,185 @@
 package zones_test
 
 import (
-	"net"
 	"net/http"
-	"testing"
 
 	"github.com/jarcoal/httpmock"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
-	"github.com/stretchr/testify/assert"
 )
 
-func TestZoneProxy(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.Deactivate()
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/zone_proxy", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "0607103482984C3B9EC782480423CE63",
-		"result": {
-			"enabled": 1
-		}
-	}`)))
-	httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/zone_proxy", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "24CF745B54A24E7BA9D613FBDA8AC849",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/0CAC3AEFB6334ECCA7B70AF76D73508B"
-	}`)))
-
-	client := api.NewClient("", "http://localhost", nil)
-	tc := &zones.ZoneProxy{
-		AttributeMeta: zones.AttributeMeta{
-			ZoneId: "m1",
-		},
-		Enabled: types.Enabled,
-	}
-	// GET /zones/{ZoneId}/zone_proxy
-	spec := &zones.ZoneProxy{
-		AttributeMeta: zones.AttributeMeta{
-			ZoneId: "m1",
-		},
-		Enabled: types.Enabled,
-	}
-	reqId, err := client.Read(spec)
-	if assert.NoError(t, err) {
-		assert.Equal(t, reqId, "0607103482984C3B9EC782480423CE63")
-		assert.Equal(t, spec, tc)
-	}
-	spec = &zones.ZoneProxy{}
-	if assert.NoError(t, spec.SetParams("m1")) {
-		reqId, err := client.Read(spec)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, "0607103482984C3B9EC782480423CE63")
-			assert.Equal(t, spec, tc)
-		}
-	}
-	// PATCH /zones/{ZoneId}/zone_proxy
-	reqId, err = client.Update(spec, nil)
-	if assert.NoError(t, err) {
-		assert.Equal(t, reqId, "24CF745B54A24E7BA9D613FBDA8AC849")
-	}
-	updateTestCase := map[string]interface{}{
-		"enabled": 1,
-	}
-	bs, err := testtool.MarshalMap(updateTestCase)
-	if assert.NoError(t, err) {
-		updateBody, err := api.MarshalUpdate(spec)
-		if assert.NoError(t, err) {
-			assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
-		}
-	}
-}
-func TestZoneProxyHealthCheck(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.Deactivate()
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/zone_proxy/health_check", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "751E0AB9585E48059090FA1B46E5B7A3",
-		"results": [
-			{
-				"address": "192.168.0.1",
-				"status": "success",
-				"tsig_name": "",
-				"enabled": 0
+var _ = Describe("zone_proxy", func() {
+	var (
+		c      zones.ZoneProxy
+		cl     *testtool.TestClient
+		err    error
+		reqId  string
+		s1, s2 zones.ZoneProxy
+	)
+	BeforeEach(func() {
+		cl = testtool.NewTestClient("", "http://localhost", nil)
+		s1 = zones.ZoneProxy{
+			AttributeMeta: zones.AttributeMeta{
+				ZoneId: "m1",
 			},
-			{
-				"address": "2001:db8::1",
-				"status": "fail",
-				"tsig_name": "tsig2",
-				"enabled": 1
-			}
-		]
-	}`)))
-	testcase := []zones.ZoneProxyHealthCheck{
-		{
-			Address:  net.ParseIP("192.168.0.1"),
-			Status:   zones.ZoneProxyStatusSuccess,
-			TsigName: "",
-			Enabled:  types.Disabled,
-		},
-		{
-			Address:  net.ParseIP("2001:db8::1"),
-			Status:   zones.ZoneProxyStatusFail,
-			TsigName: "tsig2",
-			Enabled:  types.Enabled,
-		},
-	}
-	// GET /zones/{ZoneId}/zone_proxy/health_check
-	list := &zones.ZoneProxyHealthCheckList{
-		AttributeMeta: zones.AttributeMeta{
-			ZoneId: "m1",
-		},
-	}
-	client := api.NewClient("", "http://localhost", nil)
-	reqId, err := client.List(list, nil)
-	if assert.NoError(t, err) {
-		if assert.Equal(t, reqId, "751E0AB9585E48059090FA1B46E5B7A3") {
-			if assert.Len(t, list.Items, 2) {
-				for i, tc := range testcase {
-					assert.Equal(t, list.Items[i], tc)
-				}
-			}
+			Enabled: types.Enabled,
 		}
-	}
-}
+		s2 = zones.ZoneProxy{
+			AttributeMeta: zones.AttributeMeta{
+				ZoneId: "m2",
+			},
+			Enabled: types.Disabled,
+		}
+	})
+	Describe("ZoneProxy", func() {
+		Context("Read", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/zone_proxy", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "0607103482984C3B9EC782480423CE63",
+					"result": {
+						"enabled": 1
+					}
+				}`)))
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m2/zone_proxy", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "63896F8889174DF59FF79F5C5F4B173A",
+					"result": {
+						"enabled": 0
+					}
+				}`)))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("returns id=r1", func() {
+				BeforeEach(func() {
+					c = zones.ZoneProxy{
+						AttributeMeta: zones.AttributeMeta{
+							ZoneId: "m1",
+						},
+					}
+					reqId, err = cl.Read(&c)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal("0607103482984C3B9EC782480423CE63"))
+					Expect(c).To(Equal(s1))
+				})
+			})
+			When("returns id=r2", func() {
+				BeforeEach(func() {
+					c = zones.ZoneProxy{
+						AttributeMeta: zones.AttributeMeta{
+							ZoneId: "m2",
+						},
+					}
+					reqId, err = cl.Read(&c)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal("63896F8889174DF59FF79F5C5F4B173A"))
+					Expect(c).To(Equal(s2))
+				})
+			})
+		})
+		Context("Update", func() {
+			var (
+				id1, bs1 = testtool.CreateAsyncResponse()
+				id2, bs2 = testtool.CreateAsyncResponse()
+			)
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/zone_proxy", httpmock.NewBytesResponder(202, bs1))
+				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m2/zone_proxy", httpmock.NewBytesResponder(202, bs2))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("enable", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Update(&s1, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id1))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/zones/m1/zone_proxy"]).To(MatchJSON(`{
+								"enabled": 1
+							}`))
+				})
+			})
+			When("disabled", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Update(&s2, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id2))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/zones/m2/zone_proxy"]).To(MatchJSON(`{
+								"enabled": 0
+							}`))
+				})
+			})
+		})
+		Context("SetPathParams", func() {
+			When("no arguments, nothing to do", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+			When("enough arguments", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m100")
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
+				})
+				It("can set ZonetId", func() {
+					Expect(s1.ZoneId).To(Equal("m100"))
+				})
+			})
+			When("arguments has extra value", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m100", 2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (ZoneId)", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
+		Context("api.Spec common test", func() {
+			var nilSpec *zones.ZoneProxy
+			testtool.TestDeepCopyObject(&s1, nilSpec)
+			testtool.TestGetName(&s1, "zone_proxy")
+			testtool.TestGetGroup(&s1, "zones")
+			Context("GetPathMethod", func() {
+				When("action is ActionRead", func() {
+					testtool.TestGetPathMethod(&s1, api.ActionRead, http.MethodGet, "/zones/m1/zone_proxy")
+				})
+				When("action is ActionUpdate", func() {
+					testtool.TestGetPathMethod(&s1, api.ActionUpdate, http.MethodPatch, "/zones/m1/zone_proxy")
+				})
+				When("other", func() {
+					testtool.TestGetPathMethod(&s1, api.ActionApply, "", "")
+				})
+			})
+		})
+	})
+})

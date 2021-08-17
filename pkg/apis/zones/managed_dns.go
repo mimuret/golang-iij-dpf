@@ -23,8 +23,8 @@ func (c *ManagedDnsList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
 func (c *ManagedDnsList) Init() {}
-func (c *ManagedDnsList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *ManagedDnsList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {

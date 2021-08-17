@@ -1,17 +1,10 @@
 package types_test
 
 import (
-	"testing"
-
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
-
-func TestTypes(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "types Suite")
-}
 
 var _ = Describe("types.count", func() {
 	Context("Count", func() {
@@ -30,6 +23,28 @@ var _ = Describe("types.count", func() {
 			It("returns count value", func() {
 				count.SetCount(50)
 				Expect(count.GetCount()).To(Equal(int32(50)))
+			})
+		})
+		Context("DeepCopy", func() {
+			var (
+				copy    *types.Count
+				nilMeta *types.Count
+			)
+			When("AttributeMeta is not nil", func() {
+				BeforeEach(func() {
+					copy = count.DeepCopy()
+				})
+				It("returns copy ", func() {
+					Expect(copy).To(Equal(&count))
+				})
+			})
+			When("AttributeMeta is nil", func() {
+				BeforeEach(func() {
+					copy = nilMeta.DeepCopy()
+				})
+				It("returns copy ", func() {
+					Expect(copy).To(BeNil())
+				})
 			})
 		})
 	})
