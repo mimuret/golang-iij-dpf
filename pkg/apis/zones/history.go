@@ -1,7 +1,6 @@
 package zones
 
 import (
-	"fmt"
 	"net/url"
 
 	"github.com/google/go-querystring/query"
@@ -9,27 +8,6 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 )
-
-var _ Spec = &HistoryText{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-
-type HistoryText struct {
-	AttributeMeta
-	History
-	Text string `read:"text"`
-}
-
-func (c *HistoryText) GetName() string { return "zone_histories" }
-func (c *HistoryText) GetPathMethod(action api.Action) (string, string) {
-	if action == api.ActionRead {
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_histories/%d/text", c.GetZoneId(), c.Id)
-	}
-	return "", ""
-}
-func (c *HistoryText) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId, &c.Id)
-}
 
 type History struct {
 	Id          int64      `read:"id"`
@@ -65,8 +43,8 @@ func (c *HistoryList) AddItem(v interface{}) bool {
 func (c *HistoryList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
-func (c *HistoryList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *HistoryList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func (c *HistoryList) Init() {}

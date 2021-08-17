@@ -15,10 +15,9 @@ import (
 const DefaultEndpoint = "https://api.dns-platform.jp/dpf/v1"
 
 type ClientInterface interface {
-	Do(spec Spec, action Action, body interface{}, params SearchParams) (requestId string, err error)
 	Read(s Spec) (requestId string, err error)
 	List(s ListSpec, keywords SearchParams) (requestId string, err error)
-	ListALL(s CountableListSpec, keywords SearchParams) (requestId string, err error)
+	ListAll(s CountableListSpec, keywords SearchParams) (requestId string, err error)
 	Count(s CountableListSpec, keywords SearchParams) (requestId string, err error)
 	Update(s Spec, body interface{}) (requestId string, err error)
 	Create(s Spec, body interface{}) (requestId string, err error)
@@ -163,28 +162,31 @@ func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchPar
 
 	if method == http.MethodGet {
 		if countableList != nil {
-			countResp := &CountResponse{}
-			if err := UnmarshalRead(rawResponse.Result, countResp); err != nil {
-				return rawResponse.RequestId, fmt.Errorf("failed to parse response result: %w", err)
+			// ActionCount
+			count := &Count{}
+			if err := UnmarshalRead(rawResponse.Result, count); err != nil {
+				return rawResponse.RequestId, fmt.Errorf("failed to parse count response result: %w", err)
 			}
-			countableList.SetCount(countResp.Result.Count)
-		}
-		if rawResponse.Result != nil {
+			countableList.SetCount(count.Count)
+		} else if rawResponse.Result != nil {
+			// ActionRead
 			if err := UnmarshalRead(rawResponse.Result, spec); err != nil {
 				return rawResponse.RequestId, fmt.Errorf("failed to parse response result: %w", err)
 			}
 		} else if rawResponse.Results != nil {
+			// ActionList
 			listSpec, ok := spec.(ListSpec)
 			if !ok {
 				return rawResponse.RequestId, fmt.Errorf("not support ListSpec %s", spec.GetName())
 			}
 			items := listSpec.GetItems()
 			if err := UnmarshalRead(rawResponse.Results, items); err != nil {
-				return rawResponse.RequestId, fmt.Errorf("failed to parse response result list: %w", err)
+				return rawResponse.RequestId, fmt.Errorf("failed to parse list response results: %w", err)
 			}
 		} else {
+			// Other(Job)
 			if err := UnmarshalRead(bs, spec); err != nil {
-				return rawResponse.RequestId, fmt.Errorf("failed to parse response result list: %w", err)
+				return rawResponse.RequestId, fmt.Errorf("failed to parse response result: %w", err)
 			}
 		}
 	}
@@ -205,7 +207,7 @@ func (c *Client) List(s ListSpec, keywords SearchParams) (requestId string, err 
 	return c.Do(s, ActionList, nil, keywords)
 }
 
-func (c *Client) ListALL(s CountableListSpec, keywords SearchParams) (requestId string, err error) {
+func (c *Client) ListAll(s CountableListSpec, keywords SearchParams) (requestId string, err error) {
 	req, err := c.Count(s, keywords)
 	if err != nil {
 		return req, err
@@ -221,7 +223,7 @@ func (c *Client) ListALL(s CountableListSpec, keywords SearchParams) (requestId 
 
 	for offset := int32(0); offset < count; offset += keywords.GetLimit() {
 		list := cpObj.DeepCopyObject()
-		cList, _ := list.(ListSpec)
+		cList := list.(ListSpec)
 		keywords.SetOffset(offset)
 		req, err = c.List(cList, keywords)
 		if err != nil {
@@ -296,10 +298,7 @@ LOOP:
 // s is Readable Spec
 func (c *Client) WatchRead(ctx context.Context, interval time.Duration, s Spec) error {
 	obj := s.DeepCopyObject()
-	org, ok := obj.(Spec)
-	if !ok {
-		return fmt.Errorf("is not api.Spec")
-	}
+	org := obj.(Spec)
 	return c.watch(ctx, interval, func() (bool, error) {
 		_, err := c.Read(s)
 		if err != nil {
@@ -317,10 +316,7 @@ func (c *Client) WatchRead(ctx context.Context, interval time.Duration, s Spec) 
 // s is ListAble Spec
 func (c *Client) WatchList(ctx context.Context, interval time.Duration, s ListSpec, keyword SearchParams) error {
 	obj := s.DeepCopyObject()
-	org, ok := obj.(ListSpec)
-	if !ok {
-		return fmt.Errorf("is not api.List")
-	}
+	org := obj.(ListSpec)
 	return c.watch(ctx, interval, func() (bool, error) {
 		_, err := c.List(s, keyword)
 		if err != nil {
@@ -338,13 +334,10 @@ func (c *Client) WatchList(ctx context.Context, interval time.Duration, s ListSp
 // s is CountableListSpec Spec
 func (c *Client) WatchListAll(ctx context.Context, interval time.Duration, s CountableListSpec, keyword SearchParams) error {
 	obj := s.DeepCopyObject()
-	copy, ok := obj.(CountableListSpec)
-	if !ok {
-		return fmt.Errorf("is not api.CountableListSpec")
-	}
+	copy := obj.(CountableListSpec)
 	copy.ClearItems()
 	err := c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.ListALL(copy, keyword)
+		_, err := c.ListAll(copy, keyword)
 		if err != nil {
 			return true, err
 		}

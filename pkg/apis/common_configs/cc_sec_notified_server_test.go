@@ -1,206 +1,409 @@
 package common_configs_test
 
 import (
-	"fmt"
 	"net"
 	"net/http"
-	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	"github.com/jarcoal/httpmock"
-	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/common_configs"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
-	"github.com/stretchr/testify/assert"
 )
 
-func TestCcSecNotifiedServer(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.Deactivate()
-
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers/1", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "5D7FECB0A56C49C2B73BD45DD174A575",
-		"result": {
-			"id": 1,
-			"address": "192.168.0.1",
-			"tsig_id": 0
-		}
-	}`)))
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "5ABBBEF090DF4F208AD9EDEAC7D702A5",
-		"result": {
-			"id": 2,
-			"address": "2001:db8::1",
-			"tsig_id": 2
-		}
-	}`)))
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "450B94B486D34D548313707FC7590CE0",
-		"results": [
-			{
-				"id": 1,
-				"address": "192.168.0.1",
-				"tsig_id": 0
-			},
-			{
-				"id": 2,
-				"address": "2001:db8::1",
-				"tsig_id": 2
-			}
-		]
-	}`)))
-	httpmock.RegisterResponder(http.MethodPost, "http://localhost/common_configs/1/cc_sec_notified_servers", httpmock.NewBytesResponder(202, []byte(`{
-		"request_id": "0C03D9AD2BBE488CB7E5C29241C44AC2",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/0C03D9AD2BBE488CB7E5C29241C44AC2"
-	}`)))
-	httpmock.RegisterResponder(http.MethodPatch, "http://localhost/common_configs/1/cc_sec_notified_servers/1", httpmock.NewBytesResponder(202, []byte(`{
-		"request_id": "AD6699A67620481F8ACD93848970FD57",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/AD6699A67620481F8ACD93848970FD57"
-	}`)))
-	httpmock.RegisterResponder(http.MethodPatch, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(202, []byte(`{
-		"request_id": "AD6699A67620481F8ACD93848970FD57",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/AD6699A67620481F8ACD93848970FD57"
-	}`)))
-	httpmock.RegisterResponder(http.MethodDelete, "http://localhost/common_configs/1/cc_sec_notified_servers/1", httpmock.NewBytesResponder(202, []byte(`{
-		"request_id": "5605D84FD5D04A7FB42FD299AD1EBF89",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/5605D84FD5D04A7FB42FD299AD1EBF89"
-	}`)))
-	httpmock.RegisterResponder(http.MethodDelete, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(202, []byte(`{
-		"request_id": "5605D84FD5D04A7FB42FD299AD1EBF89",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/5605D84FD5D04A7FB42FD299AD1EBF89"
-	}`)))
-
-	client := api.NewClient("", "http://localhost", nil)
-	testcase := []struct {
-		RequestId string
-		Spec      common_configs.CcSecNotifiedServer
-	}{
-		{
-			RequestId: "5D7FECB0A56C49C2B73BD45DD174A575",
-			Spec: common_configs.CcSecNotifiedServer{
-				AttributeMeta: common_configs.AttributeMeta{
-					CommonConfigId: 1,
-				},
-				Id:      1,
-				Address: net.ParseIP("192.168.0.1"),
-				TsigId:  0,
-			},
-		},
-		{
-			RequestId: "5ABBBEF090DF4F208AD9EDEAC7D702A5",
-			Spec: common_configs.CcSecNotifiedServer{
-				AttributeMeta: common_configs.AttributeMeta{
-					CommonConfigId: 1,
-				},
-				Id:      2,
-				Address: net.ParseIP("2001:db8::1"),
-				TsigId:  2,
-			},
-		},
-	}
-	// GET /common_configs/{CommonConfigId}/cc_sec_notified_servers
-	list := &common_configs.CcSecNotifiedServerList{
-		AttributeMeta: common_configs.AttributeMeta{
-			CommonConfigId: 1,
-		},
-	}
-	reqId, err := client.List(list, nil)
-	if assert.NoError(t, err) {
-		if assert.Equal(t, reqId, "450B94B486D34D548313707FC7590CE0") {
-			if assert.Len(t, list.Items, 2) {
-				for i, tc := range testcase {
-					assert.Equal(t, list.Items[i], tc.Spec)
-				}
-			}
-		}
-	}
-	list = &common_configs.CcSecNotifiedServerList{}
-	list.SetParams(1)
-	reqId, err = client.List(list, nil)
-	if assert.NoError(t, err) {
-		if assert.Equal(t, reqId, "450B94B486D34D548313707FC7590CE0") {
-			if assert.Len(t, list.Items, 2) {
-				for i, tc := range testcase {
-					assert.Equal(t, list.Items[i], tc.Spec)
-				}
-			}
-		}
-	}
-	// POST /common_configs/{CommonConfigId}/cc_sec_notified_servers
-	for _, tc := range testcase {
-		reqId, err := client.Create(&tc.Spec, nil)
-		assert.Equal(t, reqId, "0C03D9AD2BBE488CB7E5C29241C44AC2")
-		assert.NoError(t, err)
-	}
-	// GET /common_configs/{CommonConfigId}/cc_sec_notified_servers/{CcSecNotifiedServerId}
-	for _, tc := range testcase {
-		s := common_configs.CcSecNotifiedServer{
+var _ = Describe("cc_sec_notified_servers", func() {
+	var (
+		c      common_configs.CcSecNotifiedServer
+		cl     *testtool.TestClient
+		err    error
+		reqId  string
+		s1, s2 common_configs.CcSecNotifiedServer
+		slist  common_configs.CcSecNotifiedServerList
+	)
+	BeforeEach(func() {
+		cl = testtool.NewTestClient("", "http://localhost", nil)
+		s1 = common_configs.CcSecNotifiedServer{
 			AttributeMeta: common_configs.AttributeMeta{
 				CommonConfigId: 1,
 			},
-			Id: tc.Spec.Id,
+			Id:      1,
+			Address: net.ParseIP("192.168.0.1"),
+			TsigId:  0,
 		}
-		reqId, err := client.Read(&s)
-		fmt.Printf("%v, %v", tc, err)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, tc.RequestId)
-			assert.Equal(t, s, tc.Spec)
+		s2 = common_configs.CcSecNotifiedServer{
+			AttributeMeta: common_configs.AttributeMeta{
+				CommonConfigId: 1,
+			},
+			Id:      2,
+			Address: net.ParseIP("2001:db8::1"),
+			TsigId:  2,
 		}
-		s = common_configs.CcSecNotifiedServer{}
-		assert.NoError(t, s.SetParams(1, tc.Spec.Id))
-		reqId, err = client.Read(&s)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, tc.RequestId)
-			assert.Equal(t, s, tc.Spec)
+		slist = common_configs.CcSecNotifiedServerList{
+			AttributeMeta: common_configs.AttributeMeta{
+				CommonConfigId: 1,
+			},
+			Items: []common_configs.CcSecNotifiedServer{s1, s2},
 		}
-	}
-	// Patch /common_configs/{CommonConfigId}/cc_sec_notified_servers/{CcSecNotifiedServerId}
-	for _, tc := range testcase {
-		reqId, err := client.Update(&tc.Spec, nil)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, "AD6699A67620481F8ACD93848970FD57")
-		}
-	}
-	// Delete /common_configs/{CommonConfigId}/cc_sec_notified_servers/{CcSecNotifiedServerId}
-	for _, tc := range testcase {
-		reqId, err := client.Delete(&tc.Spec)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, "5605D84FD5D04A7FB42FD299AD1EBF89")
-		}
-	}
-	createTestCase := []map[string]interface{}{
-		{
-			"address": "192.168.0.1",
-		},
-		{
-			"address": "2001:db8::1",
-			"tsig_id": 2,
-		},
-	}
-	for i, tc := range createTestCase {
-		bs, err := testtool.MarshalMap(tc)
-		if assert.NoError(t, err) {
-			createBody, err := api.MarshalCreate(testcase[i].Spec)
-			if assert.NoError(t, err) {
-				assert.Equal(t, testtool.UnmarshalToMapString(createBody), testtool.UnmarshalToMapString(bs))
-			}
-		}
-	}
-	updateTestCase := []map[string]interface{}{
-		{
-			"address": "192.168.0.1",
-		},
-		{
-			"address": "2001:db8::1",
-			"tsig_id": 2,
-		},
-	}
-	for i, tc := range updateTestCase {
-		bs, err := testtool.MarshalMap(tc)
-		if assert.NoError(t, err) {
-			updateBody, err := api.MarshalUpdate(testcase[i].Spec)
-			if assert.NoError(t, err) {
-				assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
-			}
-		}
-	}
-}
+	})
+	Describe("CcSecNotifiedServer", func() {
+		Context("Read", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers/1", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "5D7FECB0A56C49C2B73BD45DD174A575",
+					"result": {
+						"id": 1,
+						"address": "192.168.0.1",
+						"tsig_id": 0
+					}
+				}`)))
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "5ABBBEF090DF4F208AD9EDEAC7D702A5",
+					"result": {
+						"id": 2,
+						"address": "2001:db8::1",
+						"tsig_id": 2
+					}
+				}`)))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("returns IPv4 server", func() {
+				BeforeEach(func() {
+					c = common_configs.CcSecNotifiedServer{
+						AttributeMeta: common_configs.AttributeMeta{
+							CommonConfigId: 1,
+						},
+						Id: 1,
+					}
+					reqId, err = cl.Read(&c)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal("5D7FECB0A56C49C2B73BD45DD174A575"))
+					Expect(c).To(Equal(s1))
+				})
+			})
+			When("returns IPv6 server", func() {
+				BeforeEach(func() {
+					c = common_configs.CcSecNotifiedServer{
+						AttributeMeta: common_configs.AttributeMeta{
+							CommonConfigId: 1,
+						},
+						Id: 2,
+					}
+					reqId, err = cl.Read(&c)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal("5ABBBEF090DF4F208AD9EDEAC7D702A5"))
+					Expect(c).To(Equal(s2))
+				})
+			})
+		})
+		Context("Create", func() {
+			var (
+				id1, bs1 = testtool.CreateAsyncResponse()
+				id2, bs2 = testtool.CreateAsyncResponse()
+			)
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodPost, "http://localhost/common_configs/2/cc_sec_notified_servers", httpmock.NewBytesResponder(202, bs1))
+				httpmock.RegisterResponder(http.MethodPost, "http://localhost/common_configs/3/cc_sec_notified_servers", httpmock.NewBytesResponder(202, bs2))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("ipv4 host", func() {
+				BeforeEach(func() {
+					s := common_configs.CcSecNotifiedServer{
+						AttributeMeta: common_configs.AttributeMeta{
+							CommonConfigId: 2,
+						},
+						Address: net.ParseIP("192.168.10.1"),
+						TsigId:  1,
+					}
+					reqId, err = cl.Create(&s, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id1))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/common_configs/2/cc_sec_notified_servers"]).To(MatchJSON(`{
+							"address": "192.168.10.1",
+							"tsig_id": 1
+						}`))
+				})
+			})
+			When("ipv6 host", func() {
+				BeforeEach(func() {
+					s := common_configs.CcSecNotifiedServer{
+						AttributeMeta: common_configs.AttributeMeta{
+							CommonConfigId: 3,
+						},
+						Address: net.ParseIP("2001:db8::1"),
+					}
+					reqId, err = cl.Create(&s, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id2))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/common_configs/3/cc_sec_notified_servers"]).To(MatchJSON(`{
+							"address": "2001:db8::1"
+						}`))
+				})
+			})
+		})
+		Context("Update", func() {
+			var (
+				id1, bs1 = testtool.CreateAsyncResponse()
+				id2, bs2 = testtool.CreateAsyncResponse()
+			)
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/common_configs/1/cc_sec_notified_servers/1", httpmock.NewBytesResponder(202, bs1))
+				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(202, bs2))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("ipv4 host", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Update(&s1, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id1))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/common_configs/1/cc_sec_notified_servers/1"]).To(MatchJSON(`{
+							"address": "192.168.0.1"
+						}`))
+				})
+			})
+			When("ipv6 host", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Update(&s2, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id2))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/common_configs/1/cc_sec_notified_servers/2"]).To(MatchJSON(`{
+							"address": "2001:db8::1",
+							"tsig_id": 2
+						}`))
+				})
+			})
+		})
+		Context("Delete", func() {
+			var (
+				id1, bs1 = testtool.CreateAsyncResponse()
+				id2, bs2 = testtool.CreateAsyncResponse()
+			)
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/common_configs/1/cc_sec_notified_servers/1", httpmock.NewBytesResponder(202, bs1))
+				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(202, bs2))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("returns IPv4 server", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Delete(&s1)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id1))
+				})
+			})
+			When("returns IPv6 server", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Delete(&s2)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id2))
+				})
+			})
+		})
+		Context("SetPathParams", func() {
+			When("no arguments, nothing to do", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+			When("enough arguments", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(100, 200)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
+				})
+				It("can set CommonConfigId", func() {
+					Expect(s1.GetCommonConfigId()).To(Equal(int64(100)))
+				})
+				It("can set Id", func() {
+					Expect(s1.GetId()).To(Equal(int64(200)))
+				})
+			})
+			When("not enough arguments", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(100)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments has extra value", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(100, 1, 2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (CommonConfigId)", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("2", 1)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (Id)", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(100, "1")
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
+		Context("api.Spec common test", func() {
+			var nilSpec *common_configs.CcSecNotifiedServer
+			testtool.TestDeepCopyObject(&s1, nilSpec)
+			testtool.TestGetName(&s1, "cc_sec_notified_servers")
+			testtool.TestGetGroup(&s1, "common_configs")
+			testtool.TestGetPathMethodForSpec(&s1, "/common_configs/1/cc_sec_notified_servers", "/common_configs/1/cc_sec_notified_servers/1")
+		})
+		Context("contracts.ChildSpec common test", func() {
+			Context("GetId", func() {
+				It("returns Id", func() {
+					Expect(s1.GetId()).To(Equal(s1.Id))
+				})
+			})
+			Context("SetId", func() {
+				BeforeEach(func() {
+					s1.SetId(2)
+				})
+				It("can set Id", func() {
+					Expect(s1.GetId()).To(Equal(int64(2)))
+				})
+			})
+		})
+	})
+	Describe("CcSecNotifiedServerList", func() {
+		var (
+			c common_configs.CcSecNotifiedServerList
+		)
+		Context("List", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "450B94B486D34D548313707FC7590CE0",
+					"results": [
+						{
+							"id": 1,
+							"address": "192.168.0.1",
+							"tsig_id": 0
+						},
+						{
+							"id": 2,
+							"address": "2001:db8::1",
+							"tsig_id": 2
+						}
+					]
+				}`)))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("returns list ", func() {
+				BeforeEach(func() {
+					c = common_configs.CcSecNotifiedServerList{
+						AttributeMeta: common_configs.AttributeMeta{
+							CommonConfigId: 1,
+						},
+					}
+					reqId, err = cl.List(&c, nil)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal("450B94B486D34D548313707FC7590CE0"))
+					Expect(c).To(Equal(slist))
+				})
+			})
+		})
+		Context("SetPathParams", func() {
+			When("no arguments, nothing to do", func() {
+				BeforeEach(func() {
+					err = slist.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+			When("enough arguments", func() {
+				BeforeEach(func() {
+					err = slist.SetPathParams(99)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
+				})
+				It("can set CommonConfigId", func() {
+					Expect(slist.GetCommonConfigId()).To(Equal(int64(99)))
+				})
+			})
+			When("arguments has extra value", func() {
+				BeforeEach(func() {
+					err = slist.SetPathParams(100, 2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (CommonConfigId)", func() {
+				BeforeEach(func() {
+					err = slist.SetPathParams("2")
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
+		Context("api.Spec common test", func() {
+			var nilSpec *common_configs.CcSecNotifiedServerList
+			testtool.TestDeepCopyObject(&slist, nilSpec)
+			testtool.TestGetName(&slist, "cc_sec_notified_servers")
+			testtool.TestGetGroup(&slist, "common_configs")
+			testtool.TestGetPathMethodForList(&slist, "/common_configs/1/cc_sec_notified_servers")
+		})
+		Context("api.ListSpec common test", func() {
+			testtool.TestGetItems(&slist, &slist.Items)
+			testtool.TestLen(&slist, 2)
+			Context("Index", func() {
+				When("index exist", func() {
+					It("returns item", func() {
+						Expect(slist.Index(0)).To(Equal(s1))
+					})
+				})
+			})
+		})
+	})
+})

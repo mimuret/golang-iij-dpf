@@ -2,17 +2,11 @@ package api_test
 
 import (
 	"net/http"
-	"testing"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
-
-func TestAPI(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "api Suite")
-}
 
 var _ = Describe("Action", func() {
 	Context("ToMethod", func() {

@@ -11,8 +11,8 @@ type ResponseCommon struct {
 
 type RawResponse struct {
 	ResponseCommon `read:",inline"`
-	Result         json.RawMessage `read:"result"`
-	Results        json.RawMessage `read:"results"`
+	Result         json.RawMessage `read:"result,omitempty"`
+	Results        json.RawMessage `read:"results,omitempty"`
 }
 
 const (
@@ -139,11 +139,6 @@ type ErrorDetail struct {
 
 func (e ErrorDetail) Error() string {
 	return e.Code + "=" + e.Attribute
-}
-
-type CountResponse struct {
-	ResponseCommon `read:",inline"`
-	Result         Count `read:"result"`
 }
 
 type Count struct {

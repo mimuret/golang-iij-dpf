@@ -7,8 +7,33 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/meta"
 )
 
+var (
+	jsonAdapter    = &JsonAPIAdapter{}
+	UnmarshalRead  = jsonAdapter.UnmarshalRead
+	MarshalCreate  = jsonAdapter.MarshalCreate
+	MarshalUpdate  = jsonAdapter.MarshalUpdate
+	MarshalApply   = jsonAdapter.MarshalApply
+	MarshalOutput  = jsonAdapter.MarshalOutput
+	UnMarshalInput = jsonAdapter.UnMarshalInput
+)
+
+type JsonApiInterface interface {
+	UnmarshalRead(bs []byte, o interface{}) error
+	MarshalCreate(body interface{}) ([]byte, error)
+	MarshalUpdate(body interface{}) ([]byte, error)
+	MarshalApply(body interface{}) ([]byte, error)
+}
+
+type JsonFileInerface interface {
+	MarshalOutput(spec Spec) ([]byte, error)
+	UnMarshalInput(bs []byte, obj Object) error
+}
+
+type JsonAPIAdapter struct {
+}
+
 // Unmarshal api response
-func UnmarshalRead(bs []byte, o interface{}) error {
+func (j *JsonAPIAdapter) UnmarshalRead(bs []byte, o interface{}) error {
 	return jsoniter.Config{
 		EscapeHTML:             true,
 		SortMapKeys:            false,
@@ -19,7 +44,7 @@ func UnmarshalRead(bs []byte, o interface{}) error {
 }
 
 // Marshal for create request
-func MarshalCreate(body interface{}) ([]byte, error) {
+func (j *JsonAPIAdapter) MarshalCreate(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
 		SortMapKeys:            true,
@@ -30,7 +55,7 @@ func MarshalCreate(body interface{}) ([]byte, error) {
 }
 
 // Marshal for update request
-func MarshalUpdate(body interface{}) ([]byte, error) {
+func (j *JsonAPIAdapter) MarshalUpdate(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
 		SortMapKeys:            true,
@@ -41,7 +66,7 @@ func MarshalUpdate(body interface{}) ([]byte, error) {
 }
 
 // Marshal for apply request
-func MarshalApply(body interface{}) ([]byte, error) {
+func (j *JsonAPIAdapter) MarshalApply(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
 		SortMapKeys:            true,
@@ -58,7 +83,7 @@ type OutputFrame struct {
 }
 
 // Marshal for file format
-func MarshalOutput(spec Spec) ([]byte, error) {
+func (j *JsonAPIAdapter) MarshalOutput(spec Spec) ([]byte, error) {
 	t := reflect.TypeOf(spec)
 	t = t.Elem()
 	out := &OutputFrame{
@@ -78,7 +103,7 @@ func MarshalOutput(spec Spec) ([]byte, error) {
 }
 
 // UnMarshal for file format
-func UnMarshalInput(bs []byte, obj Object) error {
+func (j *JsonAPIAdapter) UnMarshalInput(bs []byte, obj Object) error {
 	out := &OutputFrame{
 		Spec: obj,
 	}

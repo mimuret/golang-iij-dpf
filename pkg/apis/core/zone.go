@@ -32,13 +32,11 @@ func (c *Zone) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
 		return action.ToMethod(), fmt.Sprintf("/zones/%s", c.Id)
-	case api.ActionCancel:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/changes", c.Id)
 	}
 	return "", ""
 }
-func (c *Zone) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.Id)
+func (c *Zone) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.Id)
 }
 
 var _ apis.CountableListSpec = &ZoneList{}
@@ -75,7 +73,7 @@ func (c *ZoneList) GetPathMethod(action api.Action) (string, string) {
 	return "", ""
 }
 func (c *ZoneList) Init() {}
-func (c *ZoneList) SetParams(args ...interface{}) error {
+func (c *ZoneList) SetPathParams(args ...interface{}) error {
 	return nil
 }
 
@@ -97,29 +95,6 @@ type ZoneListSearchKeywords struct {
 
 func (s *ZoneListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
-var _ api.Spec = &ZoneApply{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-
-type ZoneApply struct {
-	AttributeMeta
-	Id          string
-	Description string `apply:"description"`
-}
-
-func (c *ZoneApply) GetName() string { return "zones" }
-func (c *ZoneApply) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/changes", c.Id)
-	}
-	return "", ""
-}
-func (c *ZoneApply) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.Id)
-}
-
 func init() {
 	Register.Add(&Zone{}, &ZoneList{})
-	Register.Add(&ZoneApply{})
 }

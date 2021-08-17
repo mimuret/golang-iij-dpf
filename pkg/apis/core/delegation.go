@@ -1,7 +1,6 @@
 package core
 
 import (
-	"net/http"
 	"net/url"
 
 	"github.com/google/go-querystring/query"
@@ -53,7 +52,7 @@ func (c *DelegationList) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (c *DelegationList) SetParams(args ...interface{}) error {
+func (c *DelegationList) SetPathParams(args ...interface{}) error {
 	return nil
 }
 
@@ -75,27 +74,6 @@ type DelegationListSearchKeywords struct {
 
 func (s *DelegationListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
-var _ apis.Spec = &DelegationApply{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-type DelegationApply struct {
-	AttributeMeta
-	ZoneIds []string `apply:"zone_ids"`
-}
-
-func (c *DelegationApply) GetName() string { return "delegations" }
-func (c *DelegationApply) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
-		return http.MethodPost, "/delegations"
-	}
-	return "", ""
-}
-func (c *DelegationApply) SetParams(args ...interface{}) error {
-	return nil
-}
-
 func init() {
 	Register.Add(&DelegationList{})
-	Register.Add(&DelegationApply{})
 }

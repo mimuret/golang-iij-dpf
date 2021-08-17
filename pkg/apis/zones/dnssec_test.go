@@ -2,112 +2,179 @@ package zones_test
 
 import (
 	"net/http"
-	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
-	"github.com/stretchr/testify/assert"
 )
 
-func TestDNSSEC(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.Deactivate()
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/dnssec", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "533F010C0DEC4B71891D1491C5308A10",
-		"result": {
-			"enabled": 1,
-			"state": 2,
-			"ds_state": 3
+var _ = Describe("dnssec", func() {
+	var (
+		c      zones.Dnssec
+		cl     *testtool.TestClient
+		err    error
+		reqId  string
+		s1, s2 zones.Dnssec
+	)
+	BeforeEach(func() {
+		cl = testtool.NewTestClient("", "http://localhost", nil)
+		s1 = zones.Dnssec{
+			AttributeMeta: zones.AttributeMeta{
+				ZoneId: "m1",
+			},
+			Enabled: types.Enabled,
+			State:   zones.DnssecStateEnable,
+			DsState: zones.DSStateDisclose,
 		}
-	}`)))
-	httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/dnssec", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "DDEACA36C111402C984ECE43A8E5C55C",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/DDEACA36C111402C984ECE43A8E5C55C"
-	}`)))
-
-	client := api.NewClient("", "http://localhost", nil)
-	tc := &zones.Dnssec{
-		AttributeMeta: zones.AttributeMeta{
-			ZoneId: "m1",
-		},
-		Enabled: types.Enabled,
-		State:   zones.DnssecStateEnable,
-		DsState: zones.DSStateDisclose,
-	}
-	// GET /zones/{ZoneId}/dnssec
-	spec := &zones.Dnssec{
-		AttributeMeta: zones.AttributeMeta{
-			ZoneId: "m1",
-		},
-	}
-	reqId, err := client.Read(spec)
-	if assert.NoError(t, err) {
-		assert.Equal(t, reqId, "533F010C0DEC4B71891D1491C5308A10")
-		assert.Equal(t, spec, tc)
-	}
-	spec = &zones.Dnssec{}
-	if assert.NoError(t, spec.SetParams("m1")) {
-		reqId, err := client.Read(spec)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, "533F010C0DEC4B71891D1491C5308A10")
-			assert.Equal(t, spec, tc)
+		s2 = zones.Dnssec{
+			AttributeMeta: zones.AttributeMeta{
+				ZoneId: "m2",
+			},
+			Enabled: types.Disabled,
+			State:   zones.DnssecStateEnable,
+			DsState: zones.DSStateDisclose,
 		}
-	}
-
-	// PATCH /zones/{ZoneId}/dnssec
-	reqId, err = client.Update(spec, nil)
-	if assert.NoError(t, err) {
-		assert.Equal(t, reqId, "DDEACA36C111402C984ECE43A8E5C55C")
-	}
-	updateTestCase := map[string]interface{}{
-		"enabled": 1,
-	}
-	bs, err := testtool.MarshalMap(updateTestCase)
-	if assert.NoError(t, err) {
-		updateBody, err := api.MarshalUpdate(tc)
-		if assert.NoError(t, err) {
-			assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
-		}
-	}
-
-}
-
-func TestDnssecKskRollover(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.Deactivate()
-	httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/dnssec/ksk_rollover", httpmock.NewBytesResponder(200, []byte(`{
-		"request_id": "81E9C891FD3440DBAB0E038798140A49",
-		"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/81E9C891FD3440DBAB0E038798140A49"
-	}`)))
-	client := api.NewClient("", "http://localhost", nil)
-	tc := &zones.DnssecKskRollover{
-		AttributeMeta: zones.AttributeMeta{
-			ZoneId: "m1",
-		},
-	}
-	// PATCH /zones/{ZoneId}/dnssec/ksk_rollover
-	reqId, err := client.Apply(tc, nil)
-	if assert.NoError(t, err) {
-		assert.Equal(t, reqId, "81E9C891FD3440DBAB0E038798140A49")
-	}
-	tc = &zones.DnssecKskRollover{}
-	if assert.NoError(t, tc.SetParams("m1")) {
-		reqId, err := client.Apply(tc, nil)
-		if assert.NoError(t, err) {
-			assert.Equal(t, reqId, "81E9C891FD3440DBAB0E038798140A49")
-		}
-	}
-
-	updateTestCase := map[string]interface{}{}
-	bs, err := testtool.MarshalMap(updateTestCase)
-	if assert.NoError(t, err) {
-		updateBody, err := api.MarshalUpdate(tc)
-		if assert.NoError(t, err) {
-			assert.Equal(t, testtool.UnmarshalToMapString(updateBody), testtool.UnmarshalToMapString(bs))
-		}
-	}
-
-}
+	})
+	Describe("Dnssec", func() {
+		Context("Read", func() {
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/dnssec", httpmock.NewBytesResponder(200, []byte(`{
+					"request_id": "533F010C0DEC4B71891D1491C5308A10",
+					"result": {
+						"enabled": 1,
+						"state": 2,
+						"ds_state": 3
+					}
+				}`)))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("returns m1", func() {
+				BeforeEach(func() {
+					c = zones.Dnssec{
+						AttributeMeta: zones.AttributeMeta{
+							ZoneId: "m1",
+						},
+					}
+					reqId, err = cl.Read(&c)
+				})
+				It("returns normal", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal("533F010C0DEC4B71891D1491C5308A10"))
+					Expect(c).To(Equal(s1))
+				})
+			})
+		})
+		Context("Update", func() {
+			var (
+				id1, bs1 = testtool.CreateAsyncResponse()
+				id2, bs2 = testtool.CreateAsyncResponse()
+			)
+			BeforeEach(func() {
+				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/dnssec", httpmock.NewBytesResponder(202, bs1))
+				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m2/dnssec", httpmock.NewBytesResponder(202, bs2))
+			})
+			AfterEach(func() {
+				httpmock.Reset()
+			})
+			When("enable", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Update(&s1, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id1))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/zones/m1/dnssec"]).To(MatchJSON(`{
+								"enabled": 1
+					}`))
+				})
+			})
+			When("disable", func() {
+				BeforeEach(func() {
+					reqId, err = cl.Update(&s2, nil)
+				})
+				It("returns job_id", func() {
+					Expect(err).To(Succeed())
+					Expect(reqId).To(Equal(id2))
+				})
+				It("post json", func() {
+					Expect(cl.RequestBody["/zones/m2/dnssec"]).To(MatchJSON(`{
+								"enabled": 0
+					}`))
+				})
+			})
+		})
+		Context("SetPathParams", func() {
+			When("no arguments, nothing to do", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+			When("enough arguments", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m10")
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
+				})
+				It("can set ContractId", func() {
+					Expect(s1.GetZoneId()).To(Equal("m10"))
+				})
+			})
+			When("arguments has extra value", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m10", 2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (ZoneId)", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
+		Context("api.Spec common test", func() {
+			var nilSpec *zones.Dnssec
+			testtool.TestDeepCopyObject(&s1, nilSpec)
+			testtool.TestGetName(&s1, "dnssec")
+			testtool.TestGetGroup(&s1, "zones")
+			Context("GetPathMethod", func() {
+				When("action is ActionRead", func() {
+					testtool.TestGetPathMethod(&s1, api.ActionRead, http.MethodGet, "/zones/m1/dnssec")
+				})
+				When("action is ActionUpdate", func() {
+					testtool.TestGetPathMethod(&s1, api.ActionUpdate, http.MethodPatch, "/zones/m1/dnssec")
+				})
+				When("action is other", func() {
+					testtool.TestGetPathMethod(&s1, api.ActionApply, "", "")
+				})
+			})
+		})
+	})
+	Context("DnssecStateToString", func() {
+		Context("String", func() {
+			Expect(zones.DnssecStateEnable.String()).To(Equal("Enable"))
+		})
+	})
+	Context("DSStateToSString", func() {
+		Context("String", func() {
+			Expect(zones.DSStateClose.String()).To(Equal("Close"))
+		})
+	})
+})

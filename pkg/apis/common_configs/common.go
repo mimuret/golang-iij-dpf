@@ -52,8 +52,6 @@ func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 	switch action {
 	case api.ActionList:
 		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s", s.GetCommonConfigId(), s.GetName())
-	case api.ActionCount:
-		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s/count", s.GetCommonConfigId(), s.GetName())
 	}
 	return "", ""
 }

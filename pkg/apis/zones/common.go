@@ -45,16 +45,6 @@ func (s *AttributeMeta) GetGroup() string    { return groupName }
 func (s *AttributeMeta) SetZoneId(id string) { s.ZoneId = id }
 func (s *AttributeMeta) GetZoneId() string   { return s.ZoneId }
 
-func GetPathMethodForChildSpec(action api.Action, s ChildSpec) (string, string) {
-	switch action {
-	case api.ActionCreate:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s", s.GetZoneId(), s.GetName())
-	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%d", s.GetZoneId(), s.GetName(), s.GetId())
-	}
-	return "", ""
-}
-
 func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 	switch action {
 	case api.ActionList:

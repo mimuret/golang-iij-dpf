@@ -48,7 +48,7 @@ type Contract struct {
 	Description string         `read:"description" update:"description"`
 }
 
-func (c *Contract) GetName() string { return "Contracts" }
+func (c *Contract) GetName() string { return "contracts" }
 func (c *Contract) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
@@ -56,8 +56,8 @@ func (c *Contract) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (c *Contract) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.Id)
+func (c *Contract) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.Id)
 }
 
 var _ apis.CountableListSpec = &ContractList{}
@@ -93,7 +93,7 @@ func (c *ContractList) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
-func (c *ContractList) SetParams(args ...interface{}) error {
+func (c *ContractList) SetPathParams(args ...interface{}) error {
 	return nil
 }
 

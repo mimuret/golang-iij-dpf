@@ -19,8 +19,8 @@ func (c *Contract) GetName() string { return "contract" }
 func (c *Contract) GetPathMethod(action api.Action) (string, string) {
 	return GetReadPathMethodForSpec(action, c)
 }
-func (c *Contract) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ZoneId)
+func (c *Contract) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {

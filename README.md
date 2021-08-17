@@ -22,7 +22,7 @@ func main() {
 
 	zoneList := &core.ZoneList{}
 	searchParam := &core.ZoneListSearchKeywords{Name: api.KeywordsString{"example.jp"}}
-	req, err := cl.ListALL(zoneList, searchParam)
+	req, err := cl.ListAll(zoneList, searchParam)
 	if err != nil {
 		panic(err)
 	}

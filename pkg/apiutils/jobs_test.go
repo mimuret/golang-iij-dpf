@@ -2,70 +2,67 @@ package apiutils_test
 
 import (
 	"context"
-	"net/http"
-	"testing"
+	"fmt"
 	"time"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
 	"github.com/mimuret/golang-iij-dpf/pkg/apiutils"
+	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-func TestAPIUtils(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "apiutils Suite")
-}
-
 var _ = Describe("jobs", func() {
 	var (
-		c *api.Client
+		c   *testtool.TestClient
+		err error
 	)
-	BeforeSuite(func() {
-		httpmock.Activate()
-	})
-	AfterSuite(func() {
-		httpmock.DeactivateAndReset()
-	})
 	BeforeEach(func() {
-		httpmock.Reset()
-		c = api.NewClient("token", "http://localhost", nil)
+		c = testtool.NewTestClient("token", "http://localhost", nil)
 	})
 	Context("WaitJob", func() {
-		When("failed to read", func() {
+		When("failed to read first", func() {
 			It("return err", func() {
 				_, err := apiutils.WaitJob(context.Background(), c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(MatchRegexp("failed to read Job"))
 			})
 		})
+		When("failed to watch read", func() {
+			BeforeEach(func() {
+				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
+					job := s.(*core.Job)
+					job.RequestId = "33CF62F20EFC468E84F9779BF6FF1B4D"
+					job.Status = core.JobStatusRunning
+					return "ok", nil
+				}
+				c.WatchReadFunc = func(ctx context.Context, interval time.Duration, s api.Spec) error {
+					return fmt.Errorf("err")
+				}
+				_, err = apiutils.WaitJob(context.Background(), c, "33CF62F20EFC468E84F9779BF6FF1B4D", time.Second)
+			})
+			It("return err", func() {
+				Expect(err).To(HaveOccurred())
+			})
+		})
 		When("job successful", func() {
 			BeforeEach(func() {
-				responses := [][]byte{
-					[]byte(`{
-					"request_id": "9BCFE2E9C10D4D9A8444CB0B48C72830",
-					"status": "RUNNING"
-				}`),
-					[]byte(`{
-					"request_id": "9BCFE2E9C10D4D9A8444CB0B48C72830",
-					"status": "SUCCESSFUL"
-				}`),
+				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
+					job := s.(*core.Job)
+					job.RequestId = "33CF62F20EFC468E84F9779BF6FF1B4D"
+					job.Status = core.JobStatusRunning
+					return "ok", nil
 				}
-				i := -1
-				httpmock.RegisterResponder(http.MethodGet, "http://localhost/jobs/9BCFE2E9C10D4D9A8444CB0B48C72830", func(r *http.Request) (*http.Response, error) {
-					if i < 1 {
-						i++
-					}
-					return httpmock.NewBytesResponse(200, responses[i]), nil
-				})
+				c.WatchReadFunc = func(ctx context.Context, interval time.Duration, s api.Spec) error {
+					job := s.(*core.Job)
+					job.RequestId = "9BCFE2E9C10D4D9A8444CB0B48C72830"
+					job.Status = core.JobStatusSuccessful
+					return nil
+				}
 			})
-			AfterEach(func() {
-				httpmock.Reset()
-			})
-			It("can add first time", func() {
+			It("returns last job", func() {
 				eq := &core.Job{
 					RequestId: "9BCFE2E9C10D4D9A8444CB0B48C72830",
 					Status:    core.JobStatusSuccessful,
@@ -77,26 +74,12 @@ var _ = Describe("jobs", func() {
 		})
 		When("job failed", func() {
 			BeforeEach(func() {
-				responses := [][]byte{
-					[]byte(`{
-					"request_id": "9BCFE2E9C10D4D9A8444CB0B48C72830",
-					"status": "RUNNING"
-				}`),
-					[]byte(`{
-					"request_id": "9BCFE2E9C10D4D9A8444CB0B48C72830",
-					"status": "FAILED"
-				}`),
+				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
+					job := s.(*core.Job)
+					job.RequestId = "33CF62F20EFC468E84F9779BF6FF1B4D"
+					job.Status = core.JobStatusFailed
+					return "ok", nil
 				}
-				i := -1
-				httpmock.RegisterResponder(http.MethodGet, "http://localhost/jobs/9BCFE2E9C10D4D9A8444CB0B48C72830", func(r *http.Request) (*http.Response, error) {
-					if i < 1 {
-						i++
-					}
-					return httpmock.NewBytesResponse(200, responses[i]), nil
-				})
-			})
-			AfterEach(func() {
-				httpmock.Reset()
 			})
 			It("can add first time", func() {
 				var err error
@@ -105,6 +88,94 @@ var _ = Describe("jobs", func() {
 					return err
 				}, time.Second*10).Should(HaveOccurred())
 				Expect(err.Error()).To(MatchRegexp("JobId 9BCFE2E9C10D4D9A8444CB0B48C72830 job failed"))
+			})
+		})
+	})
+	Context("ParseeResourceSystemId", func() {
+		var (
+			job *core.Job
+			id  string
+			err error
+		)
+		When("normal", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: "https://api.dns-platform.jp/dpf/v1/zones/a"}
+				id, err = apiutils.ParseeResourceSystemId(job)
+			})
+			It("return err", func() {
+				Expect(err).To(Succeed())
+			})
+			It("return id", func() {
+				Expect(id).To(Equal("a"))
+			})
+		})
+		When("resourceUrl is invalid url", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: "%1"}
+				id, err = apiutils.ParseeResourceSystemId(job)
+			})
+			It("return err", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse resource-url"))
+			})
+		})
+		When("resourceUrl is empty", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: ""}
+				id, err = apiutils.ParseeResourceSystemId(job)
+			})
+			It("return empty", func() {
+				Expect(err).To(Succeed())
+				Expect(id).To(Equal(""))
+			})
+		})
+	})
+	Context("ParseeResourceSystemId", func() {
+		var (
+			job *core.Job
+			id  int64
+			err error
+		)
+		When("normal", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: "https://api.dns-platform.jp/dpf/v1/common_configs/100"}
+				id, err = apiutils.ParseeResourceId(job)
+			})
+			It("return err", func() {
+				Expect(err).To(Succeed())
+			})
+			It("return id", func() {
+				Expect(id).To(Equal(int64(100)))
+			})
+		})
+		When("resourceUrl is invalid url", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: "%1"}
+				id, err = apiutils.ParseeResourceId(job)
+			})
+			It("return err", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to parse resource-url"))
+			})
+		})
+		When("resourceUrl is empty", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: ""}
+				id, err = apiutils.ParseeResourceId(job)
+			})
+			It("return err", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to convert to int64"))
+			})
+		})
+		When("id is not int64", func() {
+			BeforeEach(func() {
+				job = &core.Job{ResourceUrl: "https://api.dns-platform.jp/dpf/v1/zones/m1"}
+				id, err = apiutils.ParseeResourceId(job)
+			})
+			It("return err", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to convert to int64"))
 			})
 		})
 	})

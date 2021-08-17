@@ -18,8 +18,8 @@ type CcSecNotifiedServer struct {
 	TsigId        int64  `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
 }
 
-func (c *CcSecNotifiedServer) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.CommonConfigId, &c.Id)
+func (c *CcSecNotifiedServer) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.CommonConfigId, &c.Id)
 }
 
 func (c *CcSecNotifiedServer) GetId() int64    { return c.Id }
@@ -38,8 +38,8 @@ type CcSecNotifiedServerList struct {
 	Items []CcSecNotifiedServer `read:"items"`
 }
 
-func (c *CcSecNotifiedServerList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.CommonConfigId)
+func (c *CcSecNotifiedServerList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.CommonConfigId)
 }
 
 func (c *CcSecNotifiedServerList) GetName() string         { return "cc_sec_notified_servers" }

@@ -32,8 +32,8 @@ func (c *LogList) AddItem(v interface{}) bool {
 func (c *LogList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
-func (c *LogList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ContractId)
+func (c *LogList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ContractId)
 }
 
 func (c *LogList) Init() {}

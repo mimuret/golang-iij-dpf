@@ -1,7 +1,6 @@
 package contracts
 
 import (
-	"fmt"
 	"net/url"
 
 	"github.com/google/go-querystring/query"
@@ -30,8 +29,8 @@ func (c *CommonConfig) SetId(id int64)  { c.Id = id }
 func (c *CommonConfig) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
-func (c *CommonConfig) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ContractId, &c.Id)
+func (c *CommonConfig) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ContractId, &c.Id)
 }
 
 var _ CountableListSpec = &CommonConfigList{}
@@ -65,8 +64,8 @@ func (c *CommonConfigList) Init() {
 		c.Items[i].AttributeMeta = c.AttributeMeta
 	}
 }
-func (c *CommonConfigList) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ContractId)
+func (c *CommonConfigList) SetPathParams(args ...interface{}) error {
+	return apis.SetPathParams(args, &c.ContractId)
 }
 
 var _ api.SearchParams = &CommonConfigListSearchKeywords{}
@@ -81,51 +80,6 @@ type CommonConfigListSearchKeywords struct {
 
 func (s *CommonConfigListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
-var _ Spec = &CommonConfigDefault{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-type CommonConfigDefault struct {
-	AttributeMeta  `update:"-"`
-	CommonConfigId int64 `update:"common_config_id"`
-}
-
-func (c *CommonConfigDefault) GetName() string { return "common_configs" }
-func (c *CommonConfigDefault) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
-		return action.ToMethod(), fmt.Sprintf("/contracts/%s/common_configs/default", c.GetContractId())
-	}
-	return "", ""
-}
-func (c *CommonConfigDefault) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ContractId)
-}
-
-var _ Spec = &CommonConfigManagedDns{}
-
-// +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
-type CommonConfigManagedDns struct {
-	AttributeMeta
-	Id                int64
-	ManagedDnsEnabled types.Boolean `update:"managed_dns_enabled"`
-}
-
-func (c *CommonConfigManagedDns) GetName() string { return "common_configs" }
-func (c *CommonConfigManagedDns) GetId() int64    { return c.Id }
-func (c *CommonConfigManagedDns) SetId(id int64)  { c.Id = id }
-func (c *CommonConfigManagedDns) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
-		return action.ToMethod(), fmt.Sprintf("/contracts/%s/common_configs/%d/managed_dns", c.GetContractId(), c.Id)
-	}
-	return "", ""
-}
-func (c *CommonConfigManagedDns) SetParams(args ...interface{}) error {
-	return apis.SetParams(args, &c.ContractId, &c.Id)
-}
-
 func init() {
-	Register.Add(&CommonConfig{}, &CommonConfigList{})
-	Register.Add(&CommonConfigDefault{})
-	Register.Add(&CommonConfigManagedDns{})
+	Register.Add(&CommonConfigList{})
 }

@@ -2,6 +2,8 @@ package api_test
 
 import (
 	"bytes"
+	"log"
+	"os"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -18,6 +20,16 @@ var _ = Describe("logger", func() {
 		BeforeEach(func() {
 			buf = bytes.NewBuffer(nil)
 			logger = api.NewStdLogger(buf, "test", 0, 0)
+		})
+		Context("NewStdLogger", func() {
+			When("default value", func() {
+				BeforeEach(func() {
+					logger = api.NewStdLogger(nil, "", 0, 0)
+				})
+				It("io.Writer is os.Stderr", func() {
+					Expect(logger.Logger).To(Equal(log.New(os.Stderr, "dpf-client", 0)))
+				})
+			})
 		})
 		Context("Tracef", func() {
 			When("level 0", func() {
