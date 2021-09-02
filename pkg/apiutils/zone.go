@@ -5,8 +5,8 @@ import (
 
 	"github.com/miekg/dns"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/zones"
 )
 
 func GetZoneIdFromZonename(cl api.ClientInterface, zonename string) (string, error) {

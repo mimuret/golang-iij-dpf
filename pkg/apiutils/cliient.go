@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
 )
 
 func SyncUpdate(ctx context.Context, cl api.ClientInterface, s api.Spec, body interface{}) (string, *core.Job, error) {

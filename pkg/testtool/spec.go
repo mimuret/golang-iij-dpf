@@ -237,13 +237,6 @@ func TestGetName(s api.Spec, name string) {
 		})
 	})
 }
-func TestGetGroup(s api.Spec, name string) {
-	Context("GetGroup", func() {
-		It("returns group name", func() {
-			Expect(s.GetGroup()).To(Equal(name))
-		})
-	})
-}
 
 // List Spec
 func TestGetItems(s api.ListSpec, items interface{}) {

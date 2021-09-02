@@ -273,7 +273,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpec
 			testtool.TestDeepCopyObject(&s1, nilSpec)
 			testtool.TestGetName(&s1, "tests")
-			testtool.TestGetGroup(&s1, "test")
+
 			Context("", func() {
 				When("action is ActionCreate", func() {
 					testtool.TestGetPathMethod(&s1, api.ActionCreate, http.MethodPost, "/tests")
@@ -337,7 +337,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpecList
 			testtool.TestDeepCopyObject(&slist, nilSpec)
 			testtool.TestGetName(&slist, "tests")
-			testtool.TestGetGroup(&slist, "test")
+
 			testtool.TestGetPathMethodForList(&slist, "/tests")
 		})
 		Context("api.ListSpec common test", func() {
@@ -398,7 +398,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpecCountableList
 			testtool.TestDeepCopyObject(&slist, nilSpec)
 			testtool.TestGetName(&slist, "tests")
-			testtool.TestGetGroup(&slist, "test")
+
 			testtool.TestGetPathMethodForCountableList(&slist, "/tests")
 		})
 		Context("api.ListSpec common test", func() {

@@ -12,7 +12,7 @@ import (
 	"path"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
 )
 
 func WaitJob(ctx context.Context, c api.ClientInterface, jobId string, interval time.Duration) (*core.Job, error) {

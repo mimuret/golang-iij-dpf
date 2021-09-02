@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
 	"github.com/mimuret/golang-iij-dpf/pkg/apiutils"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 
