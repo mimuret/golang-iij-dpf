@@ -269,6 +269,43 @@ var _ = Describe("test spec", func() {
 				})
 			})
 		})
+		Context("SetPathParams", func() {
+			When("no arguments, nothing to do", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+			When("enough arguments", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m100")
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
+				})
+				It("can set ZonetId", func() {
+					Expect(s1.Id).To(Equal("m100"))
+				})
+			})
+			When("arguments has extra value", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m100", 2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (Id)", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
 		Context("api.Spec common test", func() {
 			var nilSpec *testtool.TestSpec
 			testtool.TestDeepCopyObject(&s1, nilSpec)
@@ -416,6 +453,16 @@ var _ = Describe("test spec", func() {
 			testtool.TestGetMaxLimit(&slist, 10000)
 			testtool.TestClearItems(&slist)
 			testtool.TestAddItem(&slist, s1)
+		})
+		Context("SetPathParams", func() {
+			When("nothing to do", func() {
+				BeforeEach(func() {
+					err = slist.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
 		})
 	})
 	Context("TestGetPathMethod", func() {

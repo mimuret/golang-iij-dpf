@@ -35,6 +35,21 @@ func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+func (t *TestSpec) SetPathParams(args ...interface{}) error {
+	if len(args) == 0 {
+		return nil
+	}
+	if len(args) != 1 {
+		return fmt.Errorf("args must be string")
+	}
+	id, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("args must be string")
+	}
+	t.Id = id
+	return nil
+}
+
 func (t *TestSpec) DeepCopyTestSpec() *TestSpec {
 	if t == nil {
 		return nil
@@ -90,6 +105,10 @@ func (t *TestSpecList) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+func (t *TestSpecList) SetPathParams(args ...interface{}) error {
+	return nil
+}
+
 func (t *TestSpecList) Init() {}
 
 var _ api.CountableListSpec = &TestSpecCountableList{}
