@@ -59,7 +59,7 @@ func (s *schema) Add(items []apis.Spec) {
 	}
 }
 
-func (s schemaSet) Parse(bs []byte) (api.Object, error) {
+func (s schemaSet) Parse(bs []byte) (apis.Spec, error) {
 	kv := &meta.KindVersion{}
 	if err := json.Unmarshal(bs, kv); err != nil {
 		return nil, fmt.Errorf("failed to parse json: %w", err)
@@ -79,7 +79,7 @@ func (s schemaSet) Parse(bs []byte) (api.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("kind value `%s` is not supported", kv.Kind)
 	}
-	obj := spec.DeepCopyObject()
+	obj := spec.DeepCopyObject().(apis.Spec)
 	if err := api.UnMarshalInput(bs, obj); err != nil {
 		return nil, fmt.Errorf("failed to parse spec: %w", err)
 	}
