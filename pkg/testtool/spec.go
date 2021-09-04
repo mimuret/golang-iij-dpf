@@ -8,6 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
+	"github.com/mimuret/golang-iij-dpf/pkg/schema"
 )
 
 var _ api.Spec = &TestSpec{}
@@ -20,7 +21,7 @@ type TestSpec struct {
 	Number int64  `read:"number" update:"number" create:"number" apply:"number"`
 }
 
-func (t *TestSpec) GetGroup() string { return "test" }
+func (t *TestSpec) GetGroup() string { return groupName }
 func (t *TestSpec) GetName() string  { return "tests" }
 func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
 	switch action {
@@ -83,7 +84,7 @@ func (t *TestSpecList) DeepCopyObject() api.Object {
 	return res
 }
 
-func (t *TestSpecList) GetGroup() string        { return "test" }
+func (t *TestSpecList) GetGroup() string        { return groupName }
 func (t *TestSpecList) GetName() string         { return "tests" }
 func (t *TestSpecList) GetItems() interface{}   { return &t.Items }
 func (c *TestSpecList) Len() int                { return len(c.Items) }
@@ -323,4 +324,15 @@ func TestAddItem(s api.CountableListSpec, validData interface{}) {
 			})
 		})
 	})
+}
+
+var (
+	groupName = "test.api.dns-platform.jp/v1"
+	Register  = schema.NewRegister(groupName)
+)
+
+func init() {
+	Register.Add(&TestSpec{})
+	Register.Add(&TestSpecList{})
+	Register.Add(&TestSpecCountableList{})
 }
