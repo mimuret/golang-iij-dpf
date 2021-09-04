@@ -79,7 +79,7 @@ func (j *JsonAPIAdapter) MarshalApply(body interface{}) ([]byte, error) {
 // file format frame
 type OutputFrame struct {
 	meta.KindVersion `json:",inline"`
-	Spec             Object `json:"spec"`
+	Resource         Object `json:"resource"`
 }
 
 // Marshal for file format
@@ -91,7 +91,7 @@ func (j *JsonAPIAdapter) MarshalOutput(spec Spec) ([]byte, error) {
 			Kind:       t.Name(),
 			APIVersion: spec.GetGroup(),
 		},
-		Spec: spec,
+		Resource: spec,
 	}
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -105,7 +105,7 @@ func (j *JsonAPIAdapter) MarshalOutput(spec Spec) ([]byte, error) {
 // UnMarshal for file format
 func (j *JsonAPIAdapter) UnMarshalInput(bs []byte, obj Object) error {
 	out := &OutputFrame{
-		Spec: obj,
+		Resource: obj,
 	}
 
 	return jsoniter.Config{

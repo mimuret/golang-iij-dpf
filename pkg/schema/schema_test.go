@@ -157,16 +157,16 @@ var _ = Describe("Register", func() {
 		})
 		When("failed to parse", func() {
 			BeforeEach(func() {
-				obj, err = schema.SchemaSet.Parse([]byte(`{"apiVersion": "test", "kind": "TestSpec", "spec": {"Id": 0}}`))
+				obj, err = schema.SchemaSet.Parse([]byte(`{"apiVersion": "test", "kind": "TestSpec", "resource": {"Id": 0}}`))
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("failed to parse spec:"))
+				Expect(err.Error()).To(MatchRegexp("failed to parse resource:"))
 			})
 		})
 		When("successful", func() {
 			BeforeEach(func() {
-				obj, err = schema.SchemaSet.Parse([]byte(`{"apiVersion": "test", "kind": "TestSpec", "spec": {"Id": "hoge"}}`))
+				obj, err = schema.SchemaSet.Parse([]byte(`{"apiVersion": "test", "kind": "TestSpec", "resource": {"Id": "hoge"}}`))
 			})
 			It("returns error", func() {
 				Expect(err).To(Succeed())

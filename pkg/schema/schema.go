@@ -81,7 +81,7 @@ func (s schemaSet) Parse(bs []byte) (apis.Spec, error) {
 	}
 	obj := spec.DeepCopyObject().(apis.Spec)
 	if err := api.UnMarshalInput(bs, obj); err != nil {
-		return nil, fmt.Errorf("failed to parse spec: %w", err)
+		return nil, fmt.Errorf("failed to parse resource: %w", err)
 	}
 	return obj, nil
 }
