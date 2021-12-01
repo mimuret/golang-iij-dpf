@@ -54,8 +54,7 @@ func (t *ErrSpec) UnmarshalJSON(bs []byte) error {
 	if t.ErrUnMarshalJSON != nil {
 		return t.ErrUnMarshalJSON
 	}
-	return json.Unmarshal(bs, t.TestSpec)
-
+	return json.Unmarshal(bs, &t.TestSpec)
 }
 
 var _ = Describe("Client", func() {

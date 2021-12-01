@@ -48,7 +48,7 @@ var _ = Describe("testclient.go", func() {
 						v.Name = "changed"
 						return "", nil
 					}
-					cl.Read(&s)
+					Expect(cl.Read(&s)).To(Succeed())
 				})
 				It("run ReadFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -59,7 +59,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ReadFunc", func() {
 				BeforeEach(func() {
-					cl.Read(&s)
+					Expect(cl.Read(&s)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Read", func() {
@@ -89,7 +89,7 @@ var _ = Describe("testclient.go", func() {
 						v.AddItem(s)
 						return "", nil
 					}
-					cl.List(&slist, nil)
+					Expect(cl.List(&slist, nil)).To(Succeed())
 				})
 				It("run ListFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -101,7 +101,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ListFunc", func() {
 				BeforeEach(func() {
-					cl.List(&slist, nil)
+					Expect(cl.List(&slist, nil)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.List", func() {
@@ -131,7 +131,7 @@ var _ = Describe("testclient.go", func() {
 						v.AddItem(s)
 						return "", nil
 					}
-					cl.ListAll(&slist, nil)
+					Expect(cl.ListAll(&slist, nil)).To(Succeed())
 				})
 				It("run ListAllFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -143,7 +143,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ListAllFunc", func() {
 				BeforeEach(func() {
-					cl.ListAll(&slist, nil)
+					Expect(cl.ListAll(&slist, nil)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.ListAll", func() {
@@ -173,7 +173,7 @@ var _ = Describe("testclient.go", func() {
 						v.SetCount(100)
 						return "", nil
 					}
-					cl.Count(&slist, nil)
+					Expect(cl.Count(&slist, nil)).To(Succeed())
 				})
 				It("run CountFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -184,7 +184,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist CountFunc", func() {
 				BeforeEach(func() {
-					cl.Count(&slist, nil)
+					Expect(cl.Count(&slist, nil)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Count", func() {
@@ -212,7 +212,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Update(&s, nil)
+					Expect(cl.Update(&s, nil)).To(Succeed())
 				})
 				It("run UpdateFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -220,7 +220,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist UpdateFunc", func() {
 				BeforeEach(func() {
-					cl.Update(&s, nil)
+					Expect(cl.Update(&s, nil)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Update", func() {
@@ -248,7 +248,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Create(&s, nil)
+					Expect(cl.Create(&s, nil)).To(Succeed())
 				})
 				It("run CreateFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -256,7 +256,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist CreateFunc", func() {
 				BeforeEach(func() {
-					cl.Create(&s, nil)
+					Expect(cl.Create(&s, nil)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Create", func() {
@@ -284,7 +284,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Apply(&s, nil)
+					Expect(cl.Apply(&s, nil)).To(Succeed())
 				})
 				It("run ApplyFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -292,7 +292,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ApplyFunc", func() {
 				BeforeEach(func() {
-					cl.Apply(&s, nil)
+					Expect(cl.Apply(&s, nil)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Apply", func() {
@@ -320,7 +320,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Delete(&s)
+					Expect(cl.Delete(&s)).To(Succeed())
 				})
 				It("run DeleteFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -328,7 +328,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist DeleteFunc", func() {
 				BeforeEach(func() {
-					cl.Delete(&s)
+					Expect(cl.Delete(&s)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Delete", func() {
@@ -356,7 +356,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Cancel(&s)
+					Expect(cl.Cancel(&s)).To(Succeed())
 				})
 				It("run CancelFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -364,7 +364,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist CancelFunc", func() {
 				BeforeEach(func() {
-					cl.Cancel(&s)
+					Expect(cl.Cancel(&s)).To(Succeed())
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.Cancel", func() {
@@ -392,7 +392,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return nil
 					}
-					cl.WatchRead(context.TODO(), time.Second, &s)
+					_ = cl.WatchRead(context.TODO(), time.Second, &s)
 				})
 				It("run WatchReadFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -400,7 +400,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist WatchReadFunc", func() {
 				BeforeEach(func() {
-					cl.WatchRead(context.TODO(), time.Second, &s)
+					_ = cl.WatchRead(context.TODO(), time.Second, &s)
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.WatchRead", func() {
@@ -425,7 +425,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return nil
 					}
-					cl.WatchList(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchList(context.TODO(), time.Second, &slist, nil)
 				})
 				It("run WatchListFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -433,7 +433,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist WatchListFunc", func() {
 				BeforeEach(func() {
-					cl.WatchList(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchList(context.TODO(), time.Second, &slist, nil)
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.WatchList", func() {
@@ -458,7 +458,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return nil
 					}
-					cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
 				})
 				It("run WatchListFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -466,7 +466,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist WatchListAllFunc", func() {
 				BeforeEach(func() {
-					cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.WatchListAll", func() {

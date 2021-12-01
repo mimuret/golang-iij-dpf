@@ -9,7 +9,10 @@ deep_copy_files = pkg/types/ZZ_deepcopy_generated.go \
 	pkg/apis/dpf/v1/zones/ZZ_deepcopy_generated.go \
 	pkg/apis/dpf/v1/common_configs/ZZ_deepcopy_generated.go
 
-all: deepcopy test fmt
+all: deepcopy checks test fmt
+
+checks:
+	golangci-lint run
 
 test:
 	go test -coverprofile="cover.out" ./...
