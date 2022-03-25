@@ -377,6 +377,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpecList
 			testtool.TestDeepCopyObject(&slist, nilSpec)
 			testtool.TestGetName(&slist, "tests")
+			testtool.TestGetGroup(&slist, "test.api.dns-platform.jp/v1")
 
 			testtool.TestGetPathMethodForList(&slist, "/tests")
 		})
