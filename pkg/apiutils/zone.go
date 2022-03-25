@@ -10,15 +10,15 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/zones"
 )
 
-func GetZoneIdFromZonename(cl api.ClientInterface, zonename string) (string, error) {
-	z, err := GetZoneFromZonename(cl, zonename)
+func GetZoneIdFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (string, error) {
+	z, err := GetZoneFromZonename(ctx, cl, zonename)
 	if err != nil {
 		return "", err
 	}
 	return z.Id, nil
 }
 
-func GetZoneFromZonename(cl api.ClientInterface, zonename string) (*core.Zone, error) {
+func GetZoneFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (*core.Zone, error) {
 	zonename = dns.CanonicalName(zonename)
 	keywords := &core.ZoneListSearchKeywords{
 		Name: api.KeywordsString{zonename},
@@ -35,15 +35,15 @@ func GetZoneFromZonename(cl api.ClientInterface, zonename string) (*core.Zone, e
 	return nil, fmt.Errorf("not found zone: %s", zonename)
 }
 
-func GetRecordFromZoneName(cl api.ClientInterface, zonename string, recordName string, rrtype zones.Type) (*zones.Record, error) {
-	z, err := GetZoneFromZonename(cl, zonename)
+func GetRecordFromZoneName(ctx context.Context, cl api.ClientInterface, zonename string, recordName string, rrtype zones.Type) (*zones.Record, error) {
+	z, err := GetZoneFromZonename(ctx, cl, zonename)
 	if err != nil {
 		return nil, err
 	}
-	return GetRecordFromZoneId(cl, z.Id, recordName, rrtype)
+	return GetRecordFromZoneId(ctx, cl, z.Id, recordName, rrtype)
 }
 
-func GetRecordFromZoneId(cl api.ClientInterface, zoneId string, recordName string, rrtype zones.Type) (*zones.Record, error) {
+func GetRecordFromZoneId(ctx context.Context, cl api.ClientInterface, zoneId string, recordName string, rrtype zones.Type) (*zones.Record, error) {
 	recordName = dns.CanonicalName(recordName)
 	keywords := &zones.RecordListSearchKeywords{
 		Name: api.KeywordsString{recordName},
