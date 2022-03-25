@@ -1,6 +1,7 @@
 package contracts_test
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 
@@ -86,7 +87,7 @@ var _ = Describe("tsigs", func() {
 						},
 						Id: 1,
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -102,7 +103,7 @@ var _ = Describe("tsigs", func() {
 						},
 						Id: 2,
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -124,7 +125,7 @@ var _ = Describe("tsigs", func() {
 					Name:        "hoge-huga",
 					Description: "🍺🐇",
 				}
-				reqId, err = cl.Create(&s, nil)
+				reqId, err = cl.Create(context.Background(), &s, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -146,7 +147,7 @@ var _ = Describe("tsigs", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/contracts/f1/tsigs/1", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Update(&s1, nil)
+				reqId, err = cl.Update(context.Background(), &s1, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -167,7 +168,7 @@ var _ = Describe("tsigs", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/contracts/f1/tsigs/1", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Delete(&s1)
+				reqId, err = cl.Delete(context.Background(), &s1)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -298,7 +299,7 @@ var _ = Describe("tsigs", func() {
 							ContractId: "f1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

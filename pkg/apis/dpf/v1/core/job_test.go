@@ -1,6 +1,7 @@
 package core_test
 
 import (
+	"context"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -66,7 +67,7 @@ var _ = Describe("jobs", func() {
 					c = core.Job{
 						RequestId: "9BCFE2E9C10D4D9A8444CB0B48C72830",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -79,7 +80,7 @@ var _ = Describe("jobs", func() {
 					c = core.Job{
 						RequestId: "B52CBA3FBA8D4A5C951C4EBD9EB48076",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -92,7 +93,7 @@ var _ = Describe("jobs", func() {
 					c = core.Job{
 						RequestId: "9F16F8E85D104D5C9C6BC58676B5D0BD",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

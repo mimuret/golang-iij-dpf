@@ -1,6 +1,7 @@
 package contracts_test
 
 import (
+	"context"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -35,7 +36,7 @@ var _ = Describe("common_configs/default", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/contracts/f1/common_configs/default", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Apply(&s1, nil)
+				reqId, err = cl.Apply(context.Background(), &s1, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()

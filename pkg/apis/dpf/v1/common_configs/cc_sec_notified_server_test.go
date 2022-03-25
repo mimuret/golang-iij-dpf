@@ -1,6 +1,7 @@
 package common_configs_test
 
 import (
+	"context"
 	"net"
 	"net/http"
 
@@ -77,7 +78,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						},
 						Id: 1,
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -93,7 +94,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						},
 						Id: 2,
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -123,7 +124,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						Address: net.ParseIP("192.168.10.1"),
 						TsigId:  1,
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(context.Background(), &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -144,7 +145,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						},
 						Address: net.ParseIP("2001:db8::1"),
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(context.Background(), &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -171,7 +172,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 			})
 			When("ipv4 host", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s1, nil)
+					reqId, err = cl.Update(context.Background(), &s1, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -185,7 +186,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 			})
 			When("ipv6 host", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s2, nil)
+					reqId, err = cl.Update(context.Background(), &s2, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -213,7 +214,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 			})
 			When("returns IPv4 server", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s1)
+					reqId, err = cl.Delete(context.Background(), &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -222,7 +223,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 			})
 			When("returns IPv6 server", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s2)
+					reqId, err = cl.Delete(context.Background(), &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -340,7 +341,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 							CommonConfigId: 1,
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

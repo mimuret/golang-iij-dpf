@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -192,7 +193,7 @@ var _ = Describe("records/diffs", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

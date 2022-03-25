@@ -1,6 +1,7 @@
 package contracts_test
 
 import (
+	"context"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -52,7 +53,7 @@ var _ = Describe("common_configs/managed_dns", func() {
 			})
 			When("enable", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Apply(&s1, nil)
+					reqId, err = cl.Apply(context.Background(), &s1, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -66,7 +67,7 @@ var _ = Describe("common_configs/managed_dns", func() {
 			})
 			When("disable", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Apply(&s2, nil)
+					reqId, err = cl.Apply(context.Background(), &s2, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())

@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -73,7 +74,7 @@ var _ = Describe("default_ttl", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -88,7 +89,7 @@ var _ = Describe("default_ttl", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/default_ttl", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Update(&s1, nil)
+				reqId, err = cl.Update(context.Background(), &s1, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -109,7 +110,7 @@ var _ = Describe("default_ttl", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/zones/m1/default_ttl/changes", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Cancel(&s1)
+				reqId, err = cl.Cancel(context.Background(), &s1)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -213,7 +214,7 @@ var _ = Describe("default_ttl", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

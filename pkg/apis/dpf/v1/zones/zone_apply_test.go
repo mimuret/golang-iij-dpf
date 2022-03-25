@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/jarcoal/httpmock"
@@ -35,7 +36,7 @@ var _ = Describe("zones", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/changes", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Apply(&s, nil)
+				reqId, err = cl.Apply(context.Background(), &s, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -56,7 +57,7 @@ var _ = Describe("zones", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/zones/m1/changes", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Cancel(&s)
+				reqId, err = cl.Cancel(context.Background(), &s)
 			})
 			AfterEach(func() {
 				httpmock.Reset()

@@ -1,6 +1,7 @@
 package core_test
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 	"time"
@@ -94,7 +95,7 @@ var _ = Describe("delegations", func() {
 			When("returns list ", func() {
 				BeforeEach(func() {
 					c = core.DelegationList{}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

@@ -1,6 +1,7 @@
 package testtool_test
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/jarcoal/httpmock"
@@ -32,8 +33,10 @@ var _ = Describe("test spec", func() {
 		reqId  string
 		s1, s2 testtool.TestSpec
 		slist  testtool.TestSpecList
+		ctx    context.Context
 	)
 	BeforeEach(func() {
+		ctx = context.Background()
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = testtool.TestSpec{
 			Id:     "1",
@@ -75,7 +78,7 @@ var _ = Describe("test spec", func() {
 					c = testtool.TestSpec{
 						Id: "1",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(ctx, &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -88,7 +91,7 @@ var _ = Describe("test spec", func() {
 					c = testtool.TestSpec{
 						Id: "2",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(ctx, &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -111,7 +114,7 @@ var _ = Describe("test spec", func() {
 						Name:   "name 3",
 						Number: 3,
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(ctx, &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -131,7 +134,7 @@ var _ = Describe("test spec", func() {
 						Name:   "",
 						Number: 0,
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(ctx, &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -156,7 +159,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("test 1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s1, nil)
+					reqId, err = cl.Update(ctx, &s1, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -171,7 +174,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("test 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s2, nil)
+					reqId, err = cl.Update(ctx, &s2, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -196,7 +199,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("remove1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s1)
+					reqId, err = cl.Delete(ctx, &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -205,7 +208,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("remove 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s2)
+					reqId, err = cl.Delete(ctx, &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -224,7 +227,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("cancel edit 1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Cancel(&s1)
+					reqId, err = cl.Cancel(ctx, &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -233,7 +236,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("cancel edit 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Cancel(&s2)
+					reqId, err = cl.Cancel(ctx, &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -252,7 +255,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("apply edit 1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Apply(&s1, nil)
+					reqId, err = cl.Apply(ctx, &s1, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -261,7 +264,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("apply edit 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Apply(&s2, nil)
+					reqId, err = cl.Apply(ctx, &s2, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -361,7 +364,7 @@ var _ = Describe("test spec", func() {
 			When("returns list ", func() {
 				BeforeEach(func() {
 					c = testtool.TestSpecList{}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(ctx, &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -422,7 +425,7 @@ var _ = Describe("test spec", func() {
 			When("returns list ", func() {
 				BeforeEach(func() {
 					c = testtool.TestSpecCountableList{}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(ctx, &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

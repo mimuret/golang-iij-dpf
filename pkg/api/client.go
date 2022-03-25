@@ -15,15 +15,15 @@ import (
 const DefaultEndpoint = "https://api.dns-platform.jp/dpf/v1"
 
 type ClientInterface interface {
-	Read(s Spec) (requestId string, err error)
-	List(s ListSpec, keywords SearchParams) (requestId string, err error)
-	ListAll(s CountableListSpec, keywords SearchParams) (requestId string, err error)
-	Count(s CountableListSpec, keywords SearchParams) (requestId string, err error)
-	Update(s Spec, body interface{}) (requestId string, err error)
-	Create(s Spec, body interface{}) (requestId string, err error)
-	Apply(s Spec, body interface{}) (requestId string, err error)
-	Delete(s Spec) (requestId string, err error)
-	Cancel(s Spec) (requestId string, err error)
+	Read(ctx context.Context, s Spec) (requestId string, err error)
+	List(ctx context.Context, s ListSpec, keywords SearchParams) (requestId string, err error)
+	ListAll(ctx context.Context, s CountableListSpec, keywords SearchParams) (requestId string, err error)
+	Count(ctx context.Context, s CountableListSpec, keywords SearchParams) (requestId string, err error)
+	Update(ctx context.Context, s Spec, body interface{}) (requestId string, err error)
+	Create(ctx context.Context, s Spec, body interface{}) (requestId string, err error)
+	Apply(ctx context.Context, s Spec, body interface{}) (requestId string, err error)
+	Delete(ctx context.Context, s Spec) (requestId string, err error)
+	Cancel(ctx context.Context, s Spec) (requestId string, err error)
 	WatchRead(ctx context.Context, interval time.Duration, s Spec) error
 	WatchList(ctx context.Context, interval time.Duration, s ListSpec, keyword SearchParams) error
 	WatchListAll(ctx context.Context, interval time.Duration, s CountableListSpec, keyword SearchParams) error
@@ -62,7 +62,7 @@ func NewClient(token string, endpoint string, logger Logger) *Client {
 	return &Client{Endpoint: endpoint, Token: token, logger: logger, Client: http.DefaultClient}
 }
 
-func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchParams) (requestId string, err error) {
+func (c *Client) Do(ctx context.Context, spec Spec, action Action, body interface{}, params SearchParams) (requestId string, err error) {
 	var (
 		ok            bool
 		r             io.Reader
@@ -127,7 +127,7 @@ func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchPar
 	req.Header.Add("Content-Type", "application/json")
 
 	// request
-	resp, err := c.Client.Do(req)
+	resp, err := c.Client.Do(req.WithContext(ctx))
 	if err != nil {
 		return "", fmt.Errorf("failed to get http response: %w", err)
 	}
@@ -199,16 +199,16 @@ func (c *Client) Do(spec Spec, action Action, body interface{}, params SearchPar
 	return rawResponse.RequestId, nil
 }
 
-func (c *Client) Read(s Spec) (requestId string, err error) {
-	return c.Do(s, ActionRead, nil, nil)
+func (c *Client) Read(ctx context.Context, s Spec) (requestId string, err error) {
+	return c.Do(ctx, s, ActionRead, nil, nil)
 }
 
-func (c *Client) List(s ListSpec, keywords SearchParams) (requestId string, err error) {
-	return c.Do(s, ActionList, nil, keywords)
+func (c *Client) List(ctx context.Context, s ListSpec, keywords SearchParams) (requestId string, err error) {
+	return c.Do(ctx, s, ActionList, nil, keywords)
 }
 
-func (c *Client) ListAll(s CountableListSpec, keywords SearchParams) (requestId string, err error) {
-	req, err := c.Count(s, keywords)
+func (c *Client) ListAll(ctx context.Context, s CountableListSpec, keywords SearchParams) (requestId string, err error) {
+	req, err := c.Count(ctx, s, keywords)
 	if err != nil {
 		return req, err
 	}
@@ -225,7 +225,7 @@ func (c *Client) ListAll(s CountableListSpec, keywords SearchParams) (requestId 
 		list := cpObj.DeepCopyObject()
 		cList := list.(ListSpec)
 		keywords.SetOffset(offset)
-		req, err = c.List(cList, keywords)
+		req, err = c.List(ctx, cList, keywords)
 		if err != nil {
 			return req, err
 		}
@@ -236,37 +236,37 @@ func (c *Client) ListAll(s CountableListSpec, keywords SearchParams) (requestId 
 	return req, nil
 }
 
-func (c *Client) Count(s CountableListSpec, keywords SearchParams) (requestId string, err error) {
-	return c.Do(s, ActionCount, nil, keywords)
+func (c *Client) Count(ctx context.Context, s CountableListSpec, keywords SearchParams) (requestId string, err error) {
+	return c.Do(ctx, s, ActionCount, nil, keywords)
 }
 
-func (c *Client) Update(s Spec, body interface{}) (requestId string, err error) {
+func (c *Client) Update(ctx context.Context, s Spec, body interface{}) (requestId string, err error) {
 	if body == nil {
 		body = s
 	}
-	return c.Do(s, ActionUpdate, body, nil)
+	return c.Do(ctx, s, ActionUpdate, body, nil)
 }
 
-func (c *Client) Create(s Spec, body interface{}) (requestId string, err error) {
+func (c *Client) Create(ctx context.Context, s Spec, body interface{}) (requestId string, err error) {
 	if body == nil {
 		body = s
 	}
-	return c.Do(s, ActionCreate, body, nil)
+	return c.Do(ctx, s, ActionCreate, body, nil)
 }
 
-func (c *Client) Apply(s Spec, body interface{}) (requestId string, err error) {
+func (c *Client) Apply(ctx context.Context, s Spec, body interface{}) (requestId string, err error) {
 	if body == nil {
 		body = s
 	}
-	return c.Do(s, ActionApply, body, nil)
+	return c.Do(ctx, s, ActionApply, body, nil)
 }
 
-func (c *Client) Delete(s Spec) (requestId string, err error) {
-	return c.Do(s, ActionDelete, nil, nil)
+func (c *Client) Delete(ctx context.Context, s Spec) (requestId string, err error) {
+	return c.Do(ctx, s, ActionDelete, nil, nil)
 }
 
-func (c *Client) Cancel(s Spec) (requestId string, err error) {
-	return c.Do(s, ActionCancel, nil, nil)
+func (c *Client) Cancel(ctx context.Context, s Spec) (requestId string, err error) {
+	return c.Do(ctx, s, ActionCancel, nil, nil)
 }
 
 func (c *Client) watch(ctx context.Context, interval time.Duration, f func() (keep bool, err error)) error {
@@ -300,7 +300,7 @@ func (c *Client) WatchRead(ctx context.Context, interval time.Duration, s Spec) 
 	obj := s.DeepCopyObject()
 	org := obj.(Spec)
 	return c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.Read(s)
+		_, err := c.Read(ctx, s)
 		if err != nil {
 			return true, err
 		}
@@ -318,7 +318,7 @@ func (c *Client) WatchList(ctx context.Context, interval time.Duration, s ListSp
 	obj := s.DeepCopyObject()
 	org := obj.(ListSpec)
 	return c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.List(s, keyword)
+		_, err := c.List(ctx, s, keyword)
 		if err != nil {
 			return true, err
 		}
@@ -337,7 +337,7 @@ func (c *Client) WatchListAll(ctx context.Context, interval time.Duration, s Cou
 	copy := obj.(CountableListSpec)
 	copy.ClearItems()
 	err := c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.ListAll(copy, keyword)
+		_, err := c.ListAll(ctx, copy, keyword)
 		if err != nil {
 			return true, err
 		}

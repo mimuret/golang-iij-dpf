@@ -1,6 +1,7 @@
 package core_test
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/jarcoal/httpmock"
@@ -33,7 +34,7 @@ var _ = Describe("delegations", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/delegations", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Apply(&s, nil)
+				reqId, err = cl.Apply(context.Background(), &s, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()

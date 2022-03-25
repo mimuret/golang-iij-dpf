@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -70,7 +71,7 @@ var _ = Describe("ds_records", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

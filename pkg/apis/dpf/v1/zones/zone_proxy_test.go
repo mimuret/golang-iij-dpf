@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/jarcoal/httpmock"
@@ -62,7 +63,7 @@ var _ = Describe("zone_proxy", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -77,7 +78,7 @@ var _ = Describe("zone_proxy", func() {
 							ZoneId: "m2",
 						},
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -100,7 +101,7 @@ var _ = Describe("zone_proxy", func() {
 			})
 			When("enable", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s1, nil)
+					reqId, err = cl.Update(context.Background(), &s1, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -114,7 +115,7 @@ var _ = Describe("zone_proxy", func() {
 			})
 			When("disabled", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s2, nil)
+					reqId, err = cl.Update(context.Background(), &s2, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())

@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 
@@ -119,7 +120,7 @@ var _ = Describe("records", func() {
 						},
 						Id: "r1",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -135,7 +136,7 @@ var _ = Describe("records", func() {
 						},
 						Id: "r2",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -169,7 +170,7 @@ var _ = Describe("records", func() {
 						},
 						Description: "MX SERVER",
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(context.Background(), &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -203,7 +204,7 @@ var _ = Describe("records", func() {
 			})
 			When("A record", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s1, nil)
+					reqId, err = cl.Update(context.Background(), &s1, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -226,7 +227,7 @@ var _ = Describe("records", func() {
 			})
 			When("AAAA record", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s2, nil)
+					reqId, err = cl.Update(context.Background(), &s2, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -262,7 +263,7 @@ var _ = Describe("records", func() {
 			})
 			When("remove A", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s1)
+					reqId, err = cl.Delete(context.Background(), &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -271,7 +272,7 @@ var _ = Describe("records", func() {
 			})
 			When("remove AAAA", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s2)
+					reqId, err = cl.Delete(context.Background(), &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -293,7 +294,7 @@ var _ = Describe("records", func() {
 			})
 			When("cancel edit(A)", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Cancel(&s1)
+					reqId, err = cl.Cancel(context.Background(), &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -302,7 +303,7 @@ var _ = Describe("records", func() {
 			})
 			When("cancel edit(AAAA)", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Cancel(&s2)
+					reqId, err = cl.Cancel(context.Background(), &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -450,7 +451,7 @@ var _ = Describe("records", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -585,7 +586,7 @@ var _ = Describe("records", func() {
 							ZoneId: "m1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

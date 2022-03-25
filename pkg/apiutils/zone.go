@@ -1,6 +1,7 @@
 package apiutils
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/miekg/dns"
@@ -23,7 +24,7 @@ func GetZoneFromZonename(cl api.ClientInterface, zonename string) (*core.Zone, e
 		Name: api.KeywordsString{zonename},
 	}
 	zoneList := &core.ZoneList{}
-	if _, err := cl.ListAll(zoneList, keywords); err != nil {
+	if _, err := cl.ListAll(context.Background(), zoneList, keywords); err != nil {
 		return nil, fmt.Errorf("failed to search zone: %w", err)
 	}
 	for _, zone := range zoneList.Items {
@@ -52,7 +53,7 @@ func GetRecordFromZoneId(cl api.ClientInterface, zoneId string, recordName strin
 			ZoneId: zoneId,
 		},
 	}
-	if _, err := cl.ListAll(currentList, keywords); err != nil {
+	if _, err := cl.ListAll(context.Background(), currentList, keywords); err != nil {
 		return nil, fmt.Errorf("failed to search records: %w", err)
 	}
 	for _, record := range currentList.Items {

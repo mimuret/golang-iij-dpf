@@ -1,6 +1,7 @@
 package core_test
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 
@@ -91,7 +92,7 @@ var _ = Describe("zones", func() {
 					c = core.Zone{
 						Id: "m1",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -104,7 +105,7 @@ var _ = Describe("zones", func() {
 					c = core.Zone{
 						Id: "m2",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(context.Background(), &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -119,7 +120,7 @@ var _ = Describe("zones", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Update(&s1, nil)
+				reqId, err = cl.Update(context.Background(), &s1, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -236,7 +237,7 @@ var _ = Describe("zones", func() {
 			When("returns list ", func() {
 				BeforeEach(func() {
 					c = core.ZoneList{}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

@@ -1,6 +1,7 @@
 package zones_test
 
 import (
+	"context"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -34,7 +35,7 @@ var _ = Describe("dnssec/ksk_rollover", func() {
 			)
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/dnssec/ksk_rollover", httpmock.NewBytesResponder(202, bs1))
-				reqId, err = cl.Apply(&s1, nil)
+				reqId, err = cl.Apply(context.Background(), &s1, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()

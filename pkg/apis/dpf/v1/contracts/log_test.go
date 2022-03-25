@@ -1,6 +1,7 @@
 package contracts_test
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -95,7 +96,7 @@ var _ = Describe("logs", func() {
 							ContractId: "f1",
 						},
 					}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(context.Background(), &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())

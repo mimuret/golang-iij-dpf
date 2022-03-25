@@ -19,7 +19,7 @@ func WaitJob(ctx context.Context, c api.ClientInterface, jobId string, interval 
 	job := &core.Job{
 		RequestId: jobId,
 	}
-	if _, err := c.Read(job); err != nil {
+	if _, err := c.Read(ctx, job); err != nil {
 		return nil, fmt.Errorf("failed to read Job: %w", err)
 	}
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
