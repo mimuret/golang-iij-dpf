@@ -745,6 +745,8 @@ var _ = Describe("records", func() {
 			{zones.TypeTXT, "TXT", dns.TypeTXT},
 			{zones.TypeTLSA, "TLSA", dns.TypeTLSA},
 			{zones.TypePTR, "PTR", dns.TypePTR},
+			{zones.TypeSVCB, "SVCB", dns.TypeSVCB},
+			{zones.TypeHTTPS, "HTTPS", dns.TypeHTTPS},
 			{zones.TypeANAME, "ANAME", 65280},
 		}
 		Context("String", func() {

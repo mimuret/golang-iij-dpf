@@ -52,6 +52,8 @@ const (
 	TypeTXT   Type = "TXT"
 	TypeTLSA  Type = "TLSA"
 	TypePTR   Type = "PTR"
+	TypeSVCB  Type = "SVCB"
+	TypeHTTPS Type = "HTTPS"
 
 	TypeANAME Type = "ANAME"
 )
