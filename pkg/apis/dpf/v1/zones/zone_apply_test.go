@@ -31,9 +31,7 @@ var _ = Describe("zones", func() {
 	})
 	Describe("ZoneApply", func() {
 		Context("Apply", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/changes", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Apply(context.Background(), &s, nil)
@@ -52,9 +50,7 @@ var _ = Describe("zones", func() {
 			})
 		})
 		Context("Cancel", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/zones/m1/changes", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Cancel(context.Background(), &s)

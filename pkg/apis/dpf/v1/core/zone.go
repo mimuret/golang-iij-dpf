@@ -35,6 +35,7 @@ func (c *Zone) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *Zone) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.Id)
 }
@@ -96,5 +97,5 @@ type ZoneListSearchKeywords struct {
 func (s *ZoneListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&Zone{}, &ZoneList{})
+	register(&Zone{}, &ZoneList{})
 }

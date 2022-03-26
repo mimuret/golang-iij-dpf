@@ -24,10 +24,11 @@ func (c *HistoryText) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *HistoryText) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId, &c.Id)
 }
 
 func init() {
-	Register.Add(&HistoryText{})
+	register(&HistoryText{})
 }

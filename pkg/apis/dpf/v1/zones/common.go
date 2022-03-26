@@ -9,10 +9,11 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/schema"
 )
 
-var (
-	groupName = "zones.api.dns-platform.jp/v1"
-	Register  = schema.NewRegister(groupName)
-)
+const groupName = "zones.api.dns-platform.jp/v1"
+
+func register(items ...apis.Spec) {
+	schema.NewRegister(groupName).Add(items...)
+}
 
 type Spec interface {
 	apis.Spec
@@ -58,8 +59,7 @@ func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 }
 
 func GetReadPathMethodForSpec(action api.Action, s Spec) (string, string) {
-	switch action {
-	case api.ActionRead:
+	if action == api.ActionRead {
 		return http.MethodGet, fmt.Sprintf("/zones/%s/%s", s.GetZoneId(), s.GetName())
 	}
 	return "", ""

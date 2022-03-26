@@ -7,7 +7,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
 )
 
-// for IDE
+// for IDE.
 var _ ChildSpec = &CcSecNotifiedServer{}
 
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
@@ -50,6 +50,7 @@ func (c *CcSecNotifiedServerList) Index(i int) interface{} { return c.Items[i] }
 func (c *CcSecNotifiedServerList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *CcSecNotifiedServerList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
@@ -57,5 +58,5 @@ func (c *CcSecNotifiedServerList) Init() {
 }
 
 func init() {
-	Register.Add(&CcSecNotifiedServer{}, &CcSecNotifiedServerList{})
+	register(&CcSecNotifiedServer{}, &CcSecNotifiedServerList{})
 }

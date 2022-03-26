@@ -33,9 +33,7 @@ var _ = Describe("contract_partners", func() {
 		}
 	})
 	Describe("ContractPartnerList", func() {
-		var (
-			c contracts.ContractPartnerList
-		)
+		var c contracts.ContractPartnerList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/contract_partners", httpmock.NewBytesResponder(200, []byte(`{
@@ -49,7 +47,6 @@ var _ = Describe("contract_partners", func() {
 						}
 					]
 				}`)))
-
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -126,9 +123,7 @@ var _ = Describe("contract_partners", func() {
 		})
 	})
 	Describe("ContractPartner", func() {
-		var (
-			s, copy, nilSpec *contracts.ContractPartner
-		)
+		var s, copy, nilSpec *contracts.ContractPartner
 		BeforeEach(func() {
 			s = &contracts.ContractPartner{}
 		})

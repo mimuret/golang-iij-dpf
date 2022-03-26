@@ -39,15 +39,17 @@ func (c *TsigCommonConfigList) AddItem(v interface{}) bool {
 func (c *TsigCommonConfigList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *TsigCommonConfigList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
 	}
 }
+
 func (c *TsigCommonConfigList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId, &c.Id)
 }
 
 func init() {
-	Register.Add(&TsigCommonConfigList{})
+	register(&TsigCommonConfigList{})
 }

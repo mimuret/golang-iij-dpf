@@ -8,9 +8,7 @@ import (
 
 var _ = Describe("types.count", func() {
 	Context("Count", func() {
-		var (
-			count types.Count
-		)
+		var count types.Count
 		BeforeEach(func() {
 			count.Count = 100
 		})

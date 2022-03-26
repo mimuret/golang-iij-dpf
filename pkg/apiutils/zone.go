@@ -24,7 +24,7 @@ func GetZoneFromZonename(ctx context.Context, cl api.ClientInterface, zonename s
 		Name: api.KeywordsString{zonename},
 	}
 	zoneList := &core.ZoneList{}
-	if _, err := cl.ListAll(context.Background(), zoneList, keywords); err != nil {
+	if _, err := cl.ListAll(ctx, zoneList, keywords); err != nil {
 		return nil, fmt.Errorf("failed to search zone: %w", err)
 	}
 	for _, zone := range zoneList.Items {
@@ -53,7 +53,7 @@ func GetRecordFromZoneId(ctx context.Context, cl api.ClientInterface, zoneId str
 			ZoneId: zoneId,
 		},
 	}
-	if _, err := cl.ListAll(context.Background(), currentList, keywords); err != nil {
+	if _, err := cl.ListAll(ctx, currentList, keywords); err != nil {
 		return nil, fmt.Errorf("failed to search records: %w", err)
 	}
 	for _, record := range currentList.Items {

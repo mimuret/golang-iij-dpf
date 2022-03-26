@@ -2,7 +2,6 @@ package zones
 
 import (
 	"fmt"
-
 	"strings"
 
 	"github.com/miekg/dns"
@@ -12,9 +11,7 @@ import (
 
 type RecordState int
 
-var (
-	TypeANAMECode uint16 = 65280
-)
+const TypeANAMECode uint16 = 65280
 
 const (
 	RecordStateApplied      RecordState = 0
@@ -24,16 +21,15 @@ const (
 	RecordStateBeforeUpdate RecordState = 5
 )
 
-var RecordStateToString = map[RecordState]string{
-	RecordStateApplied:      "Applied",
-	RecordStateToBeAdded:    "ToBeAdded",
-	RecordStateToBeDeleted:  "ToBeDeleted",
-	RecordStateToBeUpdate:   "ToBeUpdate",
-	RecordStateBeforeUpdate: "BeforeUpdate",
-}
-
 func (c RecordState) String() string {
-	return RecordStateToString[c]
+	recordStateToString := map[RecordState]string{
+		RecordStateApplied:      "Applied",
+		RecordStateToBeAdded:    "ToBeAdded",
+		RecordStateToBeDeleted:  "ToBeDeleted",
+		RecordStateToBeUpdate:   "ToBeUpdate",
+		RecordStateBeforeUpdate: "BeforeUpdate",
+	}
+	return recordStateToString[c]
 }
 
 type Type string
@@ -126,6 +122,7 @@ func (c *Record) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *Record) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId, &c.Id)
 }
@@ -157,9 +154,11 @@ func (c *RecordList) AddItem(v interface{}) bool {
 func (c *RecordList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *RecordList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
+
 func (c *RecordList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
@@ -193,16 +192,18 @@ func (c *CurrentRecordList) AddItem(v interface{}) bool {
 func (c *CurrentRecordList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *CurrentRecordList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
 	}
 }
+
 func (c *CurrentRecordList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {
-	Register.Add(&Record{}, &RecordList{})
-	Register.Add(&CurrentRecordList{})
+	register(&Record{}, &RecordList{})
+	register(&CurrentRecordList{})
 }

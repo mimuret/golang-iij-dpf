@@ -40,6 +40,7 @@ func (c *RecordDiffList) AddItem(v interface{}) bool {
 func (c *RecordDiffList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *RecordDiffList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
@@ -73,5 +74,5 @@ type RecordListSearchKeywords struct {
 func (s *RecordListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&RecordDiffList{})
+	register(&RecordDiffList{})
 }

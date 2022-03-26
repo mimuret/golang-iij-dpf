@@ -146,9 +146,7 @@ var _ = Describe("records", func() {
 			})
 		})
 		Context("Create", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/zones/m2/records", httpmock.NewBytesResponder(202, bs1))
 			})
@@ -391,14 +389,11 @@ var _ = Describe("records", func() {
 				When("action is other", func() {
 					testtool.TestGetPathMethod(&s1, api.ActionApply, "", "")
 				})
-
 			})
 		})
 	})
 	Describe("RecordList", func() {
-		var (
-			c zones.RecordList
-		)
+		var c zones.RecordList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/records", httpmock.NewBytesResponder(200, []byte(`{
@@ -658,65 +653,63 @@ var _ = Describe("records", func() {
 	})
 	Describe("RecordListSearchKeywords", func() {
 		Context("GetValues", func() {
-			var (
-				testcase = []struct {
-					keyword zones.RecordListSearchKeywords
-					values  url.Values
-				}{
-					{
-						zones.RecordListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeAND,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-						},
-						url.Values{
-							"type":   []string{"AND"},
-							"offset": []string{"10"},
-							"limit":  []string{"100"},
+			testcase := []struct {
+				keyword zones.RecordListSearchKeywords
+				values  url.Values
+			}{
+				{
+					zones.RecordListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeAND,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
 					},
-					{
-						zones.RecordListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeOR,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-							FullText:    api.KeywordsString{"hogehoge", "🐰"},
-							Name:        api.KeywordsString{"example.jp.", "128/0.0.168.192.in-addr.arpa."},
-							TTL:         []int32{300, 2147483647},
-							RRType:      zones.KeywordsType{"A", "CNAME", "HTTPS"},
-							RData:       api.KeywordsString{"192.168.0.1", "\"hogehoge\""},
-							Description: api.KeywordsString{"🐇", "🍺"},
-							Operator:    api.KeywordsString{"rabbit@example.jp", "SA0000000"},
+					url.Values{
+						"type":   []string{"AND"},
+						"offset": []string{"10"},
+						"limit":  []string{"100"},
+					},
+				},
+				{
+					zones.RecordListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeOR,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
-						/*
-							_keywords_full_text[]
-							_keywords_name[]
-							_keywords_ttl[]
-							_keywords_rrtype[]
-							_keywords_rdata[]
-							_keywords_description[]
-							_keywords_operator[]
+						FullText:    api.KeywordsString{"hogehoge", "🐰"},
+						Name:        api.KeywordsString{"example.jp.", "128/0.0.168.192.in-addr.arpa."},
+						TTL:         []int32{300, 2147483647},
+						RRType:      zones.KeywordsType{"A", "CNAME", "HTTPS"},
+						RData:       api.KeywordsString{"192.168.0.1", "\"hogehoge\""},
+						Description: api.KeywordsString{"🐇", "🍺"},
+						Operator:    api.KeywordsString{"rabbit@example.jp", "SA0000000"},
+					},
+					/*
+						_keywords_full_text[]
+						_keywords_name[]
+						_keywords_ttl[]
+						_keywords_rrtype[]
+						_keywords_rdata[]
+						_keywords_description[]
+						_keywords_operator[]
 
-						*/
-						url.Values{
-							"type":                    []string{"OR"},
-							"offset":                  []string{"10"},
-							"limit":                   []string{"100"},
-							"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
-							"_keywords_name[]":        []string{"example.jp.", "128/0.0.168.192.in-addr.arpa."},
-							"_keywords_ttl[]":         []string{"300", "2147483647"},
-							"_keywords_rrtype[]":      []string{"A", "CNAME", "HTTPS"},
-							"_keywords_rdata[]":       []string{"192.168.0.1", "\"hogehoge\""},
-							"_keywords_description[]": []string{"🐇", "🍺"},
-							"_keywords_operator[]":    []string{"rabbit@example.jp", "SA0000000"},
-						},
+					*/
+					url.Values{
+						"type":                    []string{"OR"},
+						"offset":                  []string{"10"},
+						"limit":                   []string{"100"},
+						"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
+						"_keywords_name[]":        []string{"example.jp.", "128/0.0.168.192.in-addr.arpa."},
+						"_keywords_ttl[]":         []string{"300", "2147483647"},
+						"_keywords_rrtype[]":      []string{"A", "CNAME", "HTTPS"},
+						"_keywords_rdata[]":       []string{"192.168.0.1", "\"hogehoge\""},
+						"_keywords_description[]": []string{"🐇", "🍺"},
+						"_keywords_operator[]":    []string{"rabbit@example.jp", "SA0000000"},
 					},
-				}
-			)
+				},
+			}
 			It("can convert url.Value", func() {
 				for _, tc := range testcase {
 					s, err := tc.keyword.GetValues()
@@ -727,7 +720,7 @@ var _ = Describe("records", func() {
 		})
 	})
 	Context("Type", func() {
-		var testcase = []struct {
+		testcase := []struct {
 			Type zones.Type
 			Str  string
 			Code uint16

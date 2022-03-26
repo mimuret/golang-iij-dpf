@@ -49,6 +49,7 @@ func (c *CcSecTransferAclList) Index(i int) interface{} { return c.Items[i] }
 func (c *CcSecTransferAclList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *CcSecTransferAclList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
@@ -56,5 +57,5 @@ func (c *CcSecTransferAclList) Init() {
 }
 
 func init() {
-	Register.Add(&CcSecTransferAcl{}, &CcSecTransferAclList{})
+	register(&CcSecTransferAcl{}, &CcSecTransferAclList{})
 }

@@ -29,7 +29,6 @@ var _ = Describe("logs", func() {
 		Expect(err).To((Succeed()))
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Log{
-
 			Time:      atTime,
 			LogType:   "service",
 			Operator:  "user1",
@@ -54,9 +53,7 @@ var _ = Describe("logs", func() {
 		}
 	})
 	Describe("LogList", func() {
-		var (
-			c zones.LogList
-		)
+		var c zones.LogList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/logs", httpmock.NewBytesResponder(200, []byte(`{

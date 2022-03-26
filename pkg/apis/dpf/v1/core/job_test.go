@@ -57,7 +57,6 @@ var _ = Describe("jobs", func() {
 					"error_type": "fail",
 					"error_message": "error message"
 				}`)))
-
 			})
 			AfterEach(func() {
 				httpmock.Reset()

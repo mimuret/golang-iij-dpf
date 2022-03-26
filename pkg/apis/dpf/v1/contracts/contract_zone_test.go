@@ -55,9 +55,7 @@ var _ = Describe("contract_zones", func() {
 		}
 	})
 	Describe("ContractZoneList", func() {
-		var (
-			c contracts.ContractZoneList
-		)
+		var c contracts.ContractZoneList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/zones", httpmock.NewBytesResponder(200, []byte(`{

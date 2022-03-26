@@ -115,9 +115,7 @@ var _ = Describe("zones", func() {
 			})
 		})
 		Context("Update", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Update(context.Background(), &s1, nil)
@@ -192,9 +190,7 @@ var _ = Describe("zones", func() {
 		})
 	})
 	Describe("ZoneList", func() {
-		var (
-			c core.ZoneList
-		)
+		var c core.ZoneList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones", httpmock.NewBytesResponder(200, []byte(`{
@@ -280,70 +276,68 @@ var _ = Describe("zones", func() {
 	})
 	Describe("ZoneListSearchKeywords", func() {
 		Context("GetValues", func() {
-			var (
-				testcase = []struct {
-					keyword core.ZoneListSearchKeywords
-					values  url.Values
-				}{
-					{
-						core.ZoneListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeAND,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-						},
-						url.Values{
-							"type":   []string{"AND"},
-							"offset": []string{"10"},
-							"limit":  []string{"100"},
+			testcase := []struct {
+				keyword core.ZoneListSearchKeywords
+				values  url.Values
+			}{
+				{
+					core.ZoneListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeAND,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
 					},
-					{
-						core.ZoneListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeOR,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-							FullText:         api.KeywordsString{"hogehoge", "🐰"},
-							ServiceCode:      api.KeywordsString{"mxxxxxx", "mxxxxxx1"},
-							Name:             api.KeywordsString{"example.jp", "example.net"},
-							Network:          api.KeywordsString{"192.168.0.0/24"},
-							State:            api.KeywordsState{types.StateBeforeStart, types.StateRunning},
-							Favorite:         api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
-							Description:      api.KeywordsString{"あああ", "🍺"},
-							CommonConfigId:   api.KeywordsId{100, 200},
-							ZoneProxyEnabled: api.KeywordsBoolean{types.Enabled, types.Disabled},
-						},
-						/*
-							_keywords_full_text[]
-							_keywords_service_code[]
-							_keywords_name[]
-							_keywords_network[]
-							_keywords_state[]
-							_keywords_favorite[]
-							_keywords_description[]
-							_keywords_common_config_id[]
-							_keywords_zone_proxy_enabled[]
-						*/
-						url.Values{
-							"type":                           []string{"OR"},
-							"offset":                         []string{"10"},
-							"limit":                          []string{"100"},
-							"_keywords_full_text[]":          []string{"hogehoge", "🐰"},
-							"_keywords_service_code[]":       []string{"mxxxxxx", "mxxxxxx1"},
-							"_keywords_name[]":               []string{"example.jp", "example.net"},
-							"_keywords_network[]":            []string{"192.168.0.0/24"},
-							"_keywords_state[]":              []string{"1", "2"},
-							"_keywords_favorite[]":           []string{"1", "2"},
-							"_keywords_description[]":        []string{"あああ", "🍺"},
-							"_keywords_common_config_id[]":   []string{"100", "200"},
-							"_keywords_zone_proxy_enabled[]": []string{"1", "0"},
-						},
+					url.Values{
+						"type":   []string{"AND"},
+						"offset": []string{"10"},
+						"limit":  []string{"100"},
 					},
-				}
-			)
+				},
+				{
+					core.ZoneListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeOR,
+							Offset: int32(10),
+							Limit:  int32(100),
+						},
+						FullText:         api.KeywordsString{"hogehoge", "🐰"},
+						ServiceCode:      api.KeywordsString{"mxxxxxx", "mxxxxxx1"},
+						Name:             api.KeywordsString{"example.jp", "example.net"},
+						Network:          api.KeywordsString{"192.168.0.0/24"},
+						State:            api.KeywordsState{types.StateBeforeStart, types.StateRunning},
+						Favorite:         api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
+						Description:      api.KeywordsString{"あああ", "🍺"},
+						CommonConfigId:   api.KeywordsId{100, 200},
+						ZoneProxyEnabled: api.KeywordsBoolean{types.Enabled, types.Disabled},
+					},
+					/*
+						_keywords_full_text[]
+						_keywords_service_code[]
+						_keywords_name[]
+						_keywords_network[]
+						_keywords_state[]
+						_keywords_favorite[]
+						_keywords_description[]
+						_keywords_common_config_id[]
+						_keywords_zone_proxy_enabled[]
+					*/
+					url.Values{
+						"type":                           []string{"OR"},
+						"offset":                         []string{"10"},
+						"limit":                          []string{"100"},
+						"_keywords_full_text[]":          []string{"hogehoge", "🐰"},
+						"_keywords_service_code[]":       []string{"mxxxxxx", "mxxxxxx1"},
+						"_keywords_name[]":               []string{"example.jp", "example.net"},
+						"_keywords_network[]":            []string{"192.168.0.0/24"},
+						"_keywords_state[]":              []string{"1", "2"},
+						"_keywords_favorite[]":           []string{"1", "2"},
+						"_keywords_description[]":        []string{"あああ", "🍺"},
+						"_keywords_common_config_id[]":   []string{"100", "200"},
+						"_keywords_zone_proxy_enabled[]": []string{"1", "0"},
+					},
+				},
+			}
 			It("can convert url.Value", func() {
 				for _, tc := range testcase {
 					s, err := tc.keyword.GetValues()

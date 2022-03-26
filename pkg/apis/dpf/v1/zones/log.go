@@ -39,5 +39,5 @@ func (c *LogList) SetPathParams(args ...interface{}) error {
 }
 
 func init() {
-	Register.Add(&LogList{})
+	register(&LogList{})
 }

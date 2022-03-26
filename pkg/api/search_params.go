@@ -88,7 +88,7 @@ func (k *CommonSearchParams) SetLimit(limit int32) { k.Limit = limit }
 // +k8s:deepcopy-gen=false
 type SearchType string
 
-var (
+const (
 	SearchTypeAND SearchType = "AND"
 	SearchTypeOR  SearchType = "OR"
 )
@@ -128,7 +128,7 @@ type SearchDate time.Time
 // +k8s:deepcopy-gen=false
 type SearchOrder string
 
-var (
+const (
 	SearchOrderASC  SearchOrder = "ASC"
 	SearchOrderDESC SearchOrder = "DESC"
 )

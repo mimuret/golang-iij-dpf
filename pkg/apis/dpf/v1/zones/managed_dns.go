@@ -28,5 +28,5 @@ func (c *ManagedDnsList) SetPathParams(args ...interface{}) error {
 }
 
 func init() {
-	Register.Add(&ManagedDnsList{})
+	register(&ManagedDnsList{})
 }

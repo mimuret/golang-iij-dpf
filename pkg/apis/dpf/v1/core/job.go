@@ -38,16 +38,16 @@ func (c *Job) GetError() error {
 
 func (c *Job) GetName() string { return "jobs" }
 func (c *Job) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionRead:
+	if action == api.ActionRead {
 		return action.ToMethod(), fmt.Sprintf("/jobs/%s", c.RequestId)
 	}
 	return "", ""
 }
+
 func (c *Job) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.RequestId)
 }
 
 func init() {
-	Register.Add(&Job{})
+	register(&Job{})
 }

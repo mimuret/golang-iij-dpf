@@ -56,9 +56,7 @@ var _ = Describe("delegations", func() {
 		})
 	})
 	Describe("DelegationList", func() {
-		var (
-			c core.DelegationList
-		)
+		var c core.DelegationList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/delegations", httpmock.NewBytesResponder(200, []byte(`{
@@ -138,55 +136,53 @@ var _ = Describe("delegations", func() {
 	})
 	Describe("DelegationListSearchKeywords", func() {
 		Context("GetValues", func() {
-			var (
-				testcase = []struct {
-					keyword core.DelegationListSearchKeywords
-					values  url.Values
-				}{
-					{
-						core.DelegationListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeAND,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-						},
-						url.Values{
-							"type":   []string{"AND"},
-							"offset": []string{"10"},
-							"limit":  []string{"100"},
+			testcase := []struct {
+				keyword core.DelegationListSearchKeywords
+				values  url.Values
+			}{
+				{
+					core.DelegationListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeAND,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
 					},
-					{
-						core.DelegationListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeOR,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-							FullText:    api.KeywordsString{"hogehoge", "🐰"},
-							ServiceCode: api.KeywordsString{"mxxxxxx", "mxxxxxx1"},
-							Name:        api.KeywordsString{"example.jp", "example.net"},
-							Network:     api.KeywordsString{"192.168.0.0/24"},
-							Favorite:    api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
-							Description: api.KeywordsString{"あああ", "🍺"},
-							Requested:   api.KeywordsBoolean{types.Disabled, types.Enabled},
-						},
-						url.Values{
-							"type":                     []string{"OR"},
-							"offset":                   []string{"10"},
-							"limit":                    []string{"100"},
-							"_keywords_full_text[]":    []string{"hogehoge", "🐰"},
-							"_keywords_service_code[]": []string{"mxxxxxx", "mxxxxxx1"},
-							"_keywords_name[]":         []string{"example.jp", "example.net"},
-							"_keywords_network[]":      []string{"192.168.0.0/24"},
-							"_keywords_favorite[]":     []string{"1", "2"},
-							"_keywords_description[]":  []string{"あああ", "🍺"},
-							"_keywords_requested[]":    []string{"0", "1"},
-						},
+					url.Values{
+						"type":   []string{"AND"},
+						"offset": []string{"10"},
+						"limit":  []string{"100"},
 					},
-				}
-			)
+				},
+				{
+					core.DelegationListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeOR,
+							Offset: int32(10),
+							Limit:  int32(100),
+						},
+						FullText:    api.KeywordsString{"hogehoge", "🐰"},
+						ServiceCode: api.KeywordsString{"mxxxxxx", "mxxxxxx1"},
+						Name:        api.KeywordsString{"example.jp", "example.net"},
+						Network:     api.KeywordsString{"192.168.0.0/24"},
+						Favorite:    api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
+						Description: api.KeywordsString{"あああ", "🍺"},
+						Requested:   api.KeywordsBoolean{types.Disabled, types.Enabled},
+					},
+					url.Values{
+						"type":                     []string{"OR"},
+						"offset":                   []string{"10"},
+						"limit":                    []string{"100"},
+						"_keywords_full_text[]":    []string{"hogehoge", "🐰"},
+						"_keywords_service_code[]": []string{"mxxxxxx", "mxxxxxx1"},
+						"_keywords_name[]":         []string{"example.jp", "example.net"},
+						"_keywords_network[]":      []string{"192.168.0.0/24"},
+						"_keywords_favorite[]":     []string{"1", "2"},
+						"_keywords_description[]":  []string{"あああ", "🍺"},
+						"_keywords_requested[]":    []string{"0", "1"},
+					},
+				},
+			}
 			It("can convert url.Value", func() {
 				for _, tc := range testcase {
 					s, err := tc.keyword.GetValues()

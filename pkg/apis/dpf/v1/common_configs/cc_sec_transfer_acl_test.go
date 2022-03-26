@@ -307,12 +307,9 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				})
 			})
 		})
-
 	})
 	Describe("CcSecTransferAclList", func() {
-		var (
-			c common_configs.CcSecTransferAclList
-		)
+		var c common_configs.CcSecTransferAclList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_transfer_acls", httpmock.NewBytesResponder(200, []byte(`{

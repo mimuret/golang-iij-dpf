@@ -43,6 +43,7 @@ func (c *HistoryList) AddItem(v interface{}) bool {
 func (c *HistoryList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *HistoryList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
@@ -63,5 +64,5 @@ type HistoryListSearchKeywords struct {
 func (s *HistoryListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&HistoryList{})
+	register(&HistoryList{})
 }

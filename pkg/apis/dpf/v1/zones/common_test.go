@@ -8,9 +8,7 @@ import (
 
 var _ = Describe("zones", func() {
 	Context("AttributeMeta", func() {
-		var (
-			meta zones.AttributeMeta
-		)
+		var meta zones.AttributeMeta
 		BeforeEach(func() {
 			meta = zones.AttributeMeta{}
 		})

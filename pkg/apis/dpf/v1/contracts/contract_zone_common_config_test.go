@@ -34,9 +34,7 @@ var _ = Describe("zones/common_configs", func() {
 	})
 	Describe("CommonConfigDefault", func() {
 		Context("Apply", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/contracts/f1/zones/common_configs", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Apply(context.Background(), &s1, nil)

@@ -18,16 +18,16 @@ type DnssecKskRollover struct {
 
 func (c *DnssecKskRollover) GetName() string { return "dnssec/ksk_rollover" }
 func (c *DnssecKskRollover) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
+	if action == api.ActionApply {
 		return http.MethodPatch, fmt.Sprintf("/zones/%s/dnssec/ksk_rollover", c.GetZoneId())
 	}
 	return "", ""
 }
+
 func (c *DnssecKskRollover) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {
-	Register.Add(&DnssecKskRollover{})
+	register(&DnssecKskRollover{})
 }

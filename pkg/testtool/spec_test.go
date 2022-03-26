@@ -101,9 +101,7 @@ var _ = Describe("test spec", func() {
 			})
 		})
 		Context("Create", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/tests", httpmock.NewBytesResponder(202, bs1))
 			})
@@ -340,9 +338,7 @@ var _ = Describe("test spec", func() {
 		})
 	})
 	Describe("TestSpecList", func() {
-		var (
-			c testtool.TestSpecList
-		)
+		var c testtool.TestSpecList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(200, []byte(`{
@@ -470,61 +466,53 @@ var _ = Describe("test spec", func() {
 		})
 	})
 	Context("TestGetPathMethod", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionCreate: {http.MethodPost, "/tests"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionCreate: {http.MethodPost, "/tests"},
+			},
+		}
 		testtool.TestGetPathMethod(s, api.ActionCreate, http.MethodPost, "/tests")
 		testtool.TestGetPathMethod(s, api.ActionList, "", "")
 	})
 	Context("TestGetPathMethodForSpec", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionCreate: {http.MethodPost, "/tests"},
-					api.ActionRead:   {http.MethodGet, "/tests/1"},
-					api.ActionUpdate: {http.MethodPatch, "/tests/1"},
-					api.ActionDelete: {http.MethodDelete, "/tests/1"},
-					api.ActionCancel: {http.MethodDelete, "/tests/cancel"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionCreate: {http.MethodPost, "/tests"},
+				api.ActionRead:   {http.MethodGet, "/tests/1"},
+				api.ActionUpdate: {http.MethodPatch, "/tests/1"},
+				api.ActionDelete: {http.MethodDelete, "/tests/1"},
+				api.ActionCancel: {http.MethodDelete, "/tests/cancel"},
+			},
+		}
 		testtool.TestGetPathMethodForSpec(s, "/tests", "/tests/1")
 	})
 	Context("TestGetPathMethodForList", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionList: {http.MethodGet, "/tests"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionList: {http.MethodGet, "/tests"},
+			},
+		}
 		testtool.TestGetPathMethodForList(s, "/tests")
 	})
 	Context("TestGetPathMethodForCountableList", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionList:  {http.MethodGet, "/tests"},
-					api.ActionCount: {http.MethodGet, "/tests/count"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionList:  {http.MethodGet, "/tests"},
+				api.ActionCount: {http.MethodGet, "/tests/count"},
+			},
+		}
 		testtool.TestGetPathMethodForCountableList(s, "/tests")
 	})
 })

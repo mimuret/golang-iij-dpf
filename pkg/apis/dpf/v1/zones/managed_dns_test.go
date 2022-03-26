@@ -44,7 +44,6 @@ var _ = Describe("managed_dns_servers", func() {
 						"ns1.example.com."
 					]
 				}`)))
-
 			})
 			AfterEach(func() {
 				httpmock.Reset()

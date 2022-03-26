@@ -26,10 +26,11 @@ func (c *ZoneApply) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *ZoneApply) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.AttributeMeta.ZoneId)
 }
 
 func init() {
-	Register.Add(&ZoneApply{})
+	register(&ZoneApply{})
 }

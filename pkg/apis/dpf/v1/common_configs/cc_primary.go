@@ -8,7 +8,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
 )
 
-// for IDE
+// for IDE.
 var _ ChildSpec = &CcPrimary{}
 
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
@@ -31,7 +31,7 @@ func (c *CcPrimary) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
 
-// for IDE
+// for IDE.
 var _ ListSpec = &CcPrimaryList{}
 
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
@@ -43,6 +43,7 @@ type CcPrimaryList struct {
 func (c *CcPrimaryList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.CommonConfigId)
 }
+
 func (c *CcPrimaryList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
@@ -58,5 +59,5 @@ func (c *CcPrimaryList) Init() {
 }
 
 func init() {
-	Register.Add(&CcPrimary{}, &CcPrimaryList{})
+	register(&CcPrimary{}, &CcPrimaryList{})
 }

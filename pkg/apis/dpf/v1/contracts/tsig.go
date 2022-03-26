@@ -16,12 +16,11 @@ const (
 	TsigAlgorithmHMACSHA256 TsigAlgorithm = 0
 )
 
-var TsigAlgorithmToString = map[TsigAlgorithm]string{
-	TsigAlgorithmHMACSHA256: "HMAC-SHA256",
-}
-
 func (c TsigAlgorithm) String() string {
-	return TsigAlgorithmToString[c]
+	tsigAlgorithmToString := map[TsigAlgorithm]string{
+		TsigAlgorithmHMACSHA256: "HMAC-SHA256",
+	}
+	return tsigAlgorithmToString[c]
 }
 
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
@@ -40,6 +39,7 @@ func (c *Tsig) SetId(id int64)  { c.Id = id }
 func (c *Tsig) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
+
 func (c *Tsig) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId, &c.Id)
 }
@@ -70,11 +70,13 @@ func (c *TsigList) AddItem(v interface{}) bool {
 func (c *TsigList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *TsigList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
 	}
 }
+
 func (c *TsigList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId)
 }
@@ -92,5 +94,5 @@ type TsigListSearchKeywords struct {
 func (s *TsigListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&Tsig{}, &TsigList{})
+	register(&Tsig{}, &TsigList{})
 }

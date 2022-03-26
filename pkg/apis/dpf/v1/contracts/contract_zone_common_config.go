@@ -18,16 +18,16 @@ type ContractZoneCommonConfig struct {
 
 func (c *ContractZoneCommonConfig) GetName() string { return "zones/common_configs" }
 func (c *ContractZoneCommonConfig) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
+	if action == api.ActionApply {
 		return action.ToMethod(), fmt.Sprintf("/contracts/%s/zones/common_configs", c.GetContractId())
 	}
 	return "", ""
 }
+
 func (c *ContractZoneCommonConfig) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId)
 }
 
 func init() {
-	Register.Add(&ContractZoneCommonConfig{})
+	register(&ContractZoneCommonConfig{})
 }

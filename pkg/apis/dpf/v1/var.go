@@ -1,5 +1,3 @@
 package dpfv1
 
-var (
-	Version = "dpf/v1"
-)
+const Version = "dpf/v1"

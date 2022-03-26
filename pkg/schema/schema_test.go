@@ -36,6 +36,7 @@ func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (t *TestSpec) DeepCopyTestSpec() *TestSpec {
 	res := &TestSpec{}
 	*res = *t
@@ -69,6 +70,7 @@ func (t ErrSpec) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (t ErrSpec) SetPathParams(...interface{}) error {
 	return nil
 }
@@ -79,9 +81,7 @@ func (t ErrSpec) DeepCopyObject() api.Object {
 
 var _ = Describe("Register", func() {
 	Context("Add", func() {
-		var (
-			register *schema.Register
-		)
+		var register *schema.Register
 		BeforeEach(func() {
 			schema.SchemaSet = schema.NewSchemaSet()
 			register = schema.NewRegister("test")

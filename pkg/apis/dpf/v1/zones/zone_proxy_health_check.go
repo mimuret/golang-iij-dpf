@@ -10,7 +10,7 @@ import (
 
 type ZoneProxyStatus string
 
-var (
+const (
 	ZoneProxyStatusSuccess ZoneProxyStatus = "success"
 	ZoneProxyStatusFail    ZoneProxyStatus = "fail"
 )
@@ -39,6 +39,7 @@ func (c *ZoneProxyHealthCheckList) Index(i int) interface{} { return c.Items[i] 
 func (c *ZoneProxyHealthCheckList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *ZoneProxyHealthCheckList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
@@ -46,5 +47,5 @@ func (c *ZoneProxyHealthCheckList) SetPathParams(args ...interface{}) error {
 func (c *ZoneProxyHealthCheckList) Init() {}
 
 func init() {
-	Register.Add(&ZoneProxyHealthCheckList{})
+	register(&ZoneProxyHealthCheckList{})
 }

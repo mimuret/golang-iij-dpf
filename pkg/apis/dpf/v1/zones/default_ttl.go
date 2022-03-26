@@ -15,14 +15,13 @@ const (
 	DefaultTTLStateBeforeUpdate DefaultTTLState = 5
 )
 
-var DefaultTTLStateToString = map[DefaultTTLState]string{
-	DefaultTTLStateApplied:      "Applied",
-	DefaultTTLStateToBeUpdate:   "ToBeUpdate",
-	DefaultTTLStateBeforeUpdate: "BeforeUpdate",
-}
-
 func (c DefaultTTLState) String() string {
-	return DefaultTTLStateToString[c]
+	defaultTTLStateToString := map[DefaultTTLState]string{
+		DefaultTTLStateApplied:      "Applied",
+		DefaultTTLStateToBeUpdate:   "ToBeUpdate",
+		DefaultTTLStateBeforeUpdate: "BeforeUpdate",
+	}
+	return defaultTTLStateToString[c]
 }
 
 var _ Spec = &DefaultTTL{}
@@ -46,6 +45,7 @@ func (c *DefaultTTL) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *DefaultTTL) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
@@ -72,6 +72,7 @@ func (c *DefaultTTLDiffList) Index(i int) interface{} { return c.Items[i] }
 func (c *DefaultTTLDiffList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *DefaultTTLDiffList) Init() {
 	for i := range c.Items {
 		if c.Items[i].New != nil {
@@ -82,11 +83,12 @@ func (c *DefaultTTLDiffList) Init() {
 		}
 	}
 }
+
 func (c *DefaultTTLDiffList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {
-	Register.Add(&DefaultTTL{})
-	Register.Add(&DefaultTTLDiffList{})
+	register(&DefaultTTL{})
+	register(&DefaultTTLDiffList{})
 }

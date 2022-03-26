@@ -317,9 +317,7 @@ var _ = Describe("cc_primaries", func() {
 		})
 	})
 	Describe("CCPrimaryList", func() {
-		var (
-			c common_configs.CcPrimaryList
-		)
+		var c common_configs.CcPrimaryList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_primaries", httpmock.NewBytesResponder(200, []byte(`{

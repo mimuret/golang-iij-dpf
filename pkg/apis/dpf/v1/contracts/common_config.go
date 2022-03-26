@@ -29,6 +29,7 @@ func (c *CommonConfig) SetId(id int64)  { c.Id = id }
 func (c *CommonConfig) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
+
 func (c *CommonConfig) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId, &c.Id)
 }
@@ -59,11 +60,13 @@ func (c *CommonConfigList) AddItem(v interface{}) bool {
 func (c *CommonConfigList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *CommonConfigList) Init() {
 	for i := range c.Items {
 		c.Items[i].AttributeMeta = c.AttributeMeta
 	}
 }
+
 func (c *CommonConfigList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId)
 }
@@ -81,5 +84,5 @@ type CommonConfigListSearchKeywords struct {
 func (s *CommonConfigListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&CommonConfigList{})
+	register(&CommonConfigList{})
 }

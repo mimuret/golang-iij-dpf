@@ -52,6 +52,7 @@ func (c *DelegationList) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *DelegationList) SetPathParams(args ...interface{}) error {
 	return nil
 }
@@ -75,5 +76,5 @@ type DelegationListSearchKeywords struct {
 func (s *DelegationListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&DelegationList{})
+	register(&DelegationList{})
 }

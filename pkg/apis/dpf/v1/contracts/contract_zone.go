@@ -32,6 +32,7 @@ func (c *ContractZoneList) AddItem(v interface{}) bool {
 func (c *ContractZoneList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *ContractZoneList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId)
 }
@@ -39,5 +40,5 @@ func (c *ContractZoneList) SetPathParams(args ...interface{}) error {
 func (c *ContractZoneList) Init() {}
 
 func init() {
-	Register.Add(&ContractZoneList{})
+	register(&ContractZoneList{})
 }

@@ -71,7 +71,6 @@ var _ = Describe("contract", func() {
 						"description": "contract 2"
 						}
 				}`)))
-
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -104,9 +103,7 @@ var _ = Describe("contract", func() {
 			})
 		})
 		Context("Update", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/contracts/f1", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Update(context.Background(), &s1, nil)
@@ -181,9 +178,7 @@ var _ = Describe("contract", func() {
 		})
 	})
 	Describe("CommonConfigList", func() {
-		var (
-			c core.ContractList
-		)
+		var c core.ContractList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts", httpmock.NewBytesResponder(200, []byte(`{
@@ -263,53 +258,51 @@ var _ = Describe("contract", func() {
 	})
 	Describe("ContractListSearchKeywords", func() {
 		Context("GetValues", func() {
-			var (
-				testcase = []struct {
-					keyword core.ContractListSearchKeywords
-					values  url.Values
-				}{
-					{
-						core.ContractListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeAND,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-						},
-						url.Values{
-							"type":   []string{"AND"},
-							"offset": []string{"10"},
-							"limit":  []string{"100"},
+			testcase := []struct {
+				keyword core.ContractListSearchKeywords
+				values  url.Values
+			}{
+				{
+					core.ContractListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeAND,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
 					},
-					{
-						core.ContractListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeOR,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-							FullText:    api.KeywordsString{"hogehoge", "🐰"},
-							ServiceCode: api.KeywordsString{"fxxxxxx", "fxxxxxx1"},
-							Plan:        core.KeywordsPlan{core.PlanBasic, core.PlanPremium},
-							State:       api.KeywordsState{types.StateBeforeStart, types.StateRunning},
-							Favorite:    api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
-							Description: api.KeywordsString{"あああ", "🍺"},
-						},
-						url.Values{
-							"type":                     []string{"OR"},
-							"offset":                   []string{"10"},
-							"limit":                    []string{"100"},
-							"_keywords_full_text[]":    []string{"hogehoge", "🐰"},
-							"_keywords_service_code[]": []string{"fxxxxxx", "fxxxxxx1"},
-							"_keywords_plan[]":         []string{"1", "2"},
-							"_keywords_state[]":        []string{"1", "2"},
-							"_keywords_favorite[]":     []string{"1", "2"},
-							"_keywords_description[]":  []string{"あああ", "🍺"},
-						},
+					url.Values{
+						"type":   []string{"AND"},
+						"offset": []string{"10"},
+						"limit":  []string{"100"},
 					},
-				}
-			)
+				},
+				{
+					core.ContractListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeOR,
+							Offset: int32(10),
+							Limit:  int32(100),
+						},
+						FullText:    api.KeywordsString{"hogehoge", "🐰"},
+						ServiceCode: api.KeywordsString{"fxxxxxx", "fxxxxxx1"},
+						Plan:        core.KeywordsPlan{core.PlanBasic, core.PlanPremium},
+						State:       api.KeywordsState{types.StateBeforeStart, types.StateRunning},
+						Favorite:    api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
+						Description: api.KeywordsString{"あああ", "🍺"},
+					},
+					url.Values{
+						"type":                     []string{"OR"},
+						"offset":                   []string{"10"},
+						"limit":                    []string{"100"},
+						"_keywords_full_text[]":    []string{"hogehoge", "🐰"},
+						"_keywords_service_code[]": []string{"fxxxxxx", "fxxxxxx1"},
+						"_keywords_plan[]":         []string{"1", "2"},
+						"_keywords_state[]":        []string{"1", "2"},
+						"_keywords_favorite[]":     []string{"1", "2"},
+						"_keywords_description[]":  []string{"あああ", "🍺"},
+					},
+				},
+			}
 			It("can convert url.Value", func() {
 				for _, tc := range testcase {
 					s, err := tc.keyword.GetValues()

@@ -113,9 +113,7 @@ var _ = Describe("tsigs", func() {
 			})
 		})
 		Context("Create", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/contracts/f2/tsigs", httpmock.NewBytesResponder(202, bs1))
 				s := contracts.Tsig{
@@ -142,9 +140,7 @@ var _ = Describe("tsigs", func() {
 			})
 		})
 		Context("Update", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/contracts/f1/tsigs/1", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Update(context.Background(), &s1, nil)
@@ -163,9 +159,7 @@ var _ = Describe("tsigs", func() {
 			})
 		})
 		Context("Delete", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/contracts/f1/tsigs/1", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Delete(context.Background(), &s1)
@@ -258,9 +252,7 @@ var _ = Describe("tsigs", func() {
 		})
 	})
 	Describe("TsigList", func() {
-		var (
-			c contracts.TsigList
-		)
+		var c contracts.TsigList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/tsigs", httpmock.NewBytesResponder(200, []byte(`{
@@ -371,47 +363,45 @@ var _ = Describe("tsigs", func() {
 	})
 	Describe("TsigListSearchKeywords", func() {
 		Context("GetValues", func() {
-			var (
-				testcase = []struct {
-					keyword contracts.TsigListSearchKeywords
-					values  url.Values
-				}{
-					{
-						contracts.TsigListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeAND,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-						},
-						url.Values{
-							"type":   []string{"AND"},
-							"offset": []string{"10"},
-							"limit":  []string{"100"},
+			testcase := []struct {
+				keyword contracts.TsigListSearchKeywords
+				values  url.Values
+			}{
+				{
+					contracts.TsigListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeAND,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
 					},
-					{
-						contracts.TsigListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeOR,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-							FullText:    api.KeywordsString{"hogehoge", "🐰"},
-							Name:        api.KeywordsString{"hogehogeあ🍺"},
-							Description: api.KeywordsString{"あああ", "🍺"},
-						},
-						url.Values{
-							"type":                    []string{"OR"},
-							"offset":                  []string{"10"},
-							"limit":                   []string{"100"},
-							"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
-							"_keywords_name[]":        []string{"hogehogeあ🍺"},
-							"_keywords_description[]": []string{"あああ", "🍺"},
-						},
+					url.Values{
+						"type":   []string{"AND"},
+						"offset": []string{"10"},
+						"limit":  []string{"100"},
 					},
-				}
-			)
+				},
+				{
+					contracts.TsigListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeOR,
+							Offset: int32(10),
+							Limit:  int32(100),
+						},
+						FullText:    api.KeywordsString{"hogehoge", "🐰"},
+						Name:        api.KeywordsString{"hogehogeあ🍺"},
+						Description: api.KeywordsString{"あああ", "🍺"},
+					},
+					url.Values{
+						"type":                    []string{"OR"},
+						"offset":                  []string{"10"},
+						"limit":                   []string{"100"},
+						"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
+						"_keywords_name[]":        []string{"hogehogeあ🍺"},
+						"_keywords_description[]": []string{"あああ", "🍺"},
+					},
+				},
+			}
 			It("can convert url.Value", func() {
 				for _, tc := range testcase {
 					s, err := tc.keyword.GetValues()
@@ -422,9 +412,7 @@ var _ = Describe("tsigs", func() {
 		})
 	})
 	Describe("TsigAlgorithm", func() {
-		var (
-			a contracts.TsigAlgorithm
-		)
+		var a contracts.TsigAlgorithm
 		Context("String", func() {
 			When("TsigAlgorithmHMACSHA256", func() {
 				BeforeEach(func() {

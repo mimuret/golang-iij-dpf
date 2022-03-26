@@ -55,7 +55,6 @@ var _ = Describe("tsigs/common_configs", func() {
 	Describe("TsigCommonConfigList", func() {
 		Context("List", func() {
 			BeforeEach(func() {
-
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/tsigs/1/common_configs", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "C38FBA61C657432695BC798DD96B0D9A",
 					"results": [

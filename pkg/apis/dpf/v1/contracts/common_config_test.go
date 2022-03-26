@@ -114,9 +114,7 @@ var _ = Describe("common_configs", func() {
 			})
 		})
 		Context("Create", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/contracts/f2/common_configs", httpmock.NewBytesResponder(202, bs1))
 				s := contracts.CommonConfig{
@@ -143,9 +141,7 @@ var _ = Describe("common_configs", func() {
 			})
 		})
 		Context("Update", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/contracts/f1/common_configs/1", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Update(context.Background(), &s1, nil)
@@ -165,9 +161,7 @@ var _ = Describe("common_configs", func() {
 			})
 		})
 		Context("Delete", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/contracts/f1/common_configs/1", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Delete(context.Background(), &s1)
@@ -259,9 +253,7 @@ var _ = Describe("common_configs", func() {
 		})
 	})
 	Describe("CommonConfigList", func() {
-		var (
-			c contracts.CommonConfigList
-		)
+		var c contracts.CommonConfigList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/common_configs", httpmock.NewBytesResponder(200, []byte(`{
@@ -365,47 +357,45 @@ var _ = Describe("common_configs", func() {
 	})
 	Describe("CommonConfigListSearchKeywords", func() {
 		Context("GetValues", func() {
-			var (
-				testcase = []struct {
-					keyword contracts.CommonConfigListSearchKeywords
-					values  url.Values
-				}{
-					{
-						contracts.CommonConfigListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeAND,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-						},
-						url.Values{
-							"type":   []string{"AND"},
-							"offset": []string{"10"},
-							"limit":  []string{"100"},
+			testcase := []struct {
+				keyword contracts.CommonConfigListSearchKeywords
+				values  url.Values
+			}{
+				{
+					contracts.CommonConfigListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeAND,
+							Offset: int32(10),
+							Limit:  int32(100),
 						},
 					},
-					{
-						contracts.CommonConfigListSearchKeywords{
-							CommonSearchParams: api.CommonSearchParams{
-								Type:   api.SearchTypeOR,
-								Offset: int32(10),
-								Limit:  int32(100),
-							},
-							FullText:    api.KeywordsString{"hogehoge", "🐰"},
-							Name:        api.KeywordsString{"hogehogeあ🍺"},
-							Description: api.KeywordsString{"あああ", "🍺"},
-						},
-						url.Values{
-							"type":                    []string{"OR"},
-							"offset":                  []string{"10"},
-							"limit":                   []string{"100"},
-							"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
-							"_keywords_name[]":        []string{"hogehogeあ🍺"},
-							"_keywords_description[]": []string{"あああ", "🍺"},
-						},
+					url.Values{
+						"type":   []string{"AND"},
+						"offset": []string{"10"},
+						"limit":  []string{"100"},
 					},
-				}
-			)
+				},
+				{
+					contracts.CommonConfigListSearchKeywords{
+						CommonSearchParams: api.CommonSearchParams{
+							Type:   api.SearchTypeOR,
+							Offset: int32(10),
+							Limit:  int32(100),
+						},
+						FullText:    api.KeywordsString{"hogehoge", "🐰"},
+						Name:        api.KeywordsString{"hogehogeあ🍺"},
+						Description: api.KeywordsString{"あああ", "🍺"},
+					},
+					url.Values{
+						"type":                    []string{"OR"},
+						"offset":                  []string{"10"},
+						"limit":                   []string{"100"},
+						"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
+						"_keywords_name[]":        []string{"hogehogeあ🍺"},
+						"_keywords_description[]": []string{"あああ", "🍺"},
+					},
+				},
+			}
 			It("can convert url.Value", func() {
 				for _, tc := range testcase {
 					s, err := tc.keyword.GetValues()

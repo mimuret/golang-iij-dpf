@@ -9,10 +9,11 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/schema"
 )
 
-var (
-	groupName = "contracts.api.dns-platform.jp/v1"
-	Register  = schema.NewRegister(groupName)
-)
+const groupName = "contracts.api.dns-platform.jp/v1"
+
+func register(items ...apis.Spec) {
+	schema.NewRegister(groupName).Add(items...)
+}
 
 type Spec interface {
 	api.Spec

@@ -28,6 +28,7 @@ func (c *DsRecordList) Index(i int) interface{} { return c.Items[i] }
 func (c *DsRecordList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *DsRecordList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
@@ -35,5 +36,5 @@ func (c *DsRecordList) SetPathParams(args ...interface{}) error {
 func (c *DsRecordList) Init() {}
 
 func init() {
-	Register.Add(&DsRecordList{})
+	register(&DsRecordList{})
 }

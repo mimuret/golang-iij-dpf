@@ -157,53 +157,51 @@ var _ = Describe("history text", func() {
 		})
 	})
 	Context("HistoryListSearchKeywords", func() {
-		var (
-			testcase = []struct {
-				keyword zones.HistoryListSearchKeywords
-				values  url.Values
-			}{
-				{
-					zones.HistoryListSearchKeywords{
-						CommonSearchParams: api.CommonSearchParams{
-							Type:   api.SearchTypeAND,
-							Offset: int32(10),
-							Limit:  int32(100),
-						},
-					},
-					url.Values{
-						"type":   []string{"AND"},
-						"offset": []string{"10"},
-						"limit":  []string{"100"},
+		testcase := []struct {
+			keyword zones.HistoryListSearchKeywords
+			values  url.Values
+		}{
+			{
+				zones.HistoryListSearchKeywords{
+					CommonSearchParams: api.CommonSearchParams{
+						Type:   api.SearchTypeAND,
+						Offset: int32(10),
+						Limit:  int32(100),
 					},
 				},
-				{
-					zones.HistoryListSearchKeywords{
-						CommonSearchParams: api.CommonSearchParams{
-							Type:   api.SearchTypeOR,
-							Offset: int32(10),
-							Limit:  int32(100),
-						},
-						FullText:    api.KeywordsString{"hogehoge", "🐰"},
-						Description: api.KeywordsString{"🐇", "🍺"},
-						Operator:    api.KeywordsString{"rabbit@example.jp", "SA0000000"},
+				url.Values{
+					"type":   []string{"AND"},
+					"offset": []string{"10"},
+					"limit":  []string{"100"},
+				},
+			},
+			{
+				zones.HistoryListSearchKeywords{
+					CommonSearchParams: api.CommonSearchParams{
+						Type:   api.SearchTypeOR,
+						Offset: int32(10),
+						Limit:  int32(100),
 					},
-					/*
-						_keywords_full_text[]
-						_keywords_description[]
-						_keywords_operator[]
+					FullText:    api.KeywordsString{"hogehoge", "🐰"},
+					Description: api.KeywordsString{"🐇", "🍺"},
+					Operator:    api.KeywordsString{"rabbit@example.jp", "SA0000000"},
+				},
+				/*
+					_keywords_full_text[]
+					_keywords_description[]
+					_keywords_operator[]
 
-					*/
-					url.Values{
-						"type":                    []string{"OR"},
-						"offset":                  []string{"10"},
-						"limit":                   []string{"100"},
-						"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
-						"_keywords_description[]": []string{"🐇", "🍺"},
-						"_keywords_operator[]":    []string{"rabbit@example.jp", "SA0000000"},
-					},
+				*/
+				url.Values{
+					"type":                    []string{"OR"},
+					"offset":                  []string{"10"},
+					"limit":                   []string{"100"},
+					"_keywords_full_text[]":   []string{"hogehoge", "🐰"},
+					"_keywords_description[]": []string{"🐇", "🍺"},
+					"_keywords_operator[]":    []string{"rabbit@example.jp", "SA0000000"},
 				},
-			}
-		)
+			},
+		}
 		It("can convert url.Value", func() {
 			for _, tc := range testcase {
 				s, err := tc.keyword.GetValues()
@@ -213,9 +211,7 @@ var _ = Describe("history text", func() {
 		})
 	})
 	Describe("History", func() {
-		var (
-			s, copy, nilSpec *zones.History
-		)
+		var s, copy, nilSpec *zones.History
 		BeforeEach(func() {
 			s = &zones.History{}
 		})

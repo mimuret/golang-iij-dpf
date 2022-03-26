@@ -9,9 +9,7 @@ import (
 
 var _ = Describe("response.go", func() {
 	Context("GenReqId", func() {
-		var (
-			reqId string
-		)
+		var reqId string
 		BeforeEach(func() {
 			reqId = testtool.GenReqId()
 		})

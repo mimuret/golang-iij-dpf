@@ -59,9 +59,7 @@ var _ = Describe("qps_histories", func() {
 		}
 	})
 	Describe("QpsHistoryList", func() {
-		var (
-			c contracts.QpsHistoryList
-		)
+		var c contracts.QpsHistoryList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/qps/histories", httpmock.NewBytesResponder(200, []byte(`{
@@ -173,9 +171,7 @@ var _ = Describe("qps_histories", func() {
 		})
 	})
 	Describe("QpsHistory", func() {
-		var (
-			s, copy, nilSpec *contracts.QpsHistory
-		)
+		var s, copy, nilSpec *contracts.QpsHistory
 		BeforeEach(func() {
 			s = &contracts.QpsHistory{}
 		})
@@ -200,9 +196,7 @@ var _ = Describe("qps_histories", func() {
 		})
 	})
 	Describe("QpsValue", func() {
-		var (
-			s, copy, nilSpec *contracts.QpsValue
-		)
+		var s, copy, nilSpec *contracts.QpsValue
 		BeforeEach(func() {
 			s = &contracts.QpsValue{}
 		})

@@ -10,9 +10,7 @@ import (
 
 var _ = Describe("net.go", func() {
 	Context("MustParseIPNet", func() {
-		var (
-			ipnet *types.IPNet
-		)
+		var ipnet *types.IPNet
 		When("normal", func() {
 			BeforeEach(func() {
 				ipnet = testtool.MustParseIPNet("192.168.0.0/16")

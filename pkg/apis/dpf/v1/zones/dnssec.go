@@ -18,16 +18,15 @@ const (
 	DnssecStateDisable    DnssecState = 4
 )
 
-var DnssecStateToString = map[DnssecState]string{
-	DnssecStateZoneClosed: "ZoneClosed",
-	DnssecStateEnabling:   "Enabling",
-	DnssecStateEnable:     "Enable",
-	DnssecStateDisabling:  "Disabling",
-	DnssecStateDisable:    "Disable",
-}
-
 func (c DnssecState) String() string {
-	return DnssecStateToString[c]
+	dnssecStateToString := map[DnssecState]string{
+		DnssecStateZoneClosed: "ZoneClosed",
+		DnssecStateEnabling:   "Enabling",
+		DnssecStateEnable:     "Enable",
+		DnssecStateDisabling:  "Disabling",
+		DnssecStateDisable:    "Disable",
+	}
+	return dnssecStateToString[c]
 }
 
 type DSState int
@@ -43,19 +42,18 @@ const (
 	DSStateWaitClearCacheForDelete       DSState = 7
 )
 
-var DSStateToSString = map[DSState]string{
-	DSStateClose:                         "Close",
-	DSStateBeforeRegistration:            "BeforeRegistration",
-	DSStateWaitClearCacheForRegistration: "WaitRegistration",
-	DSStateDisclose:                      "Disclose",
-	DSStateBeforeChange:                  "BeforeChange",
-	DSStateWaitClearCacheForChanged:      "WaitChange",
-	DSStateBeforeDelete:                  "BeforeDelete",
-	DSStateWaitClearCacheForDelete:       "WaitDelete",
-}
-
 func (c DSState) String() string {
-	return DSStateToSString[c]
+	dsStateToSString := map[DSState]string{
+		DSStateClose:                         "Close",
+		DSStateBeforeRegistration:            "BeforeRegistration",
+		DSStateWaitClearCacheForRegistration: "WaitRegistration",
+		DSStateDisclose:                      "Disclose",
+		DSStateBeforeChange:                  "BeforeChange",
+		DSStateWaitClearCacheForChanged:      "WaitChange",
+		DSStateBeforeDelete:                  "BeforeDelete",
+		DSStateWaitClearCacheForDelete:       "WaitDelete",
+	}
+	return dsStateToSString[c]
 }
 
 var _ Spec = &Dnssec{}
@@ -77,10 +75,11 @@ func (c *Dnssec) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *Dnssec) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ZoneId)
 }
 
 func init() {
-	Register.Add(&Dnssec{})
+	register(&Dnssec{})
 }

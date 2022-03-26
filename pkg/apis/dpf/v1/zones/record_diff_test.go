@@ -101,7 +101,6 @@ var _ = Describe("records/diffs", func() {
 	Context("RecordDiffList", func() {
 		Context("List", func() {
 			BeforeEach(func() {
-
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/records/diffs", httpmock.NewBytesResponder(200, []byte(`{
 					"request_id": "C36898E9087C4E2F85C94D146BC6FEDD",
 					"results": [
@@ -181,7 +180,6 @@ var _ = Describe("records/diffs", func() {
 						"count": 3
 					}
 				}`)))
-
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -264,9 +262,7 @@ var _ = Describe("records/diffs", func() {
 		})
 	})
 	Describe("RecordDiff", func() {
-		var (
-			s, copy, nilSpec *zones.RecordDiff
-		)
+		var s, copy, nilSpec *zones.RecordDiff
 		BeforeEach(func() {
 			s = &zones.RecordDiff{}
 		})

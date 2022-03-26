@@ -144,9 +144,7 @@ var _ = Describe("zone_proxy", func() {
 		})
 	})
 	Describe("ZoneProxyHealthCheck", func() {
-		var (
-			s, copy, nilSpec *zones.ZoneProxyHealthCheck
-		)
+		var s, copy, nilSpec *zones.ZoneProxyHealthCheck
 		BeforeEach(func() {
 			s = &zones.ZoneProxyHealthCheck{}
 		})

@@ -8,13 +8,12 @@ import (
 
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	. "github.com/mimuret/golang-iij-dpf/pkg/api"
 )
 
-var _ ClientInterface = &TestClient{}
+var _ api.ClientInterface = &TestClient{}
 
 type TestClient struct {
-	Client         ClientInterface
+	Client         api.ClientInterface
 	Transport      *httpmock.MockTransport
 	RequestHeaders map[string]http.Header
 	RequestBody    map[string]string
@@ -39,8 +38,8 @@ type ResponseSpec struct {
 	Err  *api.BadResponse
 }
 
-func NewTestClient(token, endpoint string, logger Logger) *TestClient {
-	cl := NewClient(token, endpoint, logger)
+func NewTestClient(token, endpoint string, logger api.Logger) *TestClient {
+	cl := api.NewClient(token, endpoint, logger)
 	nop := &TestClient{
 		RequestHeaders: make(map[string]http.Header),
 		RequestBody:    make(map[string]string),
@@ -71,6 +70,7 @@ func (n *TestClient) Read(ctx context.Context, s api.Spec) (requestId string, er
 	}
 	return n.ReadFunc(s)
 }
+
 func (n *TestClient) List(ctx context.Context, s api.ListSpec, keywords api.SearchParams) (requestId string, err error) {
 	if n.ListFunc == nil {
 		if n.Client != nil {
@@ -80,6 +80,7 @@ func (n *TestClient) List(ctx context.Context, s api.ListSpec, keywords api.Sear
 	}
 	return n.ListFunc(s, keywords)
 }
+
 func (n *TestClient) ListAll(ctx context.Context, s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
 	if n.ListAllFunc == nil {
 		if n.Client != nil {
@@ -89,6 +90,7 @@ func (n *TestClient) ListAll(ctx context.Context, s api.CountableListSpec, keywo
 	}
 	return n.ListAllFunc(s, keywords)
 }
+
 func (n *TestClient) Count(ctx context.Context, s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
 	if n.CountFunc == nil {
 		if n.Client != nil {
@@ -98,6 +100,7 @@ func (n *TestClient) Count(ctx context.Context, s api.CountableListSpec, keyword
 	}
 	return n.CountFunc(s, keywords)
 }
+
 func (n *TestClient) Update(ctx context.Context, s api.Spec, body interface{}) (requestId string, err error) {
 	if n.UpdateFunc == nil {
 		if n.Client != nil {
@@ -107,6 +110,7 @@ func (n *TestClient) Update(ctx context.Context, s api.Spec, body interface{}) (
 	}
 	return n.UpdateFunc(s, body)
 }
+
 func (n *TestClient) Create(ctx context.Context, s api.Spec, body interface{}) (requestId string, err error) {
 	if n.CreateFunc == nil {
 		if n.Client != nil {
@@ -116,6 +120,7 @@ func (n *TestClient) Create(ctx context.Context, s api.Spec, body interface{}) (
 	}
 	return n.CreateFunc(s, body)
 }
+
 func (n *TestClient) Apply(ctx context.Context, s api.Spec, body interface{}) (requestId string, err error) {
 	if n.ApplyFunc == nil {
 		if n.Client != nil {
@@ -125,6 +130,7 @@ func (n *TestClient) Apply(ctx context.Context, s api.Spec, body interface{}) (r
 	}
 	return n.ApplyFunc(s, body)
 }
+
 func (n *TestClient) Delete(ctx context.Context, s api.Spec) (requestId string, err error) {
 	if n.DeleteFunc == nil {
 		if n.Client != nil {
@@ -134,6 +140,7 @@ func (n *TestClient) Delete(ctx context.Context, s api.Spec) (requestId string, 
 	}
 	return n.DeleteFunc(s)
 }
+
 func (n *TestClient) Cancel(ctx context.Context, s api.Spec) (requestId string, err error) {
 	if n.CancelFunc == nil {
 		if n.Client != nil {
@@ -143,6 +150,7 @@ func (n *TestClient) Cancel(ctx context.Context, s api.Spec) (requestId string, 
 	}
 	return n.CancelFunc(s)
 }
+
 func (n *TestClient) WatchRead(ctx context.Context, interval time.Duration, s api.Spec) error {
 	if n.WatchReadFunc == nil {
 		if n.Client != nil {
@@ -152,6 +160,7 @@ func (n *TestClient) WatchRead(ctx context.Context, interval time.Duration, s ap
 	}
 	return n.WatchReadFunc(ctx, interval, s)
 }
+
 func (n *TestClient) WatchList(ctx context.Context, interval time.Duration, s api.ListSpec, keyword api.SearchParams) error {
 	if n.WatchListFunc == nil {
 		if n.Client != nil {
@@ -161,6 +170,7 @@ func (n *TestClient) WatchList(ctx context.Context, interval time.Duration, s ap
 	}
 	return n.WatchListFunc(ctx, interval, s, keyword)
 }
+
 func (n *TestClient) WatchListAll(ctx context.Context, interval time.Duration, s api.CountableListSpec, keyword api.SearchParams) error {
 	if n.WatchListAllFunc == nil {
 		if n.Client != nil {

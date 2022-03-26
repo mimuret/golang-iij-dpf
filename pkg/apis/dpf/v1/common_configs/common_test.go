@@ -8,9 +8,7 @@ import (
 
 var _ = Describe("common_configs", func() {
 	Context("AttributeMeta", func() {
-		var (
-			meta common_configs.AttributeMeta
-		)
+		var meta common_configs.AttributeMeta
 		BeforeEach(func() {
 			meta = common_configs.AttributeMeta{}
 		})

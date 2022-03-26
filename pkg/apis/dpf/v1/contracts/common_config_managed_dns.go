@@ -23,16 +23,16 @@ func (c *CommonConfigManagedDns) GetName() string {
 func (c *CommonConfigManagedDns) GetId() int64   { return c.Id }
 func (c *CommonConfigManagedDns) SetId(id int64) { c.Id = id }
 func (c *CommonConfigManagedDns) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
+	if action == api.ActionApply {
 		return action.ToMethod(), fmt.Sprintf("/contracts/%s/common_configs/%d/managed_dns", c.GetContractId(), c.Id)
 	}
 	return "", ""
 }
+
 func (c *CommonConfigManagedDns) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId, &c.Id)
 }
 
 func init() {
-	Register.Add(&CommonConfigManagedDns{})
+	register(&CommonConfigManagedDns{})
 }

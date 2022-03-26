@@ -7,13 +7,12 @@ const (
 	Disabled Boolean = 0
 )
 
-var BooleanToString = map[Boolean]string{
-	Enabled:  "Enabled",
-	Disabled: "Disabled",
-}
-
 func (c Boolean) String() string {
-	return BooleanToString[c]
+	booleanToString := map[Boolean]string{
+		Enabled:  "Enabled",
+		Disabled: "Disabled",
+	}
+	return booleanToString[c]
 }
 
 type State int
@@ -23,13 +22,13 @@ const (
 	StateRunning     State = 2
 )
 
-var StateToString = map[State]string{
-	StateBeforeStart: "BeforeStart",
-	StateRunning:     "Started",
-}
-
 func (c State) String() string {
-	return StateToString[c]
+	stateToString := map[State]string{
+		StateBeforeStart: "BeforeStart",
+		StateRunning:     "Started",
+	}
+
+	return stateToString[c]
 }
 
 type Favorite int
@@ -39,11 +38,10 @@ const (
 	FavoriteLowPriority  Favorite = 2
 )
 
-var FavoriteToString = map[Favorite]string{
-	FavoriteHighPriority: "High",
-	FavoriteLowPriority:  "Low",
-}
-
 func (c Favorite) String() string {
-	return FavoriteToString[c]
+	favoriteToString := map[Favorite]string{
+		FavoriteHighPriority: "High",
+		FavoriteLowPriority:  "Low",
+	}
+	return favoriteToString[c]
 }

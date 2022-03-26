@@ -5,14 +5,14 @@ import (
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
-	dpfv1 "github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1"
 	"github.com/mimuret/golang-iij-dpf/pkg/schema"
 )
 
-var (
-	groupName = "common-configs.api.dns-platform.jp/v1"
-	Register  = schema.NewRegister(dpfv1.Version + groupName)
-)
+const groupName = "common-configs.api.dns-platform.jp/v1"
+
+func register(items ...apis.Spec) {
+	schema.NewRegister(groupName).Add(items...)
+}
 
 type Spec interface {
 	apis.Spec
@@ -50,8 +50,7 @@ func GetPathMethodForChildSpec(action api.Action, s ChildSpec) (string, string) 
 }
 
 func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
-	switch action {
-	case api.ActionList:
+	if action == api.ActionList {
 		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s", s.GetCommonConfigId(), s.GetName())
 	}
 	return "", ""

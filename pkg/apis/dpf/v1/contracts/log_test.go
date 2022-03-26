@@ -53,9 +53,7 @@ var _ = Describe("logs", func() {
 		}
 	})
 	Describe("LogList", func() {
-		var (
-			c contracts.LogList
-		)
+		var c contracts.LogList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/contracts/f1/logs", httpmock.NewBytesResponder(200, []byte(`{

@@ -25,6 +25,7 @@ func (c *ContractPartnerList) Index(i int) interface{} { return c.Items[i] }
 func (c *ContractPartnerList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
+
 func (c *ContractPartnerList) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.ContractId)
 }
@@ -32,5 +33,5 @@ func (c *ContractPartnerList) SetPathParams(args ...interface{}) error {
 func (c *ContractPartnerList) Init() {}
 
 func init() {
-	Register.Add(&ContractPartnerList{})
+	register(&ContractPartnerList{})
 }

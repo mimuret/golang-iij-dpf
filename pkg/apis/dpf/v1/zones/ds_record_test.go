@@ -59,7 +59,6 @@ var _ = Describe("ds_records", func() {
 						}
 					]
 				}`)))
-
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -136,9 +135,7 @@ var _ = Describe("ds_records", func() {
 		})
 	})
 	Describe("DsRecord", func() {
-		var (
-			s, copy, nilSpec *zones.DsRecord
-		)
+		var s, copy, nilSpec *zones.DsRecord
 		BeforeEach(func() {
 			s = &zones.DsRecord{}
 		})

@@ -9,9 +9,7 @@ import (
 
 var _ = Describe("response", func() {
 	Context("BadResponse", func() {
-		var (
-			bad *api.BadResponse
-		)
+		var bad *api.BadResponse
 		Context("Error", func() {
 			When("Auth error", func() {
 				BeforeEach(func() {

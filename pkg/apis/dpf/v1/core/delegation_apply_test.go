@@ -29,9 +29,7 @@ var _ = Describe("delegations", func() {
 	})
 	Describe("DelegationApply", func() {
 		Context("Apply", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/delegations", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Apply(context.Background(), &s, nil)
@@ -71,6 +69,5 @@ var _ = Describe("delegations", func() {
 				})
 			})
 		})
-
 	})
 })

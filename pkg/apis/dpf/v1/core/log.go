@@ -10,7 +10,7 @@ import (
 
 type LogStatus string
 
-var (
+const (
 	LogStatusStart   LogStatus = "start"
 	LogStatusSuccess LogStatus = "success"
 	LogStatusFailure LogStatus = "failure"

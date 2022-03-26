@@ -26,14 +26,18 @@ type TestParams struct {
 func (t *TestParams) GetValues() (url.Values, error) {
 	return t.Values, t.Err
 }
+
 func (t *TestParams) GetOffset() int32 {
 	return 0
 }
+
 func (t *TestParams) SetOffset(int32) {
 }
+
 func (t *TestParams) GetLimit() int32 {
 	return 100
 }
+
 func (t *TestParams) SetLimit(int32) {
 }
 
@@ -127,7 +131,6 @@ var _ = Describe("Client", func() {
 					Expect(err).To(HaveOccurred())
 					Expect(err.Error()).To(MatchRegexp("spec is not CountableListSpec"))
 				})
-
 			})
 		})
 		When("spec.GetPathMethod is empty", func() {
@@ -428,7 +431,6 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to parse get response"))
 			})
 		})
-
 	})
 	Context("List", func() {
 		When("resource exist", func() {
@@ -1182,5 +1184,4 @@ var _ = Describe("Client", func() {
 			})
 		})
 	})
-
 })

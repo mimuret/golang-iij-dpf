@@ -310,9 +310,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 		})
 	})
 	Describe("CcSecNotifiedServerList", func() {
-		var (
-			c common_configs.CcSecNotifiedServerList
-		)
+		var c common_configs.CcSecNotifiedServerList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers", httpmock.NewBytesResponder(200, []byte(`{

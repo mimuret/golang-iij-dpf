@@ -84,9 +84,7 @@ var _ = Describe("default_ttl", func() {
 			})
 		})
 		Context("Update", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/default_ttl", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Update(context.Background(), &s1, nil)
@@ -105,9 +103,7 @@ var _ = Describe("default_ttl", func() {
 			})
 		})
 		Context("Cancel", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodDelete, "http://localhost/zones/m1/default_ttl/changes", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Cancel(context.Background(), &s1)
@@ -182,9 +178,7 @@ var _ = Describe("default_ttl", func() {
 		})
 	})
 	Describe("DefaultTTLDiffList", func() {
-		var (
-			c zones.DefaultTTLDiffList
-		)
+		var c zones.DefaultTTLDiffList
 		Context("Read", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/zones/m1/default_ttl/diffs", httpmock.NewBytesResponder(200, []byte(`{
@@ -258,9 +252,7 @@ var _ = Describe("default_ttl", func() {
 		})
 	})
 	Context("DefaultTTLDiff", func() {
-		var (
-			s, copy, nilSpec *zones.DefaultTTLDiff
-		)
+		var s, copy, nilSpec *zones.DefaultTTLDiff
 		BeforeEach(func() {
 			s = &zones.DefaultTTLDiff{}
 		})

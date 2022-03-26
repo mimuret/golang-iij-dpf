@@ -17,16 +17,16 @@ type DelegationApply struct {
 
 func (c *DelegationApply) GetName() string { return "delegations" }
 func (c *DelegationApply) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionApply:
+	if action == api.ActionApply {
 		return http.MethodPost, "/delegations"
 	}
 	return "", ""
 }
+
 func (c *DelegationApply) SetPathParams(args ...interface{}) error {
 	return nil
 }
 
 func init() {
-	Register.Add(&DelegationApply{})
+	register(&DelegationApply{})
 }

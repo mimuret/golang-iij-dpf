@@ -18,12 +18,14 @@ const (
 	PlanPremium Plan = 2
 )
 
-var PlanToString = map[Plan]string{
-	PlanBasic:   "basic",
-	PlanPremium: "premium",
-}
+func (c Plan) String() string {
+	planToString := map[Plan]string{
+		PlanBasic:   "basic",
+		PlanPremium: "premium",
+	}
 
-func (c Plan) String() string { return PlanToString[c] }
+	return planToString[c]
+}
 
 // +k8s:deepcopy-gen=false
 type KeywordsPlan []Plan
@@ -56,6 +58,7 @@ func (c *Contract) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
 func (c *Contract) SetPathParams(args ...interface{}) error {
 	return apis.SetPathParams(args, &c.Id)
 }
@@ -89,10 +92,10 @@ func (c *ContractList) GetPathMethod(action api.Action) (string, string) {
 		return action.ToMethod(), "/contracts"
 	case api.ActionCount:
 		return action.ToMethod(), "/contracts/count"
-
 	}
 	return "", ""
 }
+
 func (c *ContractList) SetPathParams(args ...interface{}) error {
 	return nil
 }
@@ -115,5 +118,5 @@ type ContractListSearchKeywords struct {
 func (s *ContractListSearchKeywords) GetValues() (url.Values, error) { return query.Values(s) }
 
 func init() {
-	Register.Add(&Contract{}, &ContractList{})
+	register(&Contract{}, &ContractList{})
 }

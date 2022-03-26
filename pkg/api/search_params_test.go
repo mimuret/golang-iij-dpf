@@ -134,9 +134,7 @@ var _ = Describe("search_params", func() {
 		})
 	})
 	Context("CommonSearchParams", func() {
-		var (
-			params *api.CommonSearchParams
-		)
+		var params *api.CommonSearchParams
 		BeforeEach(func() {
 			params = &api.CommonSearchParams{
 				Type:   api.SearchTypeAND,

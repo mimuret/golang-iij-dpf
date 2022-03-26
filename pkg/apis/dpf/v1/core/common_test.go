@@ -7,9 +7,7 @@ import (
 )
 
 var _ = Describe("AttributeMeta", func() {
-	var (
-		a = core.AttributeMeta{}
-	)
+	a := core.AttributeMeta{}
 	Context("GetGroup", func() {
 		It("returns core", func() {
 			Expect(a.GetGroup()).To(Equal("core.api.dns-platform.jp/v1"))

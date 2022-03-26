@@ -30,9 +30,7 @@ var _ = Describe("dnssec/ksk_rollover", func() {
 	})
 	Describe("DnssecKskRollover", func() {
 		Context("Apply", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPatch, "http://localhost/zones/m1/dnssec/ksk_rollover", httpmock.NewBytesResponder(202, bs1))
 				reqId, err = cl.Apply(context.Background(), &s1, nil)

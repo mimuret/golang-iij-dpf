@@ -97,9 +97,7 @@ var _ = Describe("zone", func() {
 		})
 	})
 	Context("GetZoneFromZonename", func() {
-		var (
-			z1 *core.Zone
-		)
+		var z1 *core.Zone
 		When("failed to read", func() {
 			BeforeEach(func() {
 				z1, err = apiutils.GetZoneFromZonename(context.Background(), c, "example.jp.")
@@ -145,9 +143,7 @@ var _ = Describe("zone", func() {
 		})
 	})
 	Context("GetRecordFromZoneName", func() {
-		var (
-			r1 *zones.Record
-		)
+		var r1 *zones.Record
 		When("failed to read", func() {
 			BeforeEach(func() {
 				r1, err = apiutils.GetRecordFromZoneName(context.Background(), c, "example.jp.", "example.jp.", zones.TypeSOA)
@@ -246,9 +242,7 @@ var _ = Describe("zone", func() {
 		})
 	})
 	Context("GetRecordFromZoneId", func() {
-		var (
-			r2 *zones.Record
-		)
+		var r2 *zones.Record
 		When("failed to read", func() {
 			BeforeEach(func() {
 				r2, err = apiutils.GetRecordFromZoneId(context.Background(), c, "m1", "example.jp.", zones.TypeSOA)
