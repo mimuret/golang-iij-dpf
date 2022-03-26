@@ -12,17 +12,17 @@ var _ ChildSpec = &CcSecTransferAcl{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CcSecTransferAcl struct {
 	AttributeMeta
-	Id      int64        `read:"id" id:"2,required"`
+	ID      int64        `read:"id" id:"2,required"`
 	Network *types.IPNet `read:"network" create:"network" update:"network"`
-	TsigId  int64        `read:"tsig_id,omitempty"  create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
+	TsigID  int64        `read:"tsig_id,omitempty"  create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
 }
 
 func (c *CcSecTransferAcl) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigID, &c.Id)
+	return apis.SetPathParams(args, &c.CommonConfigID, &c.ID)
 }
 
-func (c *CcSecTransferAcl) GetID() int64    { return c.Id }
-func (c *CcSecTransferAcl) SetID(id int64)  { c.Id = id }
+func (c *CcSecTransferAcl) GetID() int64    { return c.ID }
+func (c *CcSecTransferAcl) SetID(id int64)  { c.ID = id }
 func (c *CcSecTransferAcl) GetName() string { return "cc_sec_transfer_acls" }
 func (c *CcSecTransferAcl) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)

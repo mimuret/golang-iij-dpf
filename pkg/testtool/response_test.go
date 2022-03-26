@@ -8,16 +8,16 @@ import (
 )
 
 var _ = Describe("response.go", func() {
-	Context("GenReqId", func() {
+	Context("GenReqID", func() {
 		var reqId string
 		BeforeEach(func() {
-			reqId = testtool.GenReqId()
+			reqId = testtool.GenReqID()
 		})
 		It("returns lowercase uuuid exclude hyphen", func() {
 			Expect(reqId).To(MatchRegexp("^[a-f0-9]+$"))
 		})
 	})
-	Context("GenReqId", func() {
+	Context("GenReqID", func() {
 		var (
 			reqId string
 			bs    []byte

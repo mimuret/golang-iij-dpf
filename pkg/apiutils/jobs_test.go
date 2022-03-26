@@ -87,11 +87,11 @@ var _ = Describe("jobs", func() {
 					_, err = apiutils.WaitJob(context.Background(), c, "9BCFE2E9C10D4D9A8444CB0B48C72830", time.Second)
 					return err
 				}, time.Second*10).Should(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("JobId 9BCFE2E9C10D4D9A8444CB0B48C72830 job failed"))
+				Expect(err.Error()).To(MatchRegexp("JobID 9BCFE2E9C10D4D9A8444CB0B48C72830 job failed"))
 			})
 		})
 	})
-	Context("ParseeResourceSystemId", func() {
+	Context("ParseeResourceSystemID", func() {
 		var (
 			job *core.Job
 			id  string
@@ -100,7 +100,7 @@ var _ = Describe("jobs", func() {
 		When("normal", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: "https://api.dns-platform.jp/dpf/v1/zones/a"}
-				id, err = apiutils.ParseeResourceSystemId(job)
+				id, err = apiutils.ParseeResourceSystemID(job)
 			})
 			It("return err", func() {
 				Expect(err).To(Succeed())
@@ -112,7 +112,7 @@ var _ = Describe("jobs", func() {
 		When("resourceUrl is invalid url", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: "%1"}
-				id, err = apiutils.ParseeResourceSystemId(job)
+				id, err = apiutils.ParseeResourceSystemID(job)
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())
@@ -122,7 +122,7 @@ var _ = Describe("jobs", func() {
 		When("resourceUrl is empty", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: ""}
-				id, err = apiutils.ParseeResourceSystemId(job)
+				id, err = apiutils.ParseeResourceSystemID(job)
 			})
 			It("return empty", func() {
 				Expect(err).To(Succeed())
@@ -130,7 +130,7 @@ var _ = Describe("jobs", func() {
 			})
 		})
 	})
-	Context("ParseeResourceSystemId", func() {
+	Context("ParseeResourceSystemID", func() {
 		var (
 			job *core.Job
 			id  int64
@@ -139,7 +139,7 @@ var _ = Describe("jobs", func() {
 		When("normal", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: "https://api.dns-platform.jp/dpf/v1/common_configs/100"}
-				id, err = apiutils.ParseeResourceId(job)
+				id, err = apiutils.ParseeResourceID(job)
 			})
 			It("return err", func() {
 				Expect(err).To(Succeed())
@@ -151,7 +151,7 @@ var _ = Describe("jobs", func() {
 		When("resourceUrl is invalid url", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: "%1"}
-				id, err = apiutils.ParseeResourceId(job)
+				id, err = apiutils.ParseeResourceID(job)
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())
@@ -161,7 +161,7 @@ var _ = Describe("jobs", func() {
 		When("resourceUrl is empty", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: ""}
-				id, err = apiutils.ParseeResourceId(job)
+				id, err = apiutils.ParseeResourceID(job)
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())
@@ -171,7 +171,7 @@ var _ = Describe("jobs", func() {
 		When("id is not int64", func() {
 			BeforeEach(func() {
 				job = &core.Job{ResourceUrl: "https://api.dns-platform.jp/dpf/v1/zones/m1"}
-				id, err = apiutils.ParseeResourceId(job)
+				id, err = apiutils.ParseeResourceID(job)
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())

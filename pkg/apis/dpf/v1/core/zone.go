@@ -16,7 +16,7 @@ var _ api.Spec = &Zone{}
 
 type Zone struct {
 	AttributeMeta
-	Id               string         `read:"id"`
+	ID               string         `read:"id"`
 	CommonConfigID   int64          `read:"common_config_id"`
 	ServiceCode      string         `read:"service_code"`
 	State            types.State    `read:"state"`
@@ -31,13 +31,13 @@ func (c *Zone) GetName() string { return "zones" }
 func (c *Zone) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s", c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s", c.ID)
 	}
 	return "", ""
 }
 
 func (c *Zone) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.Id)
+	return apis.SetPathParams(args, &c.ID)
 }
 
 var _ apis.CountableListSpec = &ZoneList{}
@@ -90,7 +90,7 @@ type ZoneListSearchKeywords struct {
 	State            api.KeywordsState    `url:"_keywords_state[],omitempty"`
 	Favorite         api.KeywordsFavorite `url:"_keywords_favorite[],omitempty"`
 	Description      api.KeywordsString   `url:"_keywords_description[],omitempty"`
-	CommonConfigID   api.KeywordsId       `url:"_keywords_common_config_id[],omitempty"`
+	CommonConfigID   api.KeywordsID       `url:"_keywords_common_config_id[],omitempty"`
 	ZoneProxyEnabled api.KeywordsBoolean  `url:"_keywords_zone_proxy_enabled[],omitempty"`
 }
 

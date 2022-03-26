@@ -17,16 +17,16 @@ type HistoryText struct {
 	Text string `read:"text"`
 }
 
-func (c *HistoryText) GetName() string { return fmt.Sprintf("zone_histories/%d/text", c.Id) }
+func (c *HistoryText) GetName() string { return fmt.Sprintf("zone_histories/%d/text", c.ID) }
 func (c *HistoryText) GetPathMethod(action api.Action) (string, string) {
 	if action == api.ActionRead {
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_histories/%d/text", c.GetZoneID(), c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_histories/%d/text", c.GetZoneID(), c.ID)
 	}
 	return "", ""
 }
 
 func (c *HistoryText) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneID, &c.Id)
+	return apis.SetPathParams(args, &c.ZoneID, &c.ID)
 }
 
 func init() {

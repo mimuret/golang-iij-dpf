@@ -28,7 +28,7 @@ var _ = Describe("records/diffs", func() {
 				AttributeMeta: zones.AttributeMeta{
 					ZoneID: "m1",
 				},
-				Id:     "r1",
+				ID:     "r1",
 				Name:   "www.example.jp.",
 				TTL:    30,
 				RRType: zones.TypeA,
@@ -46,7 +46,7 @@ var _ = Describe("records/diffs", func() {
 				AttributeMeta: zones.AttributeMeta{
 					ZoneID: "m1",
 				},
-				Id:     "r1",
+				ID:     "r1",
 				Name:   "www.example.jp.",
 				TTL:    30,
 				RRType: zones.TypeA,
@@ -64,7 +64,7 @@ var _ = Describe("records/diffs", func() {
 				AttributeMeta: zones.AttributeMeta{
 					ZoneID: "m1",
 				},
-				Id:     "r3",
+				ID:     "r3",
 				Name:   "www.example.jp.",
 				TTL:    300,
 				RRType: zones.TypeTXT,
@@ -79,7 +79,7 @@ var _ = Describe("records/diffs", func() {
 				AttributeMeta: zones.AttributeMeta{
 					ZoneID: "m1",
 				},
-				Id:     "r3",
+				ID:     "r3",
 				Name:   "www.example.jp.",
 				TTL:    300,
 				RRType: zones.TypeTXT,

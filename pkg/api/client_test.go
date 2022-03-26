@@ -109,7 +109,7 @@ var _ = Describe("Client", func() {
 		})
 		When("the API succesfully", func() {
 			BeforeEach(func() {
-				testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
+				testSpec.ID = "F2246BD8617444329A40470AEC7B00B9"
 				reqId, err = c.Do(ctx, testSpec, api.ActionRead, nil, nil)
 			})
 			It("reqId is not empty", func() {
@@ -241,7 +241,7 @@ var _ = Describe("Client", func() {
 			When("recv body is not json format", func() {
 				BeforeEach(func() {
 					httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/Unavailable", httpmock.NewBytesResponder(503, []byte(`Service Unavailable`)))
-					testSpec.Id = "Unavailable"
+					testSpec.ID = "Unavailable"
 					reqId, err = c.Do(ctx, testSpec, api.ActionRead, nil, nil)
 				})
 				It("reqId is empty", func() {
@@ -259,7 +259,7 @@ var _ = Describe("Client", func() {
 						"error_type": "fail",
 						"error_message": "error message"
 					}`)))
-					testSpec.Id = "ERROR-BAD_REQUEST"
+					testSpec.ID = "ERROR-BAD_REQUEST"
 					reqId, err = c.Do(ctx, testSpec, api.ActionRead, nil, nil)
 				})
 				It("reqId is not empty", func() {
@@ -328,7 +328,7 @@ var _ = Describe("Client", func() {
 		})
 		When("response timeout", func() {
 			BeforeEach(func() {
-				testSpec.Id = "TIMEOUT"
+				testSpec.ID = "TIMEOUT"
 				ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 				defer cancel()
 				_, err = c.Read(ctx, testSpec)
@@ -340,7 +340,7 @@ var _ = Describe("Client", func() {
 		})
 		When("resource is exist", func() {
 			BeforeEach(func() {
-				testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
+				testSpec.ID = "F2246BD8617444329A40470AEC7B00B9"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("reqId is not empty", func() {
@@ -350,14 +350,14 @@ var _ = Describe("Client", func() {
 				Expect(err).To(Succeed())
 			})
 			It("can get values", func() {
-				Expect(testSpec.Id).To(Equal("F2246BD8617444329A40470AEC7B00B9"))
+				Expect(testSpec.ID).To(Equal("F2246BD8617444329A40470AEC7B00B9"))
 				Expect(testSpec.Name).To(Equal("test1"))
 				Expect(testSpec.Number).To(Equal(int64(1)))
 			})
 		})
 		When("resource is exist, but schema error", func() {
 			BeforeEach(func() {
-				testSpec.Id = "86E5EB52E2294614B35F01943AB7239A"
+				testSpec.ID = "86E5EB52E2294614B35F01943AB7239A"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("reqId is not empty", func() {
@@ -370,7 +370,7 @@ var _ = Describe("Client", func() {
 		})
 		When("resource is exist, but response is list format", func() {
 			BeforeEach(func() {
-				testSpec.Id = "41874381FD914D88B24A759155B5F0F8"
+				testSpec.ID = "41874381FD914D88B24A759155B5F0F8"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("reqId is not empty", func() {
@@ -383,21 +383,21 @@ var _ = Describe("Client", func() {
 		})
 		When("response is no frame format", func() {
 			BeforeEach(func() {
-				testSpec.Id = "83870F11B3F24AE89888C86F497EF697"
+				testSpec.ID = "83870F11B3F24AE89888C86F497EF697"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("83870F11B3F24AE89888C86F497EF697"))
 			})
 			It("err is not empty", func() {
-				Expect(testSpec.Id).To(Equal("83870F11B3F24AE89888C86F497EF697"))
+				Expect(testSpec.ID).To(Equal("83870F11B3F24AE89888C86F497EF697"))
 				Expect(testSpec.Name).To(Equal("failed"))
 				Expect(testSpec.Number).To(Equal(int64(1)))
 			})
 		})
 		When("response is no frame format, but invalid schema", func() {
 			BeforeEach(func() {
-				testSpec.Id = "72AA019055524D09A4C367DD96DCE0F9"
+				testSpec.ID = "72AA019055524D09A4C367DD96DCE0F9"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("reqId is not empty", func() {
@@ -410,7 +410,7 @@ var _ = Describe("Client", func() {
 		})
 		When("resource is not exist", func() {
 			BeforeEach(func() {
-				testSpec.Id = "NOTFOUND"
+				testSpec.ID = "NOTFOUND"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("reqId is not empty", func() {
@@ -423,7 +423,7 @@ var _ = Describe("Client", func() {
 		})
 		When("response is not json", func() {
 			BeforeEach(func() {
-				testSpec.Id = "NOT_JSON"
+				testSpec.ID = "NOT_JSON"
 				reqId, err = c.Read(ctx, testSpec)
 			})
 			It("err is not empty", func() {
@@ -465,12 +465,12 @@ var _ = Describe("Client", func() {
 				Expect(*listTestSpec).To(Equal(TestSpecList{
 					Items: []TestSpec{
 						{
-							Id:     "F2246BD8617444329A40470AEC7B00B9",
+							ID:     "F2246BD8617444329A40470AEC7B00B9",
 							Name:   "test1",
 							Number: 1,
 						},
 						{
-							Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+							ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 							Name:   "test2",
 							Number: 2,
 						},
@@ -577,12 +577,12 @@ var _ = Describe("Client", func() {
 					TestSpecList: TestSpecList{
 						Items: []TestSpec{
 							{
-								Id:     "F2246BD8617444329A40470AEC7B00B9",
+								ID:     "F2246BD8617444329A40470AEC7B00B9",
 								Name:   "test1",
 								Number: 1,
 							},
 							{
-								Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+								ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 								Name:   "test2",
 								Number: 2,
 							},
@@ -738,7 +738,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "F2BF2DCC-D94C-4436-B199-7C7377184D06"
+			testSpec.ID = "F2BF2DCC-D94C-4436-B199-7C7377184D06"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -790,7 +790,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B"
+			testSpec.ID = "665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -842,7 +842,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "BD1BC291-5763-408B-9D2E-A70434E4A810"
+			testSpec.ID = "BD1BC291-5763-408B-9D2E-A70434E4A810"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -894,7 +894,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "BD1BC291-5763-408B-9D2E-A70434E4A810"
+			testSpec.ID = "BD1BC291-5763-408B-9D2E-A70434E4A810"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -951,7 +951,7 @@ var _ = Describe("Client", func() {
 					"number": 1
 				}
 			}`)))
-			testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
+			testSpec.ID = "F2246BD8617444329A40470AEC7B00B9"
 		})
 		AfterEach(func() {
 			httpmock.Reset()
@@ -969,7 +969,7 @@ var _ = Describe("Client", func() {
 			It("get change value", func() {
 				Expect(err).To(Succeed())
 				Expect(*testSpec).To(Equal(TestSpec{
-					Id:     "F2246BD8617444329A40470AEC7B00B9",
+					ID:     "F2246BD8617444329A40470AEC7B00B9",
 					Name:   "test1",
 					Number: 1,
 				}))
@@ -1001,7 +1001,7 @@ var _ = Describe("Client", func() {
 		})
 		When("read error", func() {
 			BeforeEach(func() {
-				testSpec.Id = "NOT_FOUND"
+				testSpec.ID = "NOT_FOUND"
 				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchRead(ctx, time.Second, testSpec)
@@ -1048,12 +1048,12 @@ var _ = Describe("Client", func() {
 				Expect(*listTestSpec).To(Equal(TestSpecList{
 					Items: []TestSpec{
 						{
-							Id:     "F2246BD8617444329A40470AEC7B00B9",
+							ID:     "F2246BD8617444329A40470AEC7B00B9",
 							Name:   "test1",
 							Number: 1,
 						},
 						{
-							Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+							ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 							Name:   "test2",
 							Number: 2,
 						},
@@ -1140,12 +1140,12 @@ var _ = Describe("Client", func() {
 					TestSpecList: TestSpecList{
 						Items: []TestSpec{
 							{
-								Id:     "F2246BD8617444329A40470AEC7B00B9",
+								ID:     "F2246BD8617444329A40470AEC7B00B9",
 								Name:   "test1",
 								Number: 1,
 							},
 							{
-								Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+								ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 								Name:   "test2",
 								Number: 2,
 							},

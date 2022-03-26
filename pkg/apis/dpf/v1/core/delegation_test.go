@@ -30,7 +30,7 @@ var _ = Describe("delegations", func() {
 		Expect(err).To(Succeed())
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Delegation{
-			Id:                    "m1",
+			ID:                    "m1",
 			ServiceCode:           "dpm000001",
 			Name:                  "example.jp.",
 			Network:               "",
@@ -38,7 +38,7 @@ var _ = Describe("delegations", func() {
 			DelegationRequestedAt: atTime,
 		}
 		s2 = core.Delegation{
-			Id:                    "m2",
+			ID:                    "m2",
 			ServiceCode:           "dpm000002",
 			Name:                  "168.192.in-addr.arpa.",
 			Network:               "192.168.0.0/16",

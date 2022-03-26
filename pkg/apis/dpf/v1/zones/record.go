@@ -100,7 +100,7 @@ var _ Spec = &Record{}
 type Record struct {
 	AttributeMeta
 
-	Id          string           `read:"id"`
+	ID          string           `read:"id"`
 	Name        string           `read:"name" create:"name"`
 	TTL         int32            `read:"ttl"  create:"ttl" update:"ttl"`
 	RRType      Type             `read:"rrtype"  create:"rrtype"`
@@ -116,15 +116,15 @@ func (c *Record) GetPathMethod(action api.Action) (string, string) {
 	case api.ActionCreate:
 		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s", c.GetZoneID(), c.GetName())
 	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s", c.GetZoneID(), c.GetName(), c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s", c.GetZoneID(), c.GetName(), c.ID)
 	case api.ActionCancel:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s/changes", c.GetZoneID(), c.GetName(), c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s/changes", c.GetZoneID(), c.GetName(), c.ID)
 	}
 	return "", ""
 }
 
 func (c *Record) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneID, &c.Id)
+	return apis.SetPathParams(args, &c.ZoneID, &c.ID)
 }
 
 var _ CountableListSpec = &RecordList{}

@@ -155,9 +155,9 @@ func (s KeywordsString) Validate() bool {
 }
 
 // +k8s:deepcopy-gen=false
-type KeywordsId []int64
+type KeywordsID []int64
 
-func (s KeywordsId) Validate() bool {
+func (s KeywordsID) Validate() bool {
 	for _, v := range s {
 		if v < 0 {
 			return false

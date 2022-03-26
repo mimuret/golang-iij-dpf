@@ -31,13 +31,13 @@ var _ = Describe("history text", func() {
 
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = zones.History{
-			Id:          1,
+			ID:          1,
 			CommittedAt: atTime,
 			Description: "commit 1",
 			Operator:    "user1",
 		}
 		s2 = zones.History{
-			Id:          2,
+			ID:          2,
 			CommittedAt: atTime,
 			Description: "commit 2",
 			Operator:    "user2",

@@ -27,14 +27,14 @@ var _ = Describe("common_configs/managed_dns", func() {
 			AttributeMeta: contracts.AttributeMeta{
 				ContractID: "f1",
 			},
-			Id:                1,
+			ID:                1,
 			ManagedDnsEnabled: types.Enabled,
 		}
 		s2 = contracts.CommonConfigManagedDns{
 			AttributeMeta: contracts.AttributeMeta{
 				ContractID: "f1",
 			},
-			Id:                2,
+			ID:                2,
 			ManagedDnsEnabled: types.Disabled,
 		}
 	})
@@ -153,7 +153,7 @@ var _ = Describe("common_configs/managed_dns", func() {
 		Context("contracts.ChildSpec common test", func() {
 			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetID()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.ID))
 				})
 			})
 			Context("SetID", func() {

@@ -24,7 +24,7 @@ var _ = Describe("client.go", func() {
 	BeforeEach(func() {
 		c = testtool.NewTestClient("token", "http://localhost", nil)
 		s = &testtool.TestSpec{
-			Id:     "id1",
+			ID:     "id1",
 			Name:   "hoge",
 			Number: 100,
 		}
@@ -32,7 +32,7 @@ var _ = Describe("client.go", func() {
 	Context("SyncCreate", func() {
 		When("successful creating", func() {
 			BeforeEach(func() {
-				id = testtool.GenReqId()
+				id = testtool.GenReqID()
 				c.CreateFunc = func(s api.Spec, body interface{}) (requestId string, err error) {
 					return id, nil
 				}
@@ -58,7 +58,7 @@ var _ = Describe("client.go", func() {
 	})
 	When("successful registration of creating, but create failed", func() {
 		BeforeEach(func() {
-			id = testtool.GenReqId()
+			id = testtool.GenReqID()
 			c.CreateFunc = func(s api.Spec, body interface{}) (requestId string, err error) {
 				return id, nil
 			}
@@ -95,7 +95,7 @@ var _ = Describe("client.go", func() {
 	Context("SyncUpdate", func() {
 		When("successful updating", func() {
 			BeforeEach(func() {
-				id = testtool.GenReqId()
+				id = testtool.GenReqID()
 				c.UpdateFunc = func(s api.Spec, body interface{}) (requestId string, err error) {
 					return id, nil
 				}
@@ -121,7 +121,7 @@ var _ = Describe("client.go", func() {
 	})
 	When("successful registration of updating, but update failed", func() {
 		BeforeEach(func() {
-			id = testtool.GenReqId()
+			id = testtool.GenReqID()
 			c.UpdateFunc = func(s api.Spec, body interface{}) (requestId string, err error) {
 				return id, nil
 			}
@@ -158,7 +158,7 @@ var _ = Describe("client.go", func() {
 	Context("SyncApply", func() {
 		When("successful appling", func() {
 			BeforeEach(func() {
-				id = testtool.GenReqId()
+				id = testtool.GenReqID()
 				c.ApplyFunc = func(s api.Spec, body interface{}) (requestId string, err error) {
 					return id, nil
 				}
@@ -184,7 +184,7 @@ var _ = Describe("client.go", func() {
 	})
 	When("successful registration of appling, but apply failed", func() {
 		BeforeEach(func() {
-			id = testtool.GenReqId()
+			id = testtool.GenReqID()
 			c.ApplyFunc = func(s api.Spec, body interface{}) (requestId string, err error) {
 				return id, nil
 			}
@@ -221,7 +221,7 @@ var _ = Describe("client.go", func() {
 	Context("SyncDelete", func() {
 		When("successful deleting", func() {
 			BeforeEach(func() {
-				id = testtool.GenReqId()
+				id = testtool.GenReqID()
 				c.DeleteFunc = func(s api.Spec) (requestId string, err error) {
 					return id, nil
 				}
@@ -247,7 +247,7 @@ var _ = Describe("client.go", func() {
 	})
 	When("successful registration of deleteting, but delete failed", func() {
 		BeforeEach(func() {
-			id = testtool.GenReqId()
+			id = testtool.GenReqID()
 			c.DeleteFunc = func(s api.Spec) (requestId string, err error) {
 				return id, nil
 			}
@@ -284,7 +284,7 @@ var _ = Describe("client.go", func() {
 	Context("SyncCancel", func() {
 		When("successful canceling", func() {
 			BeforeEach(func() {
-				id = testtool.GenReqId()
+				id = testtool.GenReqID()
 				c.CancelFunc = func(s api.Spec) (requestId string, err error) {
 					return id, nil
 				}
@@ -310,7 +310,7 @@ var _ = Describe("client.go", func() {
 	})
 	When("successful registration of canceling, but cancel failed", func() {
 		BeforeEach(func() {
-			id = testtool.GenReqId()
+			id = testtool.GenReqID()
 			c.CancelFunc = func(s api.Spec) (requestId string, err error) {
 				return id, nil
 			}

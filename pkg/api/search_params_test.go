@@ -271,18 +271,18 @@ var _ = Describe("search_params", func() {
 			})
 		})
 	})
-	Context("KeywordsId.Validate", func() {
-		When("KeywordsId is include minus value", func() {
+	Context("KeywordsID.Validate", func() {
+		When("KeywordsID is include minus value", func() {
 			It("returns false", func() {
-				Expect(api.KeywordsId{-1}.Validate()).To(BeFalse())
-				Expect(api.KeywordsId{1, -1}.Validate()).To(BeFalse())
+				Expect(api.KeywordsID{-1}.Validate()).To(BeFalse())
+				Expect(api.KeywordsID{1, -1}.Validate()).To(BeFalse())
 			})
 		})
-		When("KeywordsId is not include minus value", func() {
+		When("KeywordsID is not include minus value", func() {
 			It("returns false", func() {
-				Expect(api.KeywordsId{0}.Validate()).To(BeTrue())
-				Expect(api.KeywordsId{0, 1}.Validate()).To(BeTrue())
-				Expect(api.KeywordsId{0, 1, 2}.Validate()).To(BeTrue())
+				Expect(api.KeywordsID{0}.Validate()).To(BeTrue())
+				Expect(api.KeywordsID{0, 1}.Validate()).To(BeTrue())
+				Expect(api.KeywordsID{0, 1, 2}.Validate()).To(BeTrue())
 			})
 		})
 	})

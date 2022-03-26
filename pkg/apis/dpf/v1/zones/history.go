@@ -10,7 +10,7 @@ import (
 )
 
 type History struct {
-	Id          int64      `read:"id"`
+	ID          int64      `read:"id"`
 	CommittedAt types.Time `read:"committed_at"`
 	Description string     `read:"description"`
 	Operator    string     `read:"operator"`

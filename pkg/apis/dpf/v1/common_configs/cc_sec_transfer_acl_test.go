@@ -27,17 +27,17 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 			AttributeMeta: common_configs.AttributeMeta{
 				CommonConfigID: 1,
 			},
-			Id:      1,
+			ID:      1,
 			Network: testtool.MustParseIPNet("192.168.1.0/24"),
-			TsigId:  0,
+			TsigID:  0,
 		}
 		s2 = common_configs.CcSecTransferAcl{
 			AttributeMeta: common_configs.AttributeMeta{
 				CommonConfigID: 1,
 			},
-			Id:      2,
+			ID:      2,
 			Network: testtool.MustParseIPNet("2001:db8::/64"),
-			TsigId:  2,
+			TsigID:  2,
 		}
 		slist = common_configs.CcSecTransferAclList{
 			AttributeMeta: common_configs.AttributeMeta{
@@ -75,7 +75,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 						AttributeMeta: common_configs.AttributeMeta{
 							CommonConfigID: 1,
 						},
-						Id: 1,
+						ID: 1,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -91,7 +91,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 						AttributeMeta: common_configs.AttributeMeta{
 							CommonConfigID: 1,
 						},
-						Id: 2,
+						ID: 2,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -121,7 +121,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 							CommonConfigID: 2,
 						},
 						Network: testtool.MustParseIPNet("10.0.0.0/8"),
-						TsigId:  1,
+						TsigID:  1,
 					}
 					reqId, err = cl.Create(context.Background(), &s, nil)
 				})
@@ -295,7 +295,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 		Context("contracts.ChildSpec common test", func() {
 			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetID()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.ID))
 				})
 			})
 			Context("SetID", func() {

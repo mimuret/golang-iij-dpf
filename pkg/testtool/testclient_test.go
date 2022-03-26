@@ -31,7 +31,7 @@ var _ = Describe("testclient.go", func() {
 			ctx = context.TODO()
 			ok = false
 			s = testtool.TestSpec{
-				Id: "1",
+				ID: "1",
 			}
 			slist = testtool.TestSpecCountableList{}
 			cl = testtool.NewTestClient("token", "http://localhost", nil)

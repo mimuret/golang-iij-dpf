@@ -27,7 +27,7 @@ var _ = Describe("contract", func() {
 	BeforeEach(func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Contract{
-			Id:          "f1",
+			ID:          "f1",
 			ServiceCode: "dpf0000001",
 			State:       types.StateBeforeStart,
 			Favorite:    types.FavoriteHighPriority,
@@ -35,7 +35,7 @@ var _ = Describe("contract", func() {
 			Description: "contract 1",
 		}
 		s2 = core.Contract{
-			Id:          "f2",
+			ID:          "f2",
 			ServiceCode: "dpf0000002",
 			State:       types.StateRunning,
 			Favorite:    types.FavoriteLowPriority,
@@ -78,7 +78,7 @@ var _ = Describe("contract", func() {
 			When("returns Contract f1", func() {
 				BeforeEach(func() {
 					c = core.Contract{
-						Id: "f1",
+						ID: "f1",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -91,7 +91,7 @@ var _ = Describe("contract", func() {
 			When("returns Contract f2", func() {
 				BeforeEach(func() {
 					c = core.Contract{
-						Id: "f2",
+						ID: "f2",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -139,7 +139,7 @@ var _ = Describe("contract", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ContractID", func() {
-					Expect(s1.Id).To(Equal("f10"))
+					Expect(s1.ID).To(Equal("f10"))
 				})
 			})
 			When("arguments has extra value", func() {

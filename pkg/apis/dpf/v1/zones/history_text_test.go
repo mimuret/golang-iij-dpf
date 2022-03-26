@@ -33,7 +33,7 @@ var _ = Describe("history", func() {
 				ZoneID: "m1",
 			},
 			History: zones.History{
-				Id:          1,
+				ID:          1,
 				CommittedAt: atTime,
 				Description: "commit 1",
 				Operator:    "user1",
@@ -45,7 +45,7 @@ var _ = Describe("history", func() {
 				ZoneID: "m1",
 			},
 			History: zones.History{
-				Id:          2,
+				ID:          2,
 				CommittedAt: atTime,
 				Description: "commit 2",
 				Operator:    "user2",
@@ -87,7 +87,7 @@ var _ = Describe("history", func() {
 							ZoneID: "m1",
 						},
 						History: zones.History{
-							Id: 1,
+							ID: 1,
 						},
 					}
 					reqId, err = cl.Read(context.Background(), &c)
@@ -105,7 +105,7 @@ var _ = Describe("history", func() {
 							ZoneID: "m1",
 						},
 						History: zones.History{
-							Id: 2,
+							ID: 2,
 						},
 					}
 					reqId, err = cl.Read(context.Background(), &c)
@@ -137,7 +137,7 @@ var _ = Describe("history", func() {
 					Expect(s1.GetZoneID()).To(Equal("m10"))
 				})
 				It("can set HistoryId", func() {
-					Expect(s1.Id).To(Equal(int64(10)))
+					Expect(s1.ID).To(Equal(int64(10)))
 				})
 			})
 			When("not enough arguments", func() {

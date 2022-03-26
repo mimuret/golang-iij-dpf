@@ -28,17 +28,17 @@ var _ = Describe("cc_sec_notified_servers", func() {
 			AttributeMeta: common_configs.AttributeMeta{
 				CommonConfigID: 1,
 			},
-			Id:      1,
+			ID:      1,
 			Address: net.ParseIP("192.168.0.1"),
-			TsigId:  0,
+			TsigID:  0,
 		}
 		s2 = common_configs.CcSecNotifiedServer{
 			AttributeMeta: common_configs.AttributeMeta{
 				CommonConfigID: 1,
 			},
-			Id:      2,
+			ID:      2,
 			Address: net.ParseIP("2001:db8::1"),
-			TsigId:  2,
+			TsigID:  2,
 		}
 		slist = common_configs.CcSecNotifiedServerList{
 			AttributeMeta: common_configs.AttributeMeta{
@@ -76,7 +76,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						AttributeMeta: common_configs.AttributeMeta{
 							CommonConfigID: 1,
 						},
-						Id: 1,
+						ID: 1,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -92,7 +92,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						AttributeMeta: common_configs.AttributeMeta{
 							CommonConfigID: 1,
 						},
-						Id: 2,
+						ID: 2,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -122,7 +122,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 							CommonConfigID: 2,
 						},
 						Address: net.ParseIP("192.168.10.1"),
-						TsigId:  1,
+						TsigID:  1,
 					}
 					reqId, err = cl.Create(context.Background(), &s, nil)
 				})
@@ -296,7 +296,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 		Context("contracts.ChildSpec common test", func() {
 			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetID()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.ID))
 				})
 			})
 			Context("SetID", func() {

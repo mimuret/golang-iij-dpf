@@ -13,17 +13,17 @@ var _ ChildSpec = &CcSecNotifiedServer{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CcSecNotifiedServer struct {
 	AttributeMeta `read:"-" create:"-" update:"-"`
-	Id            int64  `read:"id" create:"-" update:"-"  id:"2,required"`
+	ID            int64  `read:"id" create:"-" update:"-"  id:"2,required"`
 	Address       net.IP `read:"address" create:"address" update:"address"`
-	TsigId        int64  `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
+	TsigID        int64  `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
 }
 
 func (c *CcSecNotifiedServer) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigID, &c.Id)
+	return apis.SetPathParams(args, &c.CommonConfigID, &c.ID)
 }
 
-func (c *CcSecNotifiedServer) GetID() int64    { return c.Id }
-func (c *CcSecNotifiedServer) SetID(id int64)  { c.Id = id }
+func (c *CcSecNotifiedServer) GetID() int64    { return c.ID }
+func (c *CcSecNotifiedServer) SetID(id int64)  { c.ID = id }
 func (c *CcSecNotifiedServer) GetName() string { return "cc_sec_notified_servers" }
 func (c *CcSecNotifiedServer) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)

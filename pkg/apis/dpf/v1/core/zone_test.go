@@ -27,7 +27,7 @@ var _ = Describe("zones", func() {
 	BeforeEach(func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Zone{
-			Id:               "m1",
+			ID:               "m1",
 			CommonConfigID:   1,
 			ServiceCode:      "dpm0000001",
 			State:            types.StateBeforeStart,
@@ -38,7 +38,7 @@ var _ = Describe("zones", func() {
 			ZoneProxyEnabled: types.Disabled,
 		}
 		s2 = core.Zone{
-			Id:               "m2",
+			ID:               "m2",
 			CommonConfigID:   2,
 			ServiceCode:      "dpm0000002",
 			State:            types.StateRunning,
@@ -90,7 +90,7 @@ var _ = Describe("zones", func() {
 			When("returns Zone m1", func() {
 				BeforeEach(func() {
 					c = core.Zone{
-						Id: "m1",
+						ID: "m1",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -103,7 +103,7 @@ var _ = Describe("zones", func() {
 			When("returns Zone m2", func() {
 				BeforeEach(func() {
 					c = core.Zone{
-						Id: "m2",
+						ID: "m2",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -151,7 +151,7 @@ var _ = Describe("zones", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ContractID", func() {
-					Expect(s1.Id).To(Equal("m100"))
+					Expect(s1.ID).To(Equal("m100"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -308,7 +308,7 @@ var _ = Describe("zones", func() {
 						State:            api.KeywordsState{types.StateBeforeStart, types.StateRunning},
 						Favorite:         api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
 						Description:      api.KeywordsString{"あああ", "🍺"},
-						CommonConfigID:   api.KeywordsId{100, 200},
+						CommonConfigID:   api.KeywordsID{100, 200},
 						ZoneProxyEnabled: api.KeywordsBoolean{types.Enabled, types.Disabled},
 					},
 					/*

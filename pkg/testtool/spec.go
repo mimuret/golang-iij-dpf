@@ -16,7 +16,7 @@ var _ api.Spec = &TestSpec{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 
 type TestSpec struct {
-	Id     string `read:"id"`
+	ID     string `read:"id"`
 	Name   string `read:"name" update:"name" create:"name" apply:"name"`
 	Number int64  `read:"number" update:"number" create:"number" apply:"number"`
 }
@@ -28,11 +28,11 @@ func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
 	case api.ActionCreate:
 		return action.ToMethod(), "/tests"
 	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/tests/%s", t.Id)
+		return action.ToMethod(), fmt.Sprintf("/tests/%s", t.ID)
 	case api.ActionCancel:
-		return action.ToMethod(), fmt.Sprintf("/tests/%s/cancel", t.Id)
+		return action.ToMethod(), fmt.Sprintf("/tests/%s/cancel", t.ID)
 	case api.ActionApply:
-		return action.ToMethod(), fmt.Sprintf("/tests/%s/apply", t.Id)
+		return action.ToMethod(), fmt.Sprintf("/tests/%s/apply", t.ID)
 	}
 	return "", ""
 }
@@ -48,7 +48,7 @@ func (t *TestSpec) SetPathParams(args ...interface{}) error {
 	if !ok {
 		return fmt.Errorf("args must be string")
 	}
-	t.Id = id
+	t.ID = id
 	return nil
 }
 

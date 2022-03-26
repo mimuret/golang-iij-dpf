@@ -12,7 +12,7 @@ import (
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type Delegation struct {
 	AttributeMeta
-	Id                    string     `read:"id"`
+	ID                    string     `read:"id"`
 	ServiceCode           string     `read:"service_code"`
 	Name                  string     `read:"name"`
 	Network               string     `read:"network"`
