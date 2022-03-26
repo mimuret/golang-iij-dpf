@@ -39,7 +39,7 @@ var _ = Describe("zone_proxy", func() {
 		}
 		slist = zones.ZoneProxyHealthCheckList{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Items: []zones.ZoneProxyHealthCheck{s1, s2},
 		}
@@ -75,7 +75,7 @@ var _ = Describe("zone_proxy", func() {
 				BeforeEach(func() {
 					c = zones.ZoneProxyHealthCheckList{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -104,7 +104,7 @@ var _ = Describe("zone_proxy", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ZonetId", func() {
-					Expect(slist.ZoneId).To(Equal("m100"))
+					Expect(slist.ZoneID).To(Equal("m100"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -115,7 +115,7 @@ var _ = Describe("zone_proxy", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

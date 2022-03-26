@@ -39,15 +39,15 @@ func (c *DefaultTTL) GetName() string { return "default_ttl" }
 func (c *DefaultTTL) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/default_ttl", c.GetZoneId())
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/default_ttl", c.GetZoneID())
 	case api.ActionCancel:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/default_ttl/changes", c.GetZoneId())
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/default_ttl/changes", c.GetZoneID())
 	}
 	return "", ""
 }
 
 func (c *DefaultTTL) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 type DefaultTTLDiff struct {
@@ -85,7 +85,7 @@ func (c *DefaultTTLDiffList) Init() {
 }
 
 func (c *DefaultTTLDiffList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func init() {

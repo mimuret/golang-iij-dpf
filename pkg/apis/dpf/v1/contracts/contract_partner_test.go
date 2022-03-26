@@ -27,7 +27,7 @@ var _ = Describe("contract_partners", func() {
 
 		slist = contracts.ContractPartnerList{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Items: []contracts.ContractPartner{s1, s2},
 		}
@@ -55,7 +55,7 @@ var _ = Describe("contract_partners", func() {
 				BeforeEach(func() {
 					c = contracts.ContractPartnerList{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -83,8 +83,8 @@ var _ = Describe("contract_partners", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(slist.GetContractId()).To(Equal("id12"))
+				It("can set ContractID", func() {
+					Expect(slist.GetContractID()).To(Equal("id12"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -95,7 +95,7 @@ var _ = Describe("contract_partners", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

@@ -24,7 +24,7 @@ func (c *ManagedDnsList) GetPathMethod(action api.Action) (string, string) {
 }
 func (c *ManagedDnsList) Init() {}
 func (c *ManagedDnsList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func init() {

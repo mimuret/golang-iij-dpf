@@ -17,7 +17,7 @@ var _ api.Spec = &Zone{}
 type Zone struct {
 	AttributeMeta
 	Id               string         `read:"id"`
-	CommonConfigId   int64          `read:"common_config_id"`
+	CommonConfigID   int64          `read:"common_config_id"`
 	ServiceCode      string         `read:"service_code"`
 	State            types.State    `read:"state"`
 	Favorite         types.Favorite `read:"favorite" update:"favorite"`
@@ -90,7 +90,7 @@ type ZoneListSearchKeywords struct {
 	State            api.KeywordsState    `url:"_keywords_state[],omitempty"`
 	Favorite         api.KeywordsFavorite `url:"_keywords_favorite[],omitempty"`
 	Description      api.KeywordsString   `url:"_keywords_description[],omitempty"`
-	CommonConfigId   api.KeywordsId       `url:"_keywords_common_config_id[],omitempty"`
+	CommonConfigID   api.KeywordsId       `url:"_keywords_common_config_id[],omitempty"`
 	ZoneProxyEnabled api.KeywordsBoolean  `url:"_keywords_zone_proxy_enabled[],omitempty"`
 }
 

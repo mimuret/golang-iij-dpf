@@ -14,7 +14,7 @@ var _ ChildSpec = &CommonConfig{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CommonConfig struct {
 	AttributeMeta
-	Id int64 `read:"id"`
+	ID int64 `read:"id"`
 	// patchable
 	Name        string `read:"name"  create:"name" update:"name"`
 	Description string `read:"description"  create:"description" update:"description"`
@@ -24,14 +24,14 @@ type CommonConfig struct {
 }
 
 func (c *CommonConfig) GetName() string { return "common_configs" }
-func (c *CommonConfig) GetId() int64    { return c.Id }
-func (c *CommonConfig) SetId(id int64)  { c.Id = id }
+func (c *CommonConfig) GetID() int64    { return c.ID }
+func (c *CommonConfig) SetID(id int64)  { c.ID = id }
 func (c *CommonConfig) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
 
 func (c *CommonConfig) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId, &c.Id)
+	return apis.SetPathParams(args, &c.ContractID, &c.ID)
 }
 
 var _ CountableListSpec = &CommonConfigList{}
@@ -68,7 +68,7 @@ func (c *CommonConfigList) Init() {
 }
 
 func (c *CommonConfigList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId)
+	return apis.SetPathParams(args, &c.ContractID)
 }
 
 var _ api.SearchParams = &CommonConfigListSearchKeywords{}

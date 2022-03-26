@@ -18,14 +18,14 @@ func register(items ...apis.Spec) {
 type Spec interface {
 	api.Spec
 	apis.Params
-	GetContractId() string
-	SetContractId(string)
+	GetContractID() string
+	SetContractID(string)
 }
 
 type ChildSpec interface {
 	Spec
-	GetId() int64
-	SetId(int64)
+	GetID() int64
+	SetID(int64)
 }
 
 type ListSpec interface {
@@ -39,19 +39,19 @@ type CountableListSpec interface {
 }
 
 type AttributeMeta struct {
-	ContractId string
+	ContractID string
 }
 
 func (s *AttributeMeta) GetGroup() string        { return groupName }
-func (s *AttributeMeta) GetContractId() string   { return s.ContractId }
-func (s *AttributeMeta) SetContractId(id string) { s.ContractId = id }
+func (s *AttributeMeta) GetContractID() string   { return s.ContractID }
+func (s *AttributeMeta) SetContractID(id string) { s.ContractID = id }
 
 func GetPathMethodForChildSpec(action api.Action, s ChildSpec) (string, string) {
 	switch action {
 	case api.ActionCreate:
-		return action.ToMethod(), fmt.Sprintf("/contracts/%s/%s", s.GetContractId(), s.GetName())
+		return action.ToMethod(), fmt.Sprintf("/contracts/%s/%s", s.GetContractID(), s.GetName())
 	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/contracts/%s/%s/%d", s.GetContractId(), s.GetName(), s.GetId())
+		return action.ToMethod(), fmt.Sprintf("/contracts/%s/%s/%d", s.GetContractID(), s.GetName(), s.GetID())
 	}
 	return "", ""
 }
@@ -59,10 +59,10 @@ func GetPathMethodForChildSpec(action api.Action, s ChildSpec) (string, string) 
 func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 	switch action {
 	case api.ActionList:
-		return http.MethodGet, fmt.Sprintf("/contracts/%s/%s", s.GetContractId(), s.GetName())
+		return http.MethodGet, fmt.Sprintf("/contracts/%s/%s", s.GetContractID(), s.GetName())
 	case api.ActionCount:
 		if _, ok := s.(api.CountableListSpec); ok {
-			return http.MethodGet, fmt.Sprintf("/contracts/%s/%s/count", s.GetContractId(), s.GetName())
+			return http.MethodGet, fmt.Sprintf("/contracts/%s/%s/count", s.GetContractID(), s.GetName())
 		}
 	}
 	return "", ""

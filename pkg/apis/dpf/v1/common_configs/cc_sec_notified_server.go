@@ -19,11 +19,11 @@ type CcSecNotifiedServer struct {
 }
 
 func (c *CcSecNotifiedServer) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigId, &c.Id)
+	return apis.SetPathParams(args, &c.CommonConfigID, &c.Id)
 }
 
-func (c *CcSecNotifiedServer) GetId() int64    { return c.Id }
-func (c *CcSecNotifiedServer) SetId(id int64)  { c.Id = id }
+func (c *CcSecNotifiedServer) GetID() int64    { return c.Id }
+func (c *CcSecNotifiedServer) SetID(id int64)  { c.Id = id }
 func (c *CcSecNotifiedServer) GetName() string { return "cc_sec_notified_servers" }
 func (c *CcSecNotifiedServer) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
@@ -39,7 +39,7 @@ type CcSecNotifiedServerList struct {
 }
 
 func (c *CcSecNotifiedServerList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigId)
+	return apis.SetPathParams(args, &c.CommonConfigID)
 }
 
 func (c *CcSecNotifiedServerList) GetName() string         { return "cc_sec_notified_servers" }

@@ -24,10 +24,10 @@ var _ = Describe("zones/common_configs", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = contracts.ContractZoneCommonConfig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
-			CommonConfigId: 10,
-			ZoneIds: []string{
+			CommonConfigID: 10,
+			ZoneIDs: []string{
 				"m1", "m2",
 			},
 		}
@@ -75,8 +75,8 @@ var _ = Describe("zones/common_configs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetContractId()).To(Equal("f10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetContractID()).To(Equal("f10"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -87,7 +87,7 @@ var _ = Describe("zones/common_configs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

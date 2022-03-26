@@ -24,7 +24,7 @@ var _ = Describe("managed_dns_servers", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		slist = zones.ManagedDnsList{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Items: []string{
 				"ns1.example.jp.",
@@ -52,7 +52,7 @@ var _ = Describe("managed_dns_servers", func() {
 				BeforeEach(func() {
 					c = zones.ManagedDnsList{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -81,8 +81,8 @@ var _ = Describe("managed_dns_servers", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ZoneId", func() {
-					Expect(slist.GetZoneId()).To(Equal("m10"))
+				It("can set ZoneID", func() {
+					Expect(slist.GetZoneID()).To(Equal("m10"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -93,7 +93,7 @@ var _ = Describe("managed_dns_servers", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

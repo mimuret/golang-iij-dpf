@@ -11,72 +11,90 @@ var _ = Describe("spec.go", func() {
 	Describe("DeepCopySpec", func() {
 		var (
 			spec *testtool.TestSpec
-			copy api.Spec
+			ret  api.Spec
 		)
-		When("param is nil", func() {
+		When("param is nil value", func() {
 			BeforeEach(func() {
-				spec = nil
-				copy = api.DeepCopySpec(spec)
+				ret = api.DeepCopySpec(nil)
 			})
 			It("retruns nil", func() {
-				Expect(copy).To(BeNil())
+				Expect(ret).To(BeNil())
+			})
+		})
+		When("param is nil", func() {
+			BeforeEach(func() {
+				ret = api.DeepCopySpec(spec)
+			})
+			It("retruns nil", func() {
+				Expect(ret).To(BeNil())
 			})
 		})
 		When("param is not nil", func() {
 			BeforeEach(func() {
-				spec = &testtool.TestSpec{}
-				copy = api.DeepCopySpec(spec)
+				ret = api.DeepCopySpec(&testtool.TestSpec{})
 			})
-			It("returns copy", func() {
-				Expect(copy).NotTo(BeNil())
+			It("returns ret", func() {
+				Expect(ret).NotTo(BeNil())
 			})
 		})
 	})
 	Describe("DeepCopyListSpec", func() {
 		var (
 			spec *testtool.TestSpecList
-			copy api.Spec
+			ret  api.Spec
 		)
-		When("param is nil", func() {
+		When("param is nil svalue", func() {
 			BeforeEach(func() {
-				spec = nil
-				copy = api.DeepCopyListSpec(spec)
+				ret = api.DeepCopyListSpec(nil)
 			})
 			It("retruns nil", func() {
-				Expect(copy).To(BeNil())
+				Expect(ret).To(BeNil())
+			})
+		})
+		When("param is nil", func() {
+			BeforeEach(func() {
+				ret = api.DeepCopyListSpec(spec)
+			})
+			It("retruns nil", func() {
+				Expect(ret).To(BeNil())
 			})
 		})
 		When("param is not nil", func() {
 			BeforeEach(func() {
-				spec = &testtool.TestSpecList{}
-				copy = api.DeepCopyListSpec(spec)
+				ret = api.DeepCopyListSpec(&testtool.TestSpecList{})
 			})
-			It("returns copy", func() {
-				Expect(copy).NotTo(BeNil())
+			It("returns ret", func() {
+				Expect(ret).NotTo(BeNil())
 			})
 		})
 	})
 	Describe("DeepCopyCountableListSpec", func() {
 		var (
 			spec *testtool.TestSpecCountableList
-			copy api.Spec
+			ret  api.Spec
 		)
-		When("param is nil", func() {
+		When("param is nil value", func() {
 			BeforeEach(func() {
-				spec = nil
-				copy = api.DeepCopyCountableListSpec(spec)
+				ret = api.DeepCopyCountableListSpec(nil)
 			})
 			It("retruns nil", func() {
-				Expect(copy).To(BeNil())
+				Expect(ret).To(BeNil())
+			})
+		})
+		When("param is nil", func() {
+			BeforeEach(func() {
+				ret = api.DeepCopyCountableListSpec(spec)
+			})
+			It("retruns nil", func() {
+				Expect(ret).To(BeNil())
 			})
 		})
 		When("param is not nil", func() {
 			BeforeEach(func() {
-				spec = &testtool.TestSpecCountableList{}
-				copy = api.DeepCopyCountableListSpec(spec)
+				ret = api.DeepCopyCountableListSpec(&testtool.TestSpecCountableList{})
 			})
-			It("returns copy", func() {
-				Expect(copy).NotTo(BeNil())
+			It("returns ret", func() {
+				Expect(ret).NotTo(BeNil())
 			})
 		})
 	})

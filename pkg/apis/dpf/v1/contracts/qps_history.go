@@ -29,13 +29,13 @@ func (c *QpsHistoryList) GetItems() interface{}   { return &c.Items }
 func (c *QpsHistoryList) Len() int                { return len(c.Items) }
 func (c *QpsHistoryList) Index(i int) interface{} { return c.Items[i] }
 
-// /contracts/{ContractId}/qps/histories
+// /contracts/{ContractID}/qps/histories
 func (c *QpsHistoryList) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForListSpec(action, c)
 }
 
 func (c *QpsHistoryList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId)
+	return apis.SetPathParams(args, &c.ContractID)
 }
 
 func (c *QpsHistoryList) Init() {}

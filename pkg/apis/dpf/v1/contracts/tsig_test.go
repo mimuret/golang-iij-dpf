@@ -27,7 +27,7 @@ var _ = Describe("tsigs", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = contracts.Tsig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Id:          1,
 			Name:        "hogehoge1",
@@ -37,7 +37,7 @@ var _ = Describe("tsigs", func() {
 		}
 		s2 = contracts.Tsig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Id:          2,
 			Name:        "hogehoge2",
@@ -47,7 +47,7 @@ var _ = Describe("tsigs", func() {
 		}
 		slist = contracts.TsigList{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Items: []contracts.Tsig{s1, s2},
 		}
@@ -83,7 +83,7 @@ var _ = Describe("tsigs", func() {
 				BeforeEach(func() {
 					c = contracts.Tsig{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 						Id: 1,
 					}
@@ -99,7 +99,7 @@ var _ = Describe("tsigs", func() {
 				BeforeEach(func() {
 					c = contracts.Tsig{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 						Id: 2,
 					}
@@ -118,7 +118,7 @@ var _ = Describe("tsigs", func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/contracts/f2/tsigs", httpmock.NewBytesResponder(202, bs1))
 				s := contracts.Tsig{
 					AttributeMeta: contracts.AttributeMeta{
-						ContractId: "f2",
+						ContractID: "f2",
 					},
 					Name:        "hoge-huga",
 					Description: "🍺🐇",
@@ -188,11 +188,11 @@ var _ = Describe("tsigs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetContractId()).To(Equal("f10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetContractID()).To(Equal("f10"))
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(200)))
+					Expect(s1.GetID()).To(Equal(int64(200)))
 				})
 			})
 			When("not enough arguments", func() {
@@ -211,7 +211,7 @@ var _ = Describe("tsigs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2, 1)
 				})
@@ -236,17 +236,17 @@ var _ = Describe("tsigs", func() {
 			testtool.TestGetPathMethodForSpec(&s1, "/contracts/f1/tsigs", "/contracts/f1/tsigs/1")
 		})
 		Context("contracts.ChildSpec common test", func() {
-			Context("GetId", func() {
+			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetId()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.Id))
 				})
 			})
-			Context("SetId", func() {
+			Context("SetID", func() {
 				BeforeEach(func() {
-					s1.SetId(2)
+					s1.SetID(2)
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(2)))
+					Expect(s1.GetID()).To(Equal(int64(2)))
 				})
 			})
 		})
@@ -288,7 +288,7 @@ var _ = Describe("tsigs", func() {
 				BeforeEach(func() {
 					c = contracts.TsigList{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -316,8 +316,8 @@ var _ = Describe("tsigs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(slist.GetContractId()).To(Equal("id12"))
+				It("can set ContractID", func() {
+					Expect(slist.GetContractID()).To(Equal("id12"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -328,7 +328,7 @@ var _ = Describe("tsigs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

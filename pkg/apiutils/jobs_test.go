@@ -34,7 +34,7 @@ var _ = Describe("jobs", func() {
 			BeforeEach(func() {
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = "33CF62F20EFC468E84F9779BF6FF1B4D"
+					job.RequestID = "33CF62F20EFC468E84F9779BF6FF1B4D"
 					job.Status = core.JobStatusRunning
 					return "ok", nil
 				}
@@ -51,20 +51,20 @@ var _ = Describe("jobs", func() {
 			BeforeEach(func() {
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = "33CF62F20EFC468E84F9779BF6FF1B4D"
+					job.RequestID = "33CF62F20EFC468E84F9779BF6FF1B4D"
 					job.Status = core.JobStatusRunning
 					return "ok", nil
 				}
 				c.WatchReadFunc = func(ctx context.Context, interval time.Duration, s api.Spec) error {
 					job := s.(*core.Job)
-					job.RequestId = "9BCFE2E9C10D4D9A8444CB0B48C72830"
+					job.RequestID = "9BCFE2E9C10D4D9A8444CB0B48C72830"
 					job.Status = core.JobStatusSuccessful
 					return nil
 				}
 			})
 			It("returns last job", func() {
 				eq := &core.Job{
-					RequestId: "9BCFE2E9C10D4D9A8444CB0B48C72830",
+					RequestID: "9BCFE2E9C10D4D9A8444CB0B48C72830",
 					Status:    core.JobStatusSuccessful,
 				}
 				Eventually(func() (*core.Job, error) {
@@ -76,7 +76,7 @@ var _ = Describe("jobs", func() {
 			BeforeEach(func() {
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = "33CF62F20EFC468E84F9779BF6FF1B4D"
+					job.RequestID = "33CF62F20EFC468E84F9779BF6FF1B4D"
 					job.Status = core.JobStatusFailed
 					return "ok", nil
 				}

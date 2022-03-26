@@ -41,7 +41,7 @@ func (c *ZoneProxyHealthCheckList) GetPathMethod(action api.Action) (string, str
 }
 
 func (c *ZoneProxyHealthCheckList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func (c *ZoneProxyHealthCheckList) Init() {}

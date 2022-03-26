@@ -34,7 +34,7 @@ func (c *LogList) GetPathMethod(action api.Action) (string, string) {
 }
 
 func (c *LogList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId)
+	return apis.SetPathParams(args, &c.ContractID)
 }
 
 func (c *LogList) Init() {}

@@ -26,7 +26,7 @@ var _ = Describe("contract_zones", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Zone{
 			Id:               "m1",
-			CommonConfigId:   1,
+			CommonConfigID:   1,
 			ServiceCode:      "dpm0000001",
 			State:            types.StateBeforeStart,
 			Favorite:         types.FavoriteHighPriority,
@@ -37,7 +37,7 @@ var _ = Describe("contract_zones", func() {
 		}
 		s2 = core.Zone{
 			Id:               "m2",
-			CommonConfigId:   2,
+			CommonConfigID:   2,
 			ServiceCode:      "dpm0000002",
 			State:            types.StateRunning,
 			Favorite:         types.FavoriteLowPriority,
@@ -49,7 +49,7 @@ var _ = Describe("contract_zones", func() {
 
 		slist = contracts.ContractZoneList{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Items: []core.Zone{s1, s2},
 		}
@@ -93,7 +93,7 @@ var _ = Describe("contract_zones", func() {
 				BeforeEach(func() {
 					c = contracts.ContractZoneList{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -121,8 +121,8 @@ var _ = Describe("contract_zones", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(slist.GetContractId()).To(Equal("id12"))
+				It("can set ContractID", func() {
+					Expect(slist.GetContractID()).To(Equal("id12"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -133,7 +133,7 @@ var _ = Describe("contract_zones", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

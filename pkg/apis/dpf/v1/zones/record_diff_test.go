@@ -26,7 +26,7 @@ var _ = Describe("records/diffs", func() {
 		s1 = zones.RecordDiff{
 			New: &zones.Record{
 				AttributeMeta: zones.AttributeMeta{
-					ZoneId: "m1",
+					ZoneID: "m1",
 				},
 				Id:     "r1",
 				Name:   "www.example.jp.",
@@ -44,7 +44,7 @@ var _ = Describe("records/diffs", func() {
 		s2 = zones.RecordDiff{
 			Old: &zones.Record{
 				AttributeMeta: zones.AttributeMeta{
-					ZoneId: "m1",
+					ZoneID: "m1",
 				},
 				Id:     "r1",
 				Name:   "www.example.jp.",
@@ -62,7 +62,7 @@ var _ = Describe("records/diffs", func() {
 		s3 = zones.RecordDiff{
 			New: &zones.Record{
 				AttributeMeta: zones.AttributeMeta{
-					ZoneId: "m1",
+					ZoneID: "m1",
 				},
 				Id:     "r3",
 				Name:   "www.example.jp.",
@@ -77,7 +77,7 @@ var _ = Describe("records/diffs", func() {
 			},
 			Old: &zones.Record{
 				AttributeMeta: zones.AttributeMeta{
-					ZoneId: "m1",
+					ZoneID: "m1",
 				},
 				Id:     "r3",
 				Name:   "www.example.jp.",
@@ -93,7 +93,7 @@ var _ = Describe("records/diffs", func() {
 		}
 		slist = zones.RecordDiffList{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Items: []zones.RecordDiff{s1, s2, s3},
 		}
@@ -188,7 +188,7 @@ var _ = Describe("records/diffs", func() {
 				BeforeEach(func() {
 					c = zones.RecordDiffList{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -216,8 +216,8 @@ var _ = Describe("records/diffs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ZoneId", func() {
-					Expect(slist.GetZoneId()).To(Equal("m1"))
+				It("can set ZoneID", func() {
+					Expect(slist.GetZoneID()).To(Equal("m1"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -228,7 +228,7 @@ var _ = Describe("records/diffs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(1)
 				})

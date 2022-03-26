@@ -24,7 +24,7 @@ var _ = Describe("delegations", func() {
 		Expect(err).To(Succeed())
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s = core.DelegationApply{
-			ZoneIds: []string{"m1", "m2"},
+			ZoneIDs: []string{"m1", "m2"},
 		}
 	})
 	Describe("DelegationApply", func() {

@@ -114,17 +114,17 @@ func (c *Record) GetName() string { return "records" }
 func (c *Record) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionCreate:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s", c.GetZoneId(), c.GetName())
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s", c.GetZoneID(), c.GetName())
 	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s", c.GetZoneId(), c.GetName(), c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s", c.GetZoneID(), c.GetName(), c.Id)
 	case api.ActionCancel:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s/changes", c.GetZoneId(), c.GetName(), c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/%s/%s/changes", c.GetZoneID(), c.GetName(), c.Id)
 	}
 	return "", ""
 }
 
 func (c *Record) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId, &c.Id)
+	return apis.SetPathParams(args, &c.ZoneID, &c.Id)
 }
 
 var _ CountableListSpec = &RecordList{}
@@ -156,7 +156,7 @@ func (c *RecordList) GetPathMethod(action api.Action) (string, string) {
 }
 
 func (c *RecordList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func (c *RecordList) Init() {
@@ -200,7 +200,7 @@ func (c *CurrentRecordList) Init() {
 }
 
 func (c *CurrentRecordList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func init() {

@@ -25,7 +25,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = common_configs.CcSecTransferAcl{
 			AttributeMeta: common_configs.AttributeMeta{
-				CommonConfigId: 1,
+				CommonConfigID: 1,
 			},
 			Id:      1,
 			Network: testtool.MustParseIPNet("192.168.1.0/24"),
@@ -33,7 +33,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 		}
 		s2 = common_configs.CcSecTransferAcl{
 			AttributeMeta: common_configs.AttributeMeta{
-				CommonConfigId: 1,
+				CommonConfigID: 1,
 			},
 			Id:      2,
 			Network: testtool.MustParseIPNet("2001:db8::/64"),
@@ -41,7 +41,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 		}
 		slist = common_configs.CcSecTransferAclList{
 			AttributeMeta: common_configs.AttributeMeta{
-				CommonConfigId: 1,
+				CommonConfigID: 1,
 			},
 			Items: []common_configs.CcSecTransferAcl{s1, s2},
 		}
@@ -73,7 +73,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				BeforeEach(func() {
 					c = common_configs.CcSecTransferAcl{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 1,
+							CommonConfigID: 1,
 						},
 						Id: 1,
 					}
@@ -89,7 +89,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				BeforeEach(func() {
 					c = common_configs.CcSecTransferAcl{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 1,
+							CommonConfigID: 1,
 						},
 						Id: 2,
 					}
@@ -118,7 +118,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				BeforeEach(func() {
 					s := common_configs.CcSecTransferAcl{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 2,
+							CommonConfigID: 2,
 						},
 						Network: testtool.MustParseIPNet("10.0.0.0/8"),
 						TsigId:  1,
@@ -140,7 +140,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				BeforeEach(func() {
 					s := common_configs.CcSecTransferAcl{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 3,
+							CommonConfigID: 3,
 						},
 						Network: testtool.MustParseIPNet("2001:db8::/48"),
 					}
@@ -246,11 +246,11 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set CommonConfigId", func() {
-					Expect(s1.GetCommonConfigId()).To(Equal(int64(100)))
+				It("can set CommonConfigID", func() {
+					Expect(s1.GetCommonConfigID()).To(Equal(int64(100)))
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(200)))
+					Expect(s1.GetID()).To(Equal(int64(200)))
 				})
 			})
 			When("not enough arguments", func() {
@@ -269,7 +269,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (CommonConfigId)", func() {
+			When("arguments type missmatch (CommonConfigID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams("2", 1)
 				})
@@ -293,17 +293,17 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 			testtool.TestGetPathMethodForSpec(&s1, "/common_configs/1/cc_sec_transfer_acls", "/common_configs/1/cc_sec_transfer_acls/1")
 		})
 		Context("contracts.ChildSpec common test", func() {
-			Context("GetId", func() {
+			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetId()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.Id))
 				})
 			})
-			Context("SetId", func() {
+			Context("SetID", func() {
 				BeforeEach(func() {
-					s1.SetId(2)
+					s1.SetID(2)
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(2)))
+					Expect(s1.GetID()).To(Equal(int64(2)))
 				})
 			})
 		})
@@ -335,7 +335,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				BeforeEach(func() {
 					c = common_configs.CcSecTransferAclList{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 1,
+							CommonConfigID: 1,
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -363,8 +363,8 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set CommonConfigId", func() {
-					Expect(slist.GetCommonConfigId()).To(Equal(int64(99)))
+				It("can set CommonConfigID", func() {
+					Expect(slist.GetCommonConfigID()).To(Equal(int64(99)))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -375,7 +375,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (CommonConfigId)", func() {
+			When("arguments type missmatch (CommonConfigID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams("2")
 				})

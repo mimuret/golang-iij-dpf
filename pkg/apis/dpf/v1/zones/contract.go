@@ -21,7 +21,7 @@ func (c *Contract) GetPathMethod(action api.Action) (string, string) {
 }
 
 func (c *Contract) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func init() {

@@ -30,7 +30,7 @@ var _ = Describe("history", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = zones.HistoryText{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			History: zones.History{
 				Id:          1,
@@ -42,7 +42,7 @@ var _ = Describe("history", func() {
 		}
 		s2 = zones.HistoryText{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			History: zones.History{
 				Id:          2,
@@ -84,7 +84,7 @@ var _ = Describe("history", func() {
 				BeforeEach(func() {
 					c = zones.HistoryText{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 						History: zones.History{
 							Id: 1,
@@ -102,7 +102,7 @@ var _ = Describe("history", func() {
 				BeforeEach(func() {
 					c = zones.HistoryText{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 						History: zones.History{
 							Id: 2,
@@ -133,8 +133,8 @@ var _ = Describe("history", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetZoneId()).To(Equal("m10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetZoneID()).To(Equal("m10"))
 				})
 				It("can set HistoryId", func() {
 					Expect(s1.Id).To(Equal(int64(10)))
@@ -156,7 +156,7 @@ var _ = Describe("history", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

@@ -47,7 +47,7 @@ var _ = Describe("logs", func() {
 
 		slist = zones.LogList{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Items: []core.Log{s1, s2},
 		}
@@ -91,7 +91,7 @@ var _ = Describe("logs", func() {
 				BeforeEach(func() {
 					c = zones.LogList{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -119,8 +119,8 @@ var _ = Describe("logs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ZoneId", func() {
-					Expect(slist.GetZoneId()).To(Equal("id12"))
+				It("can set ZoneID", func() {
+					Expect(slist.GetZoneID()).To(Equal("id12"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -131,7 +131,7 @@ var _ = Describe("logs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

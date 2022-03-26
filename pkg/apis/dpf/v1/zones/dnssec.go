@@ -71,13 +71,13 @@ func (c *Dnssec) GetName() string { return "dnssec" }
 func (c *Dnssec) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/dnssec", c.GetZoneId())
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/dnssec", c.GetZoneID())
 	}
 	return "", ""
 }
 
 func (c *Dnssec) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func init() {

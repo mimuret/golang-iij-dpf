@@ -13,15 +13,15 @@ var _ CountableListSpec = &TsigCommonConfigList{}
 type TsigCommonConfigList struct {
 	AttributeMeta
 	api.Count
-	Id    int64
+	ID    int64
 	Items []CommonConfig `read:"items"`
 }
 
 func (c *TsigCommonConfigList) GetName() string {
-	return fmt.Sprintf("tsigs/%d/common_configs", c.Id)
+	return fmt.Sprintf("tsigs/%d/common_configs", c.ID)
 }
-func (c *TsigCommonConfigList) GetId() int64   { return c.Id }
-func (c *TsigCommonConfigList) SetId(id int64) { c.Id = id }
+func (c *TsigCommonConfigList) GetID() int64   { return c.ID }
+func (c *TsigCommonConfigList) SetID(id int64) { c.ID = id }
 
 func (c *TsigCommonConfigList) GetItems() interface{}   { return &c.Items }
 func (c *TsigCommonConfigList) Len() int                { return len(c.Items) }
@@ -47,7 +47,7 @@ func (c *TsigCommonConfigList) Init() {
 }
 
 func (c *TsigCommonConfigList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId, &c.Id)
+	return apis.SetPathParams(args, &c.ContractID, &c.ID)
 }
 
 func init() {

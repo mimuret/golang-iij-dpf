@@ -162,7 +162,7 @@ func (c *Client) Do(ctx context.Context, spec Spec, action Action, body interfac
 		if err := c.Json.UnmarshalRead(bs, badRequest); err != nil {
 			return "", fmt.Errorf("failed to request: status code: %d body: %s err: %w", resp.StatusCode, string(bs), err)
 		}
-		return badRequest.RequestId, badRequest
+		return badRequest.RequestID, badRequest
 	}
 
 	// parse raw response
@@ -173,7 +173,7 @@ func (c *Client) Do(ctx context.Context, spec Spec, action Action, body interfac
 	}
 	if req.Method == http.MethodGet {
 		if err := c.doReadResponse(action, spec, bs, rawResponse); err != nil {
-			return rawResponse.RequestId, err
+			return rawResponse.RequestID, err
 		}
 	}
 
@@ -182,7 +182,7 @@ func (c *Client) Do(ctx context.Context, spec Spec, action Action, body interfac
 		d.Init()
 	}
 
-	return rawResponse.RequestId, nil
+	return rawResponse.RequestID, nil
 }
 
 func (c *Client) doReadResponse(action Action, spec Spec, bs []byte, rawResponse *RawResponse) error {

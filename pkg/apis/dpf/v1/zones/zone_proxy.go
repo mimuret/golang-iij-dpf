@@ -21,13 +21,13 @@ func (c *ZoneProxy) GetName() string { return "zone_proxy" }
 func (c *ZoneProxy) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_proxy", c.GetZoneId())
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_proxy", c.GetZoneID())
 	}
 	return "", ""
 }
 
 func (c *ZoneProxy) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func init() {

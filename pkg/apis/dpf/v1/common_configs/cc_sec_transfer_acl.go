@@ -18,11 +18,11 @@ type CcSecTransferAcl struct {
 }
 
 func (c *CcSecTransferAcl) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigId, &c.Id)
+	return apis.SetPathParams(args, &c.CommonConfigID, &c.Id)
 }
 
-func (c *CcSecTransferAcl) GetId() int64    { return c.Id }
-func (c *CcSecTransferAcl) SetId(id int64)  { c.Id = id }
+func (c *CcSecTransferAcl) GetID() int64    { return c.Id }
+func (c *CcSecTransferAcl) SetID(id int64)  { c.Id = id }
 func (c *CcSecTransferAcl) GetName() string { return "cc_sec_transfer_acls" }
 func (c *CcSecTransferAcl) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
@@ -38,7 +38,7 @@ type CcSecTransferAclList struct {
 }
 
 func (c *CcSecTransferAclList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigId)
+	return apis.SetPathParams(args, &c.CommonConfigID)
 }
 
 func (c *CcSecTransferAclList) GetName() string         { return "cc_sec_transfer_acls" }

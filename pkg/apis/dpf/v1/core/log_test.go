@@ -135,7 +135,7 @@ var _ = Describe("log", func() {
 						Operation: api.KeywordsString{"updating_default_ttl", "dismiss_zone_edits"},
 						Target:    api.KeywordsString{"hoge", "fuga"},
 						Detail:    api.KeywordsString{"🐇", "🍺"},
-						RequestId: api.KeywordsString{"f02fe1e1404140cab93c8f7af26081b7", "f098f808cde249d48a885490f7622df9"},
+						RequestID: api.KeywordsString{"f02fe1e1404140cab93c8f7af26081b7", "f098f808cde249d48a885490f7622df9"},
 						Status:    core.KeywordsLogStatus{core.LogStatusStart, core.LogStatusSuccess, core.LogStatusFailure, core.LogStatusRetry},
 					},
 					/*

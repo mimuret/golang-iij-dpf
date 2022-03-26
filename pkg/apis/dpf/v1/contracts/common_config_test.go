@@ -28,9 +28,9 @@ var _ = Describe("common_configs", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = contracts.CommonConfig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
-			Id:                1,
+			ID:                1,
 			Name:              "共通設定1",
 			ManagedDNSEnabled: types.Enabled,
 			Default:           types.Enabled,
@@ -38,9 +38,9 @@ var _ = Describe("common_configs", func() {
 		}
 		s2 = contracts.CommonConfig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
-			Id:                2,
+			ID:                2,
 			Name:              "共通設定2",
 			ManagedDNSEnabled: types.Disabled,
 			Default:           types.Disabled,
@@ -48,7 +48,7 @@ var _ = Describe("common_configs", func() {
 		}
 		slist = contracts.CommonConfigList{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Items: []contracts.CommonConfig{s1, s2},
 		}
@@ -84,9 +84,9 @@ var _ = Describe("common_configs", func() {
 				BeforeEach(func() {
 					c = contracts.CommonConfig{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
-						Id: 1,
+						ID: 1,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -100,9 +100,9 @@ var _ = Describe("common_configs", func() {
 				BeforeEach(func() {
 					c = contracts.CommonConfig{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
-						Id: 2,
+						ID: 2,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -119,7 +119,7 @@ var _ = Describe("common_configs", func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/contracts/f2/common_configs", httpmock.NewBytesResponder(202, bs1))
 				s := contracts.CommonConfig{
 					AttributeMeta: contracts.AttributeMeta{
-						ContractId: "f2",
+						ContractID: "f2",
 					},
 					Name:        "create 🍻",
 					Description: "🍺🐇",
@@ -190,11 +190,11 @@ var _ = Describe("common_configs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetContractId()).To(Equal("f10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetContractID()).To(Equal("f10"))
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(200)))
+					Expect(s1.GetID()).To(Equal(int64(200)))
 				})
 			})
 			When("not enough arguments", func() {
@@ -213,7 +213,7 @@ var _ = Describe("common_configs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2, 1)
 				})
@@ -237,17 +237,17 @@ var _ = Describe("common_configs", func() {
 			testtool.TestGetPathMethodForSpec(&s1, "/contracts/f1/common_configs", "/contracts/f1/common_configs/1")
 		})
 		Context("contracts.ChildSpec common test", func() {
-			Context("GetId", func() {
+			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetId()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.ID))
 				})
 			})
-			Context("SetId", func() {
+			Context("SetID", func() {
 				BeforeEach(func() {
-					s1.SetId(2)
+					s1.SetID(2)
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(2)))
+					Expect(s1.GetID()).To(Equal(int64(2)))
 				})
 			})
 		})
@@ -283,7 +283,7 @@ var _ = Describe("common_configs", func() {
 				BeforeEach(func() {
 					c = contracts.CommonConfigList{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -311,8 +311,8 @@ var _ = Describe("common_configs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(slist.GetContractId()).To(Equal("id12"))
+				It("can set ContractID", func() {
+					Expect(slist.GetContractID()).To(Equal("id12"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -323,7 +323,7 @@ var _ = Describe("common_configs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

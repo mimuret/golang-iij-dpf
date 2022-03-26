@@ -26,9 +26,9 @@ var _ = Describe("tsigs/common_configs", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = contracts.CommonConfig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
-			Id:                1,
+			ID:                1,
 			Name:              "共通設定1",
 			ManagedDNSEnabled: types.Enabled,
 			Default:           types.Enabled,
@@ -36,9 +36,9 @@ var _ = Describe("tsigs/common_configs", func() {
 		}
 		s2 = contracts.CommonConfig{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
-			Id:                2,
+			ID:                2,
 			Name:              "共通設定2",
 			ManagedDNSEnabled: types.Disabled,
 			Default:           types.Disabled,
@@ -46,10 +46,10 @@ var _ = Describe("tsigs/common_configs", func() {
 		}
 		slist = contracts.TsigCommonConfigList{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Items: []contracts.CommonConfig{s1, s2},
-			Id:    1,
+			ID:    1,
 		}
 	})
 	Describe("TsigCommonConfigList", func() {
@@ -88,9 +88,9 @@ var _ = Describe("tsigs/common_configs", func() {
 				BeforeEach(func() {
 					c = contracts.TsigCommonConfigList{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
-						Id: 1,
+						ID: 1,
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
 				})
@@ -117,11 +117,11 @@ var _ = Describe("tsigs/common_configs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(slist.GetContractId()).To(Equal("id12"))
+				It("can set ContractID", func() {
+					Expect(slist.GetContractID()).To(Equal("id12"))
 				})
 				It("can set Id (tsig_id)", func() {
-					Expect(slist.Id).To(Equal(int64(122)))
+					Expect(slist.ID).To(Equal(int64(122)))
 				})
 			})
 			When("not enough arguments", func() {
@@ -140,7 +140,7 @@ var _ = Describe("tsigs/common_configs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2, 2)
 				})
@@ -181,17 +181,17 @@ var _ = Describe("tsigs/common_configs", func() {
 			testtool.TestAddItem(&slist, s1)
 		})
 		Context("contracts.ChildSpec common test", func() {
-			Context("GetId", func() {
+			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(slist.GetId()).To(Equal(slist.Id))
+					Expect(slist.GetID()).To(Equal(slist.ID))
 				})
 			})
-			Context("SetId", func() {
+			Context("SetID", func() {
 				BeforeEach(func() {
-					slist.SetId(2)
+					slist.SetID(2)
 				})
 				It("can set Id", func() {
-					Expect(slist.GetId()).To(Equal(int64(2)))
+					Expect(slist.GetID()).To(Equal(int64(2)))
 				})
 			})
 		})

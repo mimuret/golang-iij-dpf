@@ -138,7 +138,7 @@ var _ = Describe("contract", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
+				It("can set ContractID", func() {
 					Expect(s1.Id).To(Equal("f10"))
 				})
 			})
@@ -150,7 +150,7 @@ var _ = Describe("contract", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

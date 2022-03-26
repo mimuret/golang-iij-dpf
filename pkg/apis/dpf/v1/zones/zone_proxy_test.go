@@ -26,13 +26,13 @@ var _ = Describe("zone_proxy", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = zones.ZoneProxy{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Enabled: types.Enabled,
 		}
 		s2 = zones.ZoneProxy{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m2",
+				ZoneID: "m2",
 			},
 			Enabled: types.Disabled,
 		}
@@ -60,7 +60,7 @@ var _ = Describe("zone_proxy", func() {
 				BeforeEach(func() {
 					c = zones.ZoneProxy{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.Read(context.Background(), &c)
@@ -75,7 +75,7 @@ var _ = Describe("zone_proxy", func() {
 				BeforeEach(func() {
 					c = zones.ZoneProxy{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m2",
+							ZoneID: "m2",
 						},
 					}
 					reqId, err = cl.Read(context.Background(), &c)
@@ -145,7 +145,7 @@ var _ = Describe("zone_proxy", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ZonetId", func() {
-					Expect(s1.ZoneId).To(Equal("m100"))
+					Expect(s1.ZoneID).To(Equal("m100"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -156,7 +156,7 @@ var _ = Describe("zone_proxy", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

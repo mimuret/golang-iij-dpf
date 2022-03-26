@@ -53,7 +53,7 @@ var _ = Describe("qps_histories", func() {
 
 		slist = contracts.QpsHistoryList{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Items: []contracts.QpsHistory{s1, s2},
 		}
@@ -103,7 +103,7 @@ var _ = Describe("qps_histories", func() {
 				BeforeEach(func() {
 					c = contracts.QpsHistoryList{
 						AttributeMeta: contracts.AttributeMeta{
-							ContractId: "f1",
+							ContractID: "f1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -131,8 +131,8 @@ var _ = Describe("qps_histories", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(slist.GetContractId()).To(Equal("id12"))
+				It("can set ContractID", func() {
+					Expect(slist.GetContractID()).To(Equal("id12"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -143,7 +143,7 @@ var _ = Describe("qps_histories", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ContractId)", func() {
+			When("arguments type missmatch (ContractID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams(2)
 				})

@@ -24,7 +24,7 @@ var _ = Describe("zones", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s = zones.ZoneApply{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Description: "commit records",
 		}
@@ -83,7 +83,7 @@ var _ = Describe("zones", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ZonetId", func() {
-					Expect(s.ZoneId).To(Equal("m100"))
+					Expect(s.ZoneID).To(Equal("m100"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -94,7 +94,7 @@ var _ = Describe("zones", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s.SetPathParams(2)
 				})

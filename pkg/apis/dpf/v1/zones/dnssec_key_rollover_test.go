@@ -24,7 +24,7 @@ var _ = Describe("dnssec/ksk_rollover", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = zones.DnssecKskRollover{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 		}
 	})
@@ -62,8 +62,8 @@ var _ = Describe("dnssec/ksk_rollover", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetZoneId()).To(Equal("m10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetZoneID()).To(Equal("m10"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -74,7 +74,7 @@ var _ = Describe("dnssec/ksk_rollover", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

@@ -10,7 +10,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/zones"
 )
 
-func GetZoneIdFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (string, error) {
+func GetZoneIDFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (string, error) {
 	z, err := GetZoneFromZonename(ctx, cl, zonename)
 	if err != nil {
 		return "", err
@@ -40,17 +40,17 @@ func GetRecordFromZoneName(ctx context.Context, cl api.ClientInterface, zonename
 	if err != nil {
 		return nil, err
 	}
-	return GetRecordFromZoneId(ctx, cl, z.Id, recordName, rrtype)
+	return GetRecordFromZoneID(ctx, cl, z.Id, recordName, rrtype)
 }
 
-func GetRecordFromZoneId(ctx context.Context, cl api.ClientInterface, zoneId string, recordName string, rrtype zones.Type) (*zones.Record, error) {
+func GetRecordFromZoneID(ctx context.Context, cl api.ClientInterface, zoneId string, recordName string, rrtype zones.Type) (*zones.Record, error) {
 	recordName = dns.CanonicalName(recordName)
 	keywords := &zones.RecordListSearchKeywords{
 		Name: api.KeywordsString{recordName},
 	}
 	currentList := &zones.CurrentRecordList{
 		AttributeMeta: zones.AttributeMeta{
-			ZoneId: zoneId,
+			ZoneID: zoneId,
 		},
 	}
 	if _, err := cl.ListAll(ctx, currentList, keywords); err != nil {

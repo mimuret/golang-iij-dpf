@@ -34,14 +34,14 @@ type Tsig struct {
 }
 
 func (c *Tsig) GetName() string { return "tsigs" }
-func (c *Tsig) GetId() int64    { return c.Id }
-func (c *Tsig) SetId(id int64)  { c.Id = id }
+func (c *Tsig) GetID() int64    { return c.Id }
+func (c *Tsig) SetID(id int64)  { c.Id = id }
 func (c *Tsig) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
 
 func (c *Tsig) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId, &c.Id)
+	return apis.SetPathParams(args, &c.ContractID, &c.Id)
 }
 
 var _ ListSpec = &TsigList{}
@@ -78,7 +78,7 @@ func (c *TsigList) Init() {
 }
 
 func (c *TsigList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractId)
+	return apis.SetPathParams(args, &c.ContractID)
 }
 
 var _ api.SearchParams = &TsigListSearchKeywords{}

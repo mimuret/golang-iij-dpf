@@ -30,7 +30,7 @@ func (c *DsRecordList) GetPathMethod(action api.Action) (string, string) {
 }
 
 func (c *DsRecordList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func (c *DsRecordList) Init() {}

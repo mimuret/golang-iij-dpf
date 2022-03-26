@@ -17,14 +17,14 @@ func register(items ...apis.Spec) {
 
 type Spec interface {
 	apis.Spec
-	SetZoneId(string)
-	GetZoneId() string
+	SetZoneID(string)
+	GetZoneID() string
 }
 
 type ChildSpec interface {
 	Spec
-	GetId() int64
-	SetId(int64)
+	GetID() int64
+	SetID(int64)
 }
 
 type ListSpec interface {
@@ -38,21 +38,21 @@ type CountableListSpec interface {
 }
 
 type AttributeMeta struct {
-	ZoneId string `read:"-"`
+	ZoneID string `read:"-"`
 }
 
 // for ctl
 func (s *AttributeMeta) GetGroup() string    { return groupName }
-func (s *AttributeMeta) SetZoneId(id string) { s.ZoneId = id }
-func (s *AttributeMeta) GetZoneId() string   { return s.ZoneId }
+func (s *AttributeMeta) SetZoneID(id string) { s.ZoneID = id }
+func (s *AttributeMeta) GetZoneID() string   { return s.ZoneID }
 
 func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 	switch action {
 	case api.ActionList:
-		return http.MethodGet, fmt.Sprintf("/zones/%s/%s", s.GetZoneId(), s.GetName())
+		return http.MethodGet, fmt.Sprintf("/zones/%s/%s", s.GetZoneID(), s.GetName())
 	case api.ActionCount:
 		if _, ok := s.(api.CountableListSpec); ok {
-			return http.MethodGet, fmt.Sprintf("/zones/%s/%s/count", s.GetZoneId(), s.GetName())
+			return http.MethodGet, fmt.Sprintf("/zones/%s/%s/count", s.GetZoneID(), s.GetName())
 		}
 	}
 	return "", ""
@@ -60,7 +60,7 @@ func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 
 func GetReadPathMethodForSpec(action api.Action, s Spec) (string, string) {
 	if action == api.ActionRead {
-		return http.MethodGet, fmt.Sprintf("/zones/%s/%s", s.GetZoneId(), s.GetName())
+		return http.MethodGet, fmt.Sprintf("/zones/%s/%s", s.GetZoneID(), s.GetName())
 	}
 	return "", ""
 }

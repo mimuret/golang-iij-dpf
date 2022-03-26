@@ -17,27 +17,27 @@ var _ = Describe("common_configs", func() {
 				Expect(meta.GetGroup()).To(Equal("common-configs.api.dns-platform.jp/v1"))
 			})
 		})
-		Context("GetCommonConfigId", func() {
+		Context("GetCommonConfigID", func() {
 			When("default", func() {
 				It("returns 0", func() {
-					Expect(meta.GetCommonConfigId()).To(Equal(int64(0)))
+					Expect(meta.GetCommonConfigID()).To(Equal(int64(0)))
 				})
 			})
 			When("default", func() {
 				BeforeEach(func() {
-					meta.CommonConfigId = 1
+					meta.CommonConfigID = 1
 				})
-				It("returns CommonConfigId", func() {
-					Expect(meta.GetCommonConfigId()).To(Equal(int64(1)))
+				It("returns CommonConfigID", func() {
+					Expect(meta.GetCommonConfigID()).To(Equal(int64(1)))
 				})
 			})
 		})
-		Context("SetCommonConfigId", func() {
+		Context("SetCommonConfigID", func() {
 			BeforeEach(func() {
-				meta.SetCommonConfigId(2)
+				meta.SetCommonConfigID(2)
 			})
-			It("can set CommonConfigId", func() {
-				Expect(meta.GetCommonConfigId()).To(Equal(int64(2)))
+			It("can set CommonConfigID", func() {
+				Expect(meta.GetCommonConfigID()).To(Equal(int64(2)))
 			})
 		})
 		Context("DeepCopy", func() {

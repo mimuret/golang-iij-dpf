@@ -6,7 +6,7 @@ import (
 )
 
 type ResponseCommon struct {
-	RequestId string `read:"request_id"`
+	RequestID string `read:"request_id"`
 }
 
 type RawResponse struct {

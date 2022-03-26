@@ -27,7 +27,7 @@ var _ = Describe("default_ttl", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = zones.DefaultTTL{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Value:    3600,
 			State:    zones.DefaultTTLStateApplied,
@@ -35,7 +35,7 @@ var _ = Describe("default_ttl", func() {
 		}
 		s2 = zones.DefaultTTL{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Value:    300,
 			State:    zones.DefaultTTLStateApplied,
@@ -47,7 +47,7 @@ var _ = Describe("default_ttl", func() {
 		}
 		slist = zones.DefaultTTLDiffList{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Items: []zones.DefaultTTLDiff{zdiff},
 		}
@@ -71,7 +71,7 @@ var _ = Describe("default_ttl", func() {
 				BeforeEach(func() {
 					c = zones.DefaultTTL{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.Read(context.Background(), &c)
@@ -135,8 +135,8 @@ var _ = Describe("default_ttl", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetZoneId()).To(Equal("m10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetZoneID()).To(Equal("m10"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -147,7 +147,7 @@ var _ = Describe("default_ttl", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})
@@ -205,7 +205,7 @@ var _ = Describe("default_ttl", func() {
 				BeforeEach(func() {
 					c = zones.DefaultTTLDiffList{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)

@@ -28,7 +28,7 @@ var _ = Describe("zones", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Zone{
 			Id:               "m1",
-			CommonConfigId:   1,
+			CommonConfigID:   1,
 			ServiceCode:      "dpm0000001",
 			State:            types.StateBeforeStart,
 			Favorite:         types.FavoriteHighPriority,
@@ -39,7 +39,7 @@ var _ = Describe("zones", func() {
 		}
 		s2 = core.Zone{
 			Id:               "m2",
-			CommonConfigId:   2,
+			CommonConfigID:   2,
 			ServiceCode:      "dpm0000002",
 			State:            types.StateRunning,
 			Favorite:         types.FavoriteLowPriority,
@@ -150,7 +150,7 @@ var _ = Describe("zones", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
+				It("can set ContractID", func() {
 					Expect(s1.Id).To(Equal("m100"))
 				})
 			})
@@ -162,7 +162,7 @@ var _ = Describe("zones", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})
@@ -308,7 +308,7 @@ var _ = Describe("zones", func() {
 						State:            api.KeywordsState{types.StateBeforeStart, types.StateRunning},
 						Favorite:         api.KeywordsFavorite{types.FavoriteHighPriority, types.FavoriteLowPriority},
 						Description:      api.KeywordsString{"あああ", "🍺"},
-						CommonConfigId:   api.KeywordsId{100, 200},
+						CommonConfigID:   api.KeywordsId{100, 200},
 						ZoneProxyEnabled: api.KeywordsBoolean{types.Enabled, types.Disabled},
 					},
 					/*

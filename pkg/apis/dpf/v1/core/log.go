@@ -30,7 +30,7 @@ type Log struct {
 	Operator  string     `read:"operator"`
 	Operation string     `read:"operation"`
 	Target    string     `read:"target"`
-	RequestId string     `read:"request_id"`
+	RequestID string     `read:"request_id"`
 	Status    LogStatus  `read:"status"`
 }
 
@@ -65,7 +65,7 @@ type LogListSearchKeywords struct {
 	Operation api.KeywordsString `url:"_keywords_operation[],omitempty"`
 	Target    api.KeywordsString `url:"_keywords_target[],omitempty"`
 	Detail    api.KeywordsString `url:"_keywords_detail[],omitempty"`
-	RequestId api.KeywordsString `url:"_keywords_request_id[],omitempty"`
+	RequestID api.KeywordsString `url:"_keywords_request_id[],omitempty"`
 	Status    KeywordsLogStatus  `url:"_keywords_status[],omitempty"`
 }
 

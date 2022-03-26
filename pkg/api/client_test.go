@@ -1158,7 +1158,7 @@ var _ = Describe("Client", func() {
 			BeforeEach(func() {
 				_, err = c.ListAll(ctx, countableList, &api.CommonSearchParams{Limit: 1})
 				Expect(err).To(Succeed())
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
+				ctx, cancel = context.WithTimeout(context.Background(), time.Second*1)
 				defer cancel()
 				err = c.WatchListAll(ctx, time.Second, countableList, &api.CommonSearchParams{Limit: 1})
 			})

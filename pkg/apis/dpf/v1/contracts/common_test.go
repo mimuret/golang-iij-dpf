@@ -17,26 +17,26 @@ var _ = Describe("contracts", func() {
 				Expect(meta.GetGroup()).To(Equal("contracts.api.dns-platform.jp/v1"))
 			})
 		})
-		Context("GetContractId", func() {
+		Context("GetContractID", func() {
 			When("default", func() {
 				It("returns ", func() {
-					Expect(meta.GetContractId()).To(Equal(""))
+					Expect(meta.GetContractID()).To(Equal(""))
 				})
 			})
 			When("default", func() {
 				BeforeEach(func() {
-					meta.ContractId = "id1"
+					meta.ContractID = "id1"
 				})
-				It("returns ContractId", func() {
-					Expect(meta.GetContractId()).To(Equal("id1"))
+				It("returns ContractID", func() {
+					Expect(meta.GetContractID()).To(Equal("id1"))
 				})
 			})
-			Context("SetContractId", func() {
+			Context("SetContractID", func() {
 				BeforeEach(func() {
-					meta.SetContractId("id2")
+					meta.SetContractID("id2")
 				})
-				It("can set ContractId", func() {
-					Expect(meta.GetContractId()).To(Equal("id2"))
+				It("can set ContractID", func() {
+					Expect(meta.GetContractID()).To(Equal("id2"))
 				})
 			})
 			Context("DeepCopy", func() {

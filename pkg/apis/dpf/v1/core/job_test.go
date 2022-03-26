@@ -24,16 +24,16 @@ var _ = Describe("jobs", func() {
 	BeforeEach(func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Job{
-			RequestId: "9BCFE2E9C10D4D9A8444CB0B48C72830",
+			RequestID: "9BCFE2E9C10D4D9A8444CB0B48C72830",
 			Status:    core.JobStatusRunning,
 		}
 		s2 = core.Job{
-			RequestId:   "B52CBA3FBA8D4A5C951C4EBD9EB48076",
+			RequestID:   "B52CBA3FBA8D4A5C951C4EBD9EB48076",
 			Status:      core.JobStatusSuccessful,
 			ResourceUrl: "http://localhost/contracts/f1",
 		}
 		s3 = core.Job{
-			RequestId:    "9F16F8E85D104D5C9C6BC58676B5D0BD",
+			RequestID:    "9F16F8E85D104D5C9C6BC58676B5D0BD",
 			Status:       core.JobStatusFailed,
 			ErrorType:    "fail",
 			ErrorMessage: "error message",
@@ -64,7 +64,7 @@ var _ = Describe("jobs", func() {
 			When("returns Job s1", func() {
 				BeforeEach(func() {
 					c = core.Job{
-						RequestId: "9BCFE2E9C10D4D9A8444CB0B48C72830",
+						RequestID: "9BCFE2E9C10D4D9A8444CB0B48C72830",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -77,7 +77,7 @@ var _ = Describe("jobs", func() {
 			When("returns Job s2", func() {
 				BeforeEach(func() {
 					c = core.Job{
-						RequestId: "B52CBA3FBA8D4A5C951C4EBD9EB48076",
+						RequestID: "B52CBA3FBA8D4A5C951C4EBD9EB48076",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -90,7 +90,7 @@ var _ = Describe("jobs", func() {
 			When("returns Job s3", func() {
 				BeforeEach(func() {
 					c = core.Job{
-						RequestId: "9F16F8E85D104D5C9C6BC58676B5D0BD",
+						RequestID: "9F16F8E85D104D5C9C6BC58676B5D0BD",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -117,8 +117,8 @@ var _ = Describe("jobs", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.RequestId).To(Equal("f10"))
+				It("can set ContractID", func() {
+					Expect(s1.RequestID).To(Equal("f10"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -129,7 +129,7 @@ var _ = Describe("jobs", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (RequestId)", func() {
+			When("arguments type missmatch (RequestID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

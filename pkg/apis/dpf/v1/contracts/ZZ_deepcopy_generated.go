@@ -206,8 +206,8 @@ func (in *ContractPartnerList) DeepCopyObject() api.Object {
 func (in *ContractZoneCommonConfig) DeepCopyInto(out *ContractZoneCommonConfig) {
 	*out = *in
 	out.AttributeMeta = in.AttributeMeta
-	if in.ZoneIds != nil {
-		in, out := &in.ZoneIds, &out.ZoneIds
+	if in.ZoneIDs != nil {
+		in, out := &in.ZoneIDs, &out.ZoneIDs
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}

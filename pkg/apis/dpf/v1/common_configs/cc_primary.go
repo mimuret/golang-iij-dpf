@@ -14,18 +14,18 @@ var _ ChildSpec = &CcPrimary{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CcPrimary struct {
 	AttributeMeta
-	Id      int64         `read:"id,omitempty" id:"2,required"`
+	ID      int64         `read:"id,omitempty" id:"2,required"`
 	Address net.IP        `read:"address" create:"address" update:"address"`
-	TsigId  int64         `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
+	TsigID  int64         `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
 	Enabled types.Boolean `read:"enabled" update:"enabled"`
 }
 
 func (c *CcPrimary) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigId, &c.Id)
+	return apis.SetPathParams(args, &c.CommonConfigID, &c.ID)
 }
 
-func (c *CcPrimary) GetId() int64    { return c.Id }
-func (c *CcPrimary) SetId(id int64)  { c.Id = id }
+func (c *CcPrimary) GetID() int64    { return c.ID }
+func (c *CcPrimary) SetID(id int64)  { c.ID = id }
 func (c *CcPrimary) GetName() string { return "cc_primaries" }
 func (c *CcPrimary) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
@@ -41,7 +41,7 @@ type CcPrimaryList struct {
 }
 
 func (c *CcPrimaryList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.CommonConfigId)
+	return apis.SetPathParams(args, &c.CommonConfigID)
 }
 
 func (c *CcPrimaryList) GetPathMethod(action api.Action) (string, string) {

@@ -20,13 +20,13 @@ type HistoryText struct {
 func (c *HistoryText) GetName() string { return fmt.Sprintf("zone_histories/%d/text", c.Id) }
 func (c *HistoryText) GetPathMethod(action api.Action) (string, string) {
 	if action == api.ActionRead {
-		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_histories/%d/text", c.GetZoneId(), c.Id)
+		return action.ToMethod(), fmt.Sprintf("/zones/%s/zone_histories/%d/text", c.GetZoneID(), c.Id)
 	}
 	return "", ""
 }
 
 func (c *HistoryText) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId, &c.Id)
+	return apis.SetPathParams(args, &c.ZoneID, &c.Id)
 }
 
 func init() {

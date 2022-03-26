@@ -27,25 +27,25 @@ var _ = Describe("cc_primaries", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = common_configs.CcPrimary{
 			AttributeMeta: common_configs.AttributeMeta{
-				CommonConfigId: 1,
+				CommonConfigID: 1,
 			},
-			Id:      1,
+			ID:      1,
 			Address: net.ParseIP("192.168.0.1"),
-			TsigId:  0,
+			TsigID:  0,
 			Enabled: types.Disabled,
 		}
 		s2 = common_configs.CcPrimary{
 			AttributeMeta: common_configs.AttributeMeta{
-				CommonConfigId: 1,
+				CommonConfigID: 1,
 			},
-			Id:      2,
+			ID:      2,
 			Address: net.ParseIP("2001:db8::1"),
-			TsigId:  2,
+			TsigID:  2,
 			Enabled: types.Enabled,
 		}
 		slist = common_configs.CcPrimaryList{
 			AttributeMeta: common_configs.AttributeMeta{
-				CommonConfigId: 1,
+				CommonConfigID: 1,
 			},
 			Items: []common_configs.CcPrimary{s1, s2},
 		}
@@ -79,9 +79,9 @@ var _ = Describe("cc_primaries", func() {
 				BeforeEach(func() {
 					c = common_configs.CcPrimary{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 1,
+							CommonConfigID: 1,
 						},
-						Id: 1,
+						ID: 1,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -95,9 +95,9 @@ var _ = Describe("cc_primaries", func() {
 				BeforeEach(func() {
 					c = common_configs.CcPrimary{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 1,
+							CommonConfigID: 1,
 						},
-						Id: 2,
+						ID: 2,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -124,10 +124,10 @@ var _ = Describe("cc_primaries", func() {
 				BeforeEach(func() {
 					s := common_configs.CcPrimary{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 2,
+							CommonConfigID: 2,
 						},
 						Address: net.ParseIP("192.168.10.1"),
-						TsigId:  1,
+						TsigID:  1,
 					}
 					reqId, err = cl.Create(context.Background(), &s, nil)
 				})
@@ -146,7 +146,7 @@ var _ = Describe("cc_primaries", func() {
 				BeforeEach(func() {
 					s := common_configs.CcPrimary{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 3,
+							CommonConfigID: 3,
 						},
 						Address: net.ParseIP("2001:db8::1"),
 					}
@@ -254,11 +254,11 @@ var _ = Describe("cc_primaries", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set CommonConfigId", func() {
-					Expect(s1.GetCommonConfigId()).To(Equal(int64(100)))
+				It("can set CommonConfigID", func() {
+					Expect(s1.GetCommonConfigID()).To(Equal(int64(100)))
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(200)))
+					Expect(s1.GetID()).To(Equal(int64(200)))
 				})
 			})
 			When("not enough arguments", func() {
@@ -277,7 +277,7 @@ var _ = Describe("cc_primaries", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (CommonConfigId)", func() {
+			When("arguments type missmatch (CommonConfigID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams("2", 1)
 				})
@@ -301,17 +301,17 @@ var _ = Describe("cc_primaries", func() {
 			testtool.TestGetPathMethodForSpec(&s1, "/common_configs/1/cc_primaries", "/common_configs/1/cc_primaries/1")
 		})
 		Context("contracts.ChildSpec common test", func() {
-			Context("GetId", func() {
+			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetId()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.ID))
 				})
 			})
-			Context("SetId", func() {
+			Context("SetID", func() {
 				BeforeEach(func() {
-					s1.SetId(2)
+					s1.SetID(2)
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(2)))
+					Expect(s1.GetID()).To(Equal(int64(2)))
 				})
 			})
 		})
@@ -345,7 +345,7 @@ var _ = Describe("cc_primaries", func() {
 				BeforeEach(func() {
 					c = common_configs.CcPrimaryList{
 						AttributeMeta: common_configs.AttributeMeta{
-							CommonConfigId: 1,
+							CommonConfigID: 1,
 						},
 					}
 					reqId, err = cl.List(context.Background(), &c, nil)
@@ -373,8 +373,8 @@ var _ = Describe("cc_primaries", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set CommonConfigId", func() {
-					Expect(slist.GetCommonConfigId()).To(Equal(int64(99)))
+				It("can set CommonConfigID", func() {
+					Expect(slist.GetCommonConfigID()).To(Equal(int64(99)))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -385,7 +385,7 @@ var _ = Describe("cc_primaries", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (CommonConfigId)", func() {
+			When("arguments type missmatch (CommonConfigID)", func() {
 				BeforeEach(func() {
 					err = slist.SetPathParams("2")
 				})

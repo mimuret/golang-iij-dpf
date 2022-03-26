@@ -26,7 +26,7 @@ var _ = Describe("dnssec", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = zones.Dnssec{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Enabled: types.Enabled,
 			State:   zones.DnssecStateEnable,
@@ -34,7 +34,7 @@ var _ = Describe("dnssec", func() {
 		}
 		s2 = zones.Dnssec{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m2",
+				ZoneID: "m2",
 			},
 			Enabled: types.Disabled,
 			State:   zones.DnssecStateEnable,
@@ -60,7 +60,7 @@ var _ = Describe("dnssec", func() {
 				BeforeEach(func() {
 					c = zones.Dnssec{
 						AttributeMeta: zones.AttributeMeta{
-							ZoneId: "m1",
+							ZoneID: "m1",
 						},
 					}
 					reqId, err = cl.Read(context.Background(), &c)
@@ -129,8 +129,8 @@ var _ = Describe("dnssec", func() {
 				It("not returns error", func() {
 					Expect(err).To(Succeed())
 				})
-				It("can set ContractId", func() {
-					Expect(s1.GetZoneId()).To(Equal("m10"))
+				It("can set ContractID", func() {
+					Expect(s1.GetZoneID()).To(Equal("m10"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -141,7 +141,7 @@ var _ = Describe("dnssec", func() {
 					Expect(err).To(HaveOccurred())
 				})
 			})
-			When("arguments type missmatch (ZoneId)", func() {
+			When("arguments type missmatch (ZoneID)", func() {
 				BeforeEach(func() {
 					err = s1.SetPathParams(2)
 				})

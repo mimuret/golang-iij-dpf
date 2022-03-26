@@ -25,14 +25,14 @@ var _ = Describe("common_configs/managed_dns", func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = contracts.CommonConfigManagedDns{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Id:                1,
 			ManagedDnsEnabled: types.Enabled,
 		}
 		s2 = contracts.CommonConfigManagedDns{
 			AttributeMeta: contracts.AttributeMeta{
-				ContractId: "f1",
+				ContractID: "f1",
 			},
 			Id:                2,
 			ManagedDnsEnabled: types.Disabled,
@@ -97,10 +97,10 @@ var _ = Describe("common_configs/managed_dns", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ContractId", func() {
-					Expect(s1.GetContractId()).To(Equal("f10"))
+					Expect(s1.GetContractID()).To(Equal("f10"))
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(200)))
+					Expect(s1.GetID()).To(Equal(int64(200)))
 				})
 			})
 			When("not enough arguments", func() {
@@ -151,17 +151,17 @@ var _ = Describe("common_configs/managed_dns", func() {
 			})
 		})
 		Context("contracts.ChildSpec common test", func() {
-			Context("GetId", func() {
+			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetId()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.Id))
 				})
 			})
-			Context("SetId", func() {
+			Context("SetID", func() {
 				BeforeEach(func() {
-					s1.SetId(2)
+					s1.SetID(2)
 				})
 				It("can set Id", func() {
-					Expect(s1.GetId()).To(Equal(int64(2)))
+					Expect(s1.GetID()).To(Equal(int64(2)))
 				})
 			})
 		})

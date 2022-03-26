@@ -45,7 +45,7 @@ func (c *HistoryList) GetPathMethod(action api.Action) (string, string) {
 }
 
 func (c *HistoryList) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ZoneId)
+	return apis.SetPathParams(args, &c.ZoneID)
 }
 
 func (c *HistoryList) Init() {}

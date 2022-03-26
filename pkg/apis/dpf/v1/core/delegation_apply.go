@@ -12,7 +12,7 @@ var _ apis.Spec = &DelegationApply{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type DelegationApply struct {
 	AttributeMeta
-	ZoneIds []string `apply:"zone_ids"`
+	ZoneIDs []string `apply:"zone_ids"`
 }
 
 func (c *DelegationApply) GetName() string { return "delegations" }

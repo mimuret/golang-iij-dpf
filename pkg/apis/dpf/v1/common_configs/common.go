@@ -16,14 +16,14 @@ func register(items ...apis.Spec) {
 
 type Spec interface {
 	apis.Spec
-	SetCommonConfigId(int64)
-	GetCommonConfigId() int64
+	SetCommonConfigID(int64)
+	GetCommonConfigID() int64
 }
 
 type ChildSpec interface {
 	Spec
-	GetId() int64
-	SetId(int64)
+	GetID() int64
+	SetID(int64)
 }
 
 type ListSpec interface {
@@ -32,26 +32,26 @@ type ListSpec interface {
 }
 
 type AttributeMeta struct {
-	CommonConfigId int64 `read:"-" id:"1,required"`
+	CommonConfigID int64 `read:"-" id:"1,required"`
 }
 
 func (s *AttributeMeta) GetGroup() string           { return groupName }
-func (s *AttributeMeta) SetCommonConfigId(id int64) { s.CommonConfigId = id }
-func (s *AttributeMeta) GetCommonConfigId() int64   { return s.CommonConfigId }
+func (s *AttributeMeta) SetCommonConfigID(id int64) { s.CommonConfigID = id }
+func (s *AttributeMeta) GetCommonConfigID() int64   { return s.CommonConfigID }
 
 func GetPathMethodForChildSpec(action api.Action, s ChildSpec) (string, string) {
 	switch action {
 	case api.ActionCreate:
-		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s", s.GetCommonConfigId(), s.GetName())
+		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s", s.GetCommonConfigID(), s.GetName())
 	case api.ActionRead, api.ActionUpdate, api.ActionDelete:
-		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s/%d", s.GetCommonConfigId(), s.GetName(), s.GetId())
+		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s/%d", s.GetCommonConfigID(), s.GetName(), s.GetID())
 	}
 	return "", ""
 }
 
 func GetPathMethodForListSpec(action api.Action, s ListSpec) (string, string) {
 	if action == api.ActionList {
-		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s", s.GetCommonConfigId(), s.GetName())
+		return action.ToMethod(), fmt.Sprintf("/common_configs/%d/%s", s.GetCommonConfigID(), s.GetName())
 	}
 	return "", ""
 }

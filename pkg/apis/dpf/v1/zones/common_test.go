@@ -17,26 +17,26 @@ var _ = Describe("zones", func() {
 				Expect(meta.GetGroup()).To(Equal("zones.api.dns-platform.jp/v1"))
 			})
 		})
-		Context("GetZoneId", func() {
+		Context("GetZoneID", func() {
 			When("default", func() {
 				It("returns ", func() {
-					Expect(meta.GetZoneId()).To(Equal(""))
+					Expect(meta.GetZoneID()).To(Equal(""))
 				})
 			})
 			When("default", func() {
 				BeforeEach(func() {
-					meta.ZoneId = "id1"
+					meta.ZoneID = "id1"
 				})
-				It("returns ZoneId", func() {
-					Expect(meta.GetZoneId()).To(Equal("id1"))
+				It("returns ZoneID", func() {
+					Expect(meta.GetZoneID()).To(Equal("id1"))
 				})
 			})
-			Context("SetZoneId", func() {
+			Context("SetZoneID", func() {
 				BeforeEach(func() {
-					meta.SetZoneId("id2")
+					meta.SetZoneID("id2")
 				})
-				It("can set ZoneId", func() {
-					Expect(meta.GetZoneId()).To(Equal("id2"))
+				It("can set ZoneID", func() {
+					Expect(meta.GetZoneID()).To(Equal("id2"))
 				})
 			})
 			Context("DeepCopy", func() {
