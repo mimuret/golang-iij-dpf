@@ -18,6 +18,7 @@ import (
 var _ = Describe("testclient.go", func() {
 	Context("TestClient", func() {
 		var (
+			ctx   context.Context
 			err   error
 			reqId string
 			cl    *testtool.TestClient
@@ -27,6 +28,7 @@ var _ = Describe("testclient.go", func() {
 			count int
 		)
 		BeforeEach(func() {
+			ctx = context.TODO()
 			ok = false
 			s = testtool.TestSpec{
 				Id: "1",
@@ -48,7 +50,10 @@ var _ = Describe("testclient.go", func() {
 						v.Name = "changed"
 						return "", nil
 					}
-					cl.Read(&s)
+					_, err = cl.Read(ctx, &s)
+				})
+				It("no error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run ReadFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -59,8 +64,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ReadFunc", func() {
 				BeforeEach(func() {
-					cl.Read(&s)
+					_, err = cl.Read(ctx, &s)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Read", func() {
 					Expect(ok).To(BeFalse())
@@ -70,7 +78,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist ReadFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Read(&s)
+					reqId, err = cl.Read(ctx, &s)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -89,7 +97,10 @@ var _ = Describe("testclient.go", func() {
 						v.AddItem(s)
 						return "", nil
 					}
-					cl.List(&slist, nil)
+					_, err = cl.List(ctx, &slist, nil)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run ListFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -101,8 +112,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ListFunc", func() {
 				BeforeEach(func() {
-					cl.List(&slist, nil)
+					_, err = cl.List(ctx, &slist, nil)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.List", func() {
 					Expect(ok).To(BeFalse())
@@ -112,7 +126,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist ListFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.List(&slist, nil)
+					reqId, err = cl.List(ctx, &slist, nil)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -131,7 +145,10 @@ var _ = Describe("testclient.go", func() {
 						v.AddItem(s)
 						return "", nil
 					}
-					cl.ListAll(&slist, nil)
+					_, err = cl.ListAll(ctx, &slist, nil)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run ListAllFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -143,8 +160,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ListAllFunc", func() {
 				BeforeEach(func() {
-					cl.ListAll(&slist, nil)
+					_, err = cl.ListAll(ctx, &slist, nil)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.ListAll", func() {
 					Expect(ok).To(BeFalse())
@@ -154,7 +174,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist ListAllFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.ListAll(&slist, nil)
+					reqId, err = cl.ListAll(ctx, &slist, nil)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -173,7 +193,10 @@ var _ = Describe("testclient.go", func() {
 						v.SetCount(100)
 						return "", nil
 					}
-					cl.Count(&slist, nil)
+					_, err = cl.Count(ctx, &slist, nil)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run CountFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -184,8 +207,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist CountFunc", func() {
 				BeforeEach(func() {
-					cl.Count(&slist, nil)
+					_, err = cl.Count(ctx, &slist, nil)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Count", func() {
 					Expect(ok).To(BeFalse())
@@ -195,7 +221,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist CountFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Count(&slist, nil)
+					reqId, err = cl.Count(ctx, &slist, nil)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -212,7 +238,10 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Update(&s, nil)
+					_, err = cl.Update(ctx, &s, nil)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run UpdateFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -220,8 +249,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist UpdateFunc", func() {
 				BeforeEach(func() {
-					cl.Update(&s, nil)
+					_, err = cl.Update(ctx, &s, nil)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Update", func() {
 					Expect(ok).To(BeFalse())
@@ -231,7 +263,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist UpdateFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Update(&s, nil)
+					reqId, err = cl.Update(ctx, &s, nil)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -248,7 +280,10 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Create(&s, nil)
+					_, err = cl.Create(ctx, &s, nil)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run CreateFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -256,8 +291,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist CreateFunc", func() {
 				BeforeEach(func() {
-					cl.Create(&s, nil)
+					_, err = cl.Create(ctx, &s, nil)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Create", func() {
 					Expect(ok).To(BeFalse())
@@ -267,7 +305,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist CreateFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(ctx, &s, nil)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -284,7 +322,10 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Apply(&s, nil)
+					_, err = cl.Apply(ctx, &s, nil)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run ApplyFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -292,8 +333,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist ApplyFunc", func() {
 				BeforeEach(func() {
-					cl.Apply(&s, nil)
+					_, err = cl.Apply(ctx, &s, nil)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Apply", func() {
 					Expect(ok).To(BeFalse())
@@ -303,7 +347,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist ApplyFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Apply(&s, nil)
+					reqId, err = cl.Apply(ctx, &s, nil)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -320,7 +364,10 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Delete(&s)
+					_, err = cl.Delete(ctx, &s)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run DeleteFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -328,8 +375,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist DeleteFunc", func() {
 				BeforeEach(func() {
-					cl.Delete(&s)
+					_, err = cl.Delete(ctx, &s)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Delete", func() {
 					Expect(ok).To(BeFalse())
@@ -339,7 +389,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist DeleteFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Delete(&s)
+					reqId, err = cl.Delete(ctx, &s)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -356,7 +406,10 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return "", nil
 					}
-					cl.Cancel(&s)
+					_, err = cl.Cancel(ctx, &s)
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
 				})
 				It("run CancelFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -364,8 +417,11 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist CancelFunc", func() {
 				BeforeEach(func() {
-					cl.Cancel(&s)
+					_, err = cl.Cancel(ctx, &s)
 					count = httpmock.GetTotalCallCount()
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
 				})
 				It("run TestClient.Client.Cancel", func() {
 					Expect(ok).To(BeFalse())
@@ -375,7 +431,7 @@ var _ = Describe("testclient.go", func() {
 			When("not exist CancelFunc or Client", func() {
 				BeforeEach(func() {
 					cl.Client = nil
-					reqId, err = cl.Cancel(&s)
+					reqId, err = cl.Cancel(ctx, &s)
 				})
 				It("returns empty request id", func() {
 					Expect(reqId).To(BeEmpty())
@@ -392,7 +448,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return nil
 					}
-					cl.WatchRead(context.TODO(), time.Second, &s)
+					_ = cl.WatchRead(context.TODO(), time.Second, &s)
 				})
 				It("run WatchReadFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -400,7 +456,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist WatchReadFunc", func() {
 				BeforeEach(func() {
-					cl.WatchRead(context.TODO(), time.Second, &s)
+					_ = cl.WatchRead(context.TODO(), time.Second, &s)
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.WatchRead", func() {
@@ -425,7 +481,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return nil
 					}
-					cl.WatchList(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchList(context.TODO(), time.Second, &slist, nil)
 				})
 				It("run WatchListFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -433,7 +489,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist WatchListFunc", func() {
 				BeforeEach(func() {
-					cl.WatchList(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchList(context.TODO(), time.Second, &slist, nil)
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.WatchList", func() {
@@ -458,7 +514,7 @@ var _ = Describe("testclient.go", func() {
 						ok = true
 						return nil
 					}
-					cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
 				})
 				It("run WatchListFunc", func() {
 					Expect(ok).To(BeTrue())
@@ -466,7 +522,7 @@ var _ = Describe("testclient.go", func() {
 			})
 			When("not exist WatchListAllFunc", func() {
 				BeforeEach(func() {
-					cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
+					_ = cl.WatchListAll(context.TODO(), time.Second, &slist, nil)
 					count = httpmock.GetTotalCallCount()
 				})
 				It("run TestClient.Client.WatchListAll", func() {

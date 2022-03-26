@@ -9,9 +9,7 @@ import (
 
 var _ = Describe("response.go", func() {
 	Context("GenReqId", func() {
-		var (
-			reqId string
-		)
+		var reqId string
 		BeforeEach(func() {
 			reqId = testtool.GenReqId()
 		})
@@ -27,7 +25,7 @@ var _ = Describe("response.go", func() {
 		BeforeEach(func() {
 			reqId, bs = testtool.CreateAsyncResponse()
 		})
-		It("returns RequestId", func() {
+		It("returns RequestID", func() {
 			Expect(reqId).To(MatchRegexp("^[a-f0-9]+$"))
 		})
 		It("returns AsyncResponseJson", func() {

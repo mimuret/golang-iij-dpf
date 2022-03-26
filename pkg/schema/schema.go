@@ -10,9 +10,7 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/meta"
 )
 
-var (
-	SchemaSet = NewSchemaSet()
-)
+var SchemaSet = NewSchemaSet()
 
 type Register struct {
 	Group string
@@ -59,7 +57,7 @@ func (s *schema) Add(items []apis.Spec) {
 	}
 }
 
-func (s schemaSet) Parse(bs []byte) (api.Object, error) {
+func (s schemaSet) Parse(bs []byte) (apis.Spec, error) {
 	kv := &meta.KindVersion{}
 	if err := json.Unmarshal(bs, kv); err != nil {
 		return nil, fmt.Errorf("failed to parse json: %w", err)
@@ -79,9 +77,12 @@ func (s schemaSet) Parse(bs []byte) (api.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("kind value `%s` is not supported", kv.Kind)
 	}
-	obj := spec.DeepCopyObject()
+	obj, ok := spec.DeepCopyObject().(apis.Spec)
+	if !ok {
+		return nil, fmt.Errorf("kind value `%s` is not apis.Spec", kv.Kind)
+	}
 	if err := api.UnMarshalInput(bs, obj); err != nil {
-		return nil, fmt.Errorf("failed to parse spec: %w", err)
+		return nil, fmt.Errorf("failed to parse resource: %w", err)
 	}
 	return obj, nil
 }

@@ -1,6 +1,7 @@
 package testtool_test
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/jarcoal/httpmock"
@@ -32,8 +33,10 @@ var _ = Describe("test spec", func() {
 		reqId  string
 		s1, s2 testtool.TestSpec
 		slist  testtool.TestSpecList
+		ctx    context.Context
 	)
 	BeforeEach(func() {
+		ctx = context.Background()
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = testtool.TestSpec{
 			Id:     "1",
@@ -75,7 +78,7 @@ var _ = Describe("test spec", func() {
 					c = testtool.TestSpec{
 						Id: "1",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(ctx, &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -88,7 +91,7 @@ var _ = Describe("test spec", func() {
 					c = testtool.TestSpec{
 						Id: "2",
 					}
-					reqId, err = cl.Read(&c)
+					reqId, err = cl.Read(ctx, &c)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -98,9 +101,7 @@ var _ = Describe("test spec", func() {
 			})
 		})
 		Context("Create", func() {
-			var (
-				id1, bs1 = testtool.CreateAsyncResponse()
-			)
+			id1, bs1 := testtool.CreateAsyncResponse()
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodPost, "http://localhost/tests", httpmock.NewBytesResponder(202, bs1))
 			})
@@ -111,7 +112,7 @@ var _ = Describe("test spec", func() {
 						Name:   "name 3",
 						Number: 3,
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(ctx, &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -131,7 +132,7 @@ var _ = Describe("test spec", func() {
 						Name:   "",
 						Number: 0,
 					}
-					reqId, err = cl.Create(&s, nil)
+					reqId, err = cl.Create(ctx, &s, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -156,7 +157,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("test 1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s1, nil)
+					reqId, err = cl.Update(ctx, &s1, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -171,7 +172,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("test 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Update(&s2, nil)
+					reqId, err = cl.Update(ctx, &s2, nil)
 				})
 				It("returns job_id", func() {
 					Expect(err).To(Succeed())
@@ -196,7 +197,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("remove1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s1)
+					reqId, err = cl.Delete(ctx, &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -205,7 +206,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("remove 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Delete(&s2)
+					reqId, err = cl.Delete(ctx, &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -224,7 +225,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("cancel edit 1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Cancel(&s1)
+					reqId, err = cl.Cancel(ctx, &s1)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -233,7 +234,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("cancel edit 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Cancel(&s2)
+					reqId, err = cl.Cancel(ctx, &s2)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -252,7 +253,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("apply edit 1", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Apply(&s1, nil)
+					reqId, err = cl.Apply(ctx, &s1, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -261,7 +262,7 @@ var _ = Describe("test spec", func() {
 			})
 			When("apply edit 2", func() {
 				BeforeEach(func() {
-					reqId, err = cl.Apply(&s2, nil)
+					reqId, err = cl.Apply(ctx, &s2, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -269,11 +270,48 @@ var _ = Describe("test spec", func() {
 				})
 			})
 		})
+		Context("SetPathParams", func() {
+			When("no arguments, nothing to do", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+			When("enough arguments", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m100")
+				})
+				It("not returns error", func() {
+					Expect(err).To(Succeed())
+				})
+				It("can set ZonetId", func() {
+					Expect(s1.Id).To(Equal("m100"))
+				})
+			})
+			When("arguments has extra value", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams("m100", 2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+			When("arguments type missmatch (Id)", func() {
+				BeforeEach(func() {
+					err = s1.SetPathParams(2)
+				})
+				It("returns error", func() {
+					Expect(err).To(HaveOccurred())
+				})
+			})
+		})
 		Context("api.Spec common test", func() {
 			var nilSpec *testtool.TestSpec
 			testtool.TestDeepCopyObject(&s1, nilSpec)
 			testtool.TestGetName(&s1, "tests")
-			testtool.TestGetGroup(&s1, "test")
+
 			Context("", func() {
 				When("action is ActionCreate", func() {
 					testtool.TestGetPathMethod(&s1, api.ActionCreate, http.MethodPost, "/tests")
@@ -300,9 +338,7 @@ var _ = Describe("test spec", func() {
 		})
 	})
 	Describe("TestSpecList", func() {
-		var (
-			c testtool.TestSpecList
-		)
+		var c testtool.TestSpecList
 		Context("List", func() {
 			BeforeEach(func() {
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests", httpmock.NewBytesResponder(200, []byte(`{
@@ -324,7 +360,7 @@ var _ = Describe("test spec", func() {
 			When("returns list ", func() {
 				BeforeEach(func() {
 					c = testtool.TestSpecList{}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(ctx, &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -337,7 +373,8 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpecList
 			testtool.TestDeepCopyObject(&slist, nilSpec)
 			testtool.TestGetName(&slist, "tests")
-			testtool.TestGetGroup(&slist, "test")
+			testtool.TestGetGroup(&slist, "test.api.dns-platform.jp/v1")
+
 			testtool.TestGetPathMethodForList(&slist, "/tests")
 		})
 		Context("api.ListSpec common test", func() {
@@ -385,7 +422,7 @@ var _ = Describe("test spec", func() {
 			When("returns list ", func() {
 				BeforeEach(func() {
 					c = testtool.TestSpecCountableList{}
-					reqId, err = cl.List(&c, nil)
+					reqId, err = cl.List(ctx, &c, nil)
 				})
 				It("returns normal", func() {
 					Expect(err).To(Succeed())
@@ -398,7 +435,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpecCountableList
 			testtool.TestDeepCopyObject(&slist, nilSpec)
 			testtool.TestGetName(&slist, "tests")
-			testtool.TestGetGroup(&slist, "test")
+
 			testtool.TestGetPathMethodForCountableList(&slist, "/tests")
 		})
 		Context("api.ListSpec common test", func() {
@@ -417,63 +454,65 @@ var _ = Describe("test spec", func() {
 			testtool.TestClearItems(&slist)
 			testtool.TestAddItem(&slist, s1)
 		})
+		Context("SetPathParams", func() {
+			When("nothing to do", func() {
+				BeforeEach(func() {
+					err = slist.SetPathParams()
+				})
+				It("returns error", func() {
+					Expect(err).To(Succeed())
+				})
+			})
+		})
 	})
 	Context("TestGetPathMethod", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionCreate: {http.MethodPost, "/tests"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionCreate: {http.MethodPost, "/tests"},
+			},
+		}
 		testtool.TestGetPathMethod(s, api.ActionCreate, http.MethodPost, "/tests")
 		testtool.TestGetPathMethod(s, api.ActionList, "", "")
 	})
 	Context("TestGetPathMethodForSpec", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionCreate: {http.MethodPost, "/tests"},
-					api.ActionRead:   {http.MethodGet, "/tests/1"},
-					api.ActionUpdate: {http.MethodPatch, "/tests/1"},
-					api.ActionDelete: {http.MethodDelete, "/tests/1"},
-					api.ActionCancel: {http.MethodDelete, "/tests/cancel"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionCreate: {http.MethodPost, "/tests"},
+				api.ActionRead:   {http.MethodGet, "/tests/1"},
+				api.ActionUpdate: {http.MethodPatch, "/tests/1"},
+				api.ActionDelete: {http.MethodDelete, "/tests/1"},
+				api.ActionCancel: {http.MethodDelete, "/tests/cancel"},
+			},
+		}
 		testtool.TestGetPathMethodForSpec(s, "/tests", "/tests/1")
 	})
 	Context("TestGetPathMethodForList", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionList: {http.MethodGet, "/tests"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionList: {http.MethodGet, "/tests"},
+			},
+		}
 		testtool.TestGetPathMethodForList(s, "/tests")
 	})
 	Context("TestGetPathMethodForCountableList", func() {
-		var (
-			s = &SpecForGetMethodPathTest{
-				Response: map[api.Action]struct {
-					Method string
-					Path   string
-				}{
-					api.ActionList:  {http.MethodGet, "/tests"},
-					api.ActionCount: {http.MethodGet, "/tests/count"},
-				},
-			}
-		)
+		s := &SpecForGetMethodPathTest{
+			Response: map[api.Action]struct {
+				Method string
+				Path   string
+			}{
+				api.ActionList:  {http.MethodGet, "/tests"},
+				api.ActionCount: {http.MethodGet, "/tests/count"},
+			},
+		}
 		testtool.TestGetPathMethodForCountableList(s, "/tests")
 	})
 })

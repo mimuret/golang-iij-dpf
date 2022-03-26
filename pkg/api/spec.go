@@ -1,5 +1,9 @@
 package api
 
+import (
+	"reflect"
+)
+
 type Object interface {
 	DeepCopyObject() Object
 }
@@ -30,4 +34,37 @@ type CountableListSpec interface {
 
 type Initializer interface {
 	Init()
+}
+
+func DeepCopySpec(s Spec) Spec {
+	if s == nil || reflect.ValueOf(s).IsNil() {
+		return nil
+	}
+	ret, ok := s.DeepCopyObject().(Spec)
+	if !ok {
+		return nil
+	}
+	return ret
+}
+
+func DeepCopyListSpec(s ListSpec) ListSpec {
+	if s == nil || reflect.ValueOf(s).IsNil() {
+		return nil
+	}
+	ret, ok := s.DeepCopyObject().(ListSpec)
+	if !ok {
+		return nil
+	}
+	return ret
+}
+
+func DeepCopyCountableListSpec(s CountableListSpec) CountableListSpec {
+	if s == nil || reflect.ValueOf(s).IsNil() {
+		return nil
+	}
+	ret, ok := s.DeepCopyObject().(CountableListSpec)
+	if !ok {
+		return nil
+	}
+	return ret
 }

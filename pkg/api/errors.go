@@ -1,8 +1,10 @@
 package api
 
+import "errors"
+
 func IsBadResponse(err error, f func(b *BadResponse) bool) bool {
-	bad, ok := err.(*BadResponse)
-	if !ok {
+	bad := &BadResponse{}
+	if !errors.As(err, &bad) {
 		return false
 	}
 	if f == nil {

@@ -1,35 +1,61 @@
-all: deepcopy test fmt
+PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+types_go_files  = $(wildcard ./pkg/types/*.go)
+v1_core_go_files  = $(wildcard ./pkg/apis/dpf/v1/core/*.go)
+v1_contracts_go_files  = $(wildcard ./pkg/apis/dpf/v1/contracts/*.go)
+v1_common_configs_go_files  = $(wildcard ./pkg/apis/dpf/v1/common_configs/*.go)
+v1_zones_go_files  = $(wildcard ./pkg/apis/dpf/v1/zones/*.go)
+deep_copy_files = pkg/types/ZZ_deepcopy_generated.go \
+	pkg/apis/dpf/v1/core/ZZ_deepcopy_generated.go \
+	pkg/apis/dpf/v1/contracts/ZZ_deepcopy_generated.go \
+	pkg/apis/dpf/v1/zones/ZZ_deepcopy_generated.go \
+	pkg/apis/dpf/v1/common_configs/ZZ_deepcopy_generated.go
+
+all: deepcopy checks test fmt
+
+checks: golangci-lint
+	$(GOLANGCI_LINT) run
 
 test:
 	go test -coverprofile="cover.out" ./...
 	go tool cover -html=cover.out -o cover.html
 
-fmt:
-	go fmt ./...
+fmt: gofumpt
+	$(GOFUMPT) -l -w .
 
-deepcopy: deepcopy-gen
-	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/api
+deepcopy:  
+
+pkg/types/ZZ_deepcopy_generated.go: deepcopy-gen $(v1_core_go_files)
 	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/types
-	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/core
-	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/contracts
-	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/zones
-	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/common_configs
+pkg/apis/dpf/v1/core/ZZ_deepcopy_generated.go: deepcopy-gen $(v1_core_go_files)
+	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/dpf/v1/core
+pkg/apis/dpf/v1/contracts/ZZ_deepcopy_generated.go: deepcopy-gen $(v1_contracts_go_files)
+	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/dpf/v1/contracts
+pkg/apis/dpf/v1/zones/ZZ_deepcopy_generated.go: deepcopy-gen $(v1_common_configs_go_files)
+	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/dpf/v1/zones
+pkg/apis/dpf/v1/common_configs/ZZ_deepcopy_generated.go: deepcopy-gen $(v1_zones_go_files)
+	$(DEEPCOPY_GEN) -O ZZ_deepcopy_generated -h boilerplate.go.txt -i ./pkg/apis/dpf/v1/common_configs
 
-DEEPCOPY_GEN = $(shell pwd)/bin/deepcopy-gen
+DEEPCOPY_GEN = $(PROJECT_DIR)/bin/deepcopy-gen
 deepcopy-gen: ## Download deepcopy-gen locally if necessary.
-	mkdir -p $(shell pwd)/bin
+	mkdir -p $(PROJECT_DIR)/bin
 	$(call go-get-tool,$(DEEPCOPY_GEN),k8s.io/code-generator/cmd/deepcopy-gen)
 
+GOFUMPT = $(PROJECT_DIR)/bin/gofumpt
+gofumpt:
+	mkdir -p $(PROJECT_DIR)/bin
+	$(call go-get-tool,$(GOFUMPT),mvdan.cc/gofumpt@latest)
+
+GOLANGCI_LINT = $(PROJECT_DIR)/bin/golangci-lint
+golangci-lint:
+	mkdir -p $(PROJECT_DIR)/bin
+	$(call go-get-tool,$(GOLANGCI_LINT),github.com/golangci/golangci-lint/cmd/golangci-lint@master)
+
+
 # go-get-tool will 'go get' any package $2 and install it to $1.
-PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 define go-get-tool
 @[ -f $(1) ] || { \
 set -e ;\
-TMP_DIR=$$(mktemp -d) ;\
-cd $$TMP_DIR ;\
-go mod init tmp ;\
 echo "Downloading $(2)" ;\
-GOBIN=$(PROJECT_DIR)/bin go get $(2) ;\
-rm -rf $$TMP_DIR ;\
+GOBIN=$(PROJECT_DIR)/bin go install $(2) ;\
 }
 endef

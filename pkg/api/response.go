@@ -6,7 +6,7 @@ import (
 )
 
 type ResponseCommon struct {
-	RequestId string `read:"request_id"`
+	RequestID string `read:"request_id"`
 }
 
 type RawResponse struct {
@@ -43,6 +43,7 @@ func (r *BadResponse) Error() string {
 	}
 	return "ErrorType: " + r.ErrorType + " Message: " + r.ErrorMessage + errorDetail
 }
+
 func (r *BadResponse) IsStatusCode(code int) bool {
 	return r.StatusCode == code
 }

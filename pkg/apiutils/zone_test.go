@@ -1,9 +1,11 @@
 package apiutils_test
 
 import (
+	"context"
+
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/zones"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/zones"
 	"github.com/mimuret/golang-iij-dpf/pkg/apiutils"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 	"github.com/mimuret/golang-iij-dpf/pkg/types"
@@ -23,7 +25,7 @@ var _ = Describe("zone", func() {
 	BeforeEach(func() {
 		z = &core.Zone{
 			Id:               "m1",
-			CommonConfigId:   1,
+			CommonConfigID:   1,
 			ServiceCode:      "dpm0000001",
 			State:            1,
 			Favorite:         1,
@@ -34,7 +36,7 @@ var _ = Describe("zone", func() {
 		}
 		r = &zones.Record{
 			AttributeMeta: zones.AttributeMeta{
-				ZoneId: "m1",
+				ZoneID: "m1",
 			},
 			Id:     "r1",
 			Name:   "example.jp.",
@@ -50,10 +52,10 @@ var _ = Describe("zone", func() {
 
 		c = testtool.NewTestClient("token", "http://localhost", nil)
 	})
-	Context("GetZoneIdFromZonename", func() {
+	Context("GetZoneIDFromZonename", func() {
 		When("failed to read", func() {
 			BeforeEach(func() {
-				zoneId, err = apiutils.GetZoneIdFromZonename(c, "example.jp.")
+				zoneId, err = apiutils.GetZoneIDFromZonename(context.Background(), c, "example.jp.")
 			})
 			It("return empty error", func() {
 				Expect(err).To(HaveOccurred())
@@ -70,7 +72,7 @@ var _ = Describe("zone", func() {
 					})
 					return "", nil
 				}
-				zoneId, err = apiutils.GetZoneIdFromZonename(c, "example.jp.")
+				zoneId, err = apiutils.GetZoneIDFromZonename(context.Background(), c, "example.jp.")
 			})
 			It("returns zoneId", func() {
 				Expect(err).To(Succeed())
@@ -86,7 +88,7 @@ var _ = Describe("zone", func() {
 					})
 					return "", nil
 				}
-				zoneId, err = apiutils.GetZoneIdFromZonename(c, "example.jp.")
+				zoneId, err = apiutils.GetZoneIDFromZonename(context.Background(), c, "example.jp.")
 			})
 			It("returns err", func() {
 				Expect(err).To(HaveOccurred())
@@ -95,12 +97,10 @@ var _ = Describe("zone", func() {
 		})
 	})
 	Context("GetZoneFromZonename", func() {
-		var (
-			z1 *core.Zone
-		)
+		var z1 *core.Zone
 		When("failed to read", func() {
 			BeforeEach(func() {
-				z1, err = apiutils.GetZoneFromZonename(c, "example.jp.")
+				z1, err = apiutils.GetZoneFromZonename(context.Background(), c, "example.jp.")
 			})
 			It("return empty", func() {
 				Expect(err).To(HaveOccurred())
@@ -118,7 +118,7 @@ var _ = Describe("zone", func() {
 					})
 					return "", nil
 				}
-				z1, err = apiutils.GetZoneFromZonename(c, "example.jp.")
+				z1, err = apiutils.GetZoneFromZonename(context.Background(), c, "example.jp.")
 			})
 			It("return zone", func() {
 				Expect(err).To(Succeed())
@@ -134,7 +134,7 @@ var _ = Describe("zone", func() {
 					})
 					return "", nil
 				}
-				z1, err = apiutils.GetZoneFromZonename(c, "example.jp.")
+				z1, err = apiutils.GetZoneFromZonename(context.Background(), c, "example.jp.")
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
@@ -143,12 +143,10 @@ var _ = Describe("zone", func() {
 		})
 	})
 	Context("GetRecordFromZoneName", func() {
-		var (
-			r1 *zones.Record
-		)
+		var r1 *zones.Record
 		When("failed to read", func() {
 			BeforeEach(func() {
-				r1, err = apiutils.GetRecordFromZoneName(c, "example.jp.", "example.jp.", zones.TypeSOA)
+				r1, err = apiutils.GetRecordFromZoneName(context.Background(), c, "example.jp.", "example.jp.", zones.TypeSOA)
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
@@ -173,7 +171,7 @@ var _ = Describe("zone", func() {
 					}
 					return "", nil
 				}
-				r1, err = apiutils.GetRecordFromZoneName(c, "example.jp.", "example.jp.", zones.TypeSOA)
+				r1, err = apiutils.GetRecordFromZoneName(context.Background(), c, "example.jp.", "example.jp.", zones.TypeSOA)
 			})
 			It("returns record", func() {
 				Expect(err).To(Succeed())
@@ -192,7 +190,7 @@ var _ = Describe("zone", func() {
 					}
 					return "ok", nil
 				}
-				r1, err = apiutils.GetRecordFromZoneName(c, "example.jp.", "example.jp.", zones.TypeSOA)
+				r1, err = apiutils.GetRecordFromZoneName(context.Background(), c, "example.jp.", "example.jp.", zones.TypeSOA)
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
@@ -215,7 +213,7 @@ var _ = Describe("zone", func() {
 					case *zones.CurrentRecordList:
 						v.AddItem(zones.Record{
 							AttributeMeta: zones.AttributeMeta{
-								ZoneId: "m1",
+								ZoneID: "m1",
 							},
 							Id:     "r2",
 							Name:   "example.jp.",
@@ -234,7 +232,7 @@ var _ = Describe("zone", func() {
 					}
 					return "", nil
 				}
-				r1, err = apiutils.GetRecordFromZoneName(c, "example.jp.", "example.jp.", zones.TypeSOA)
+				r1, err = apiutils.GetRecordFromZoneName(context.Background(), c, "example.jp.", "example.jp.", zones.TypeSOA)
 			})
 			It("return error", func() {
 				Expect(err).To(HaveOccurred())
@@ -243,13 +241,11 @@ var _ = Describe("zone", func() {
 			})
 		})
 	})
-	Context("GetRecordFromZoneId", func() {
-		var (
-			r2 *zones.Record
-		)
+	Context("GetRecordFromZoneID", func() {
+		var r2 *zones.Record
 		When("failed to read", func() {
 			BeforeEach(func() {
-				r2, err = apiutils.GetRecordFromZoneId(c, "m1", "example.jp.", zones.TypeSOA)
+				r2, err = apiutils.GetRecordFromZoneID(context.Background(), c, "m1", "example.jp.", zones.TypeSOA)
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
@@ -274,7 +270,7 @@ var _ = Describe("zone", func() {
 					}
 					return "", nil
 				}
-				r2, err = apiutils.GetRecordFromZoneId(c, "m1", "example.jp.", zones.TypeSOA)
+				r2, err = apiutils.GetRecordFromZoneID(context.Background(), c, "m1", "example.jp.", zones.TypeSOA)
 			})
 			It("return record", func() {
 				Expect(err).To(Succeed())
@@ -293,7 +289,7 @@ var _ = Describe("zone", func() {
 					}
 					return "ok", nil
 				}
-				r2, err = apiutils.GetRecordFromZoneId(c, "m1", "example.jp.", zones.TypeSOA)
+				r2, err = apiutils.GetRecordFromZoneID(context.Background(), c, "m1", "example.jp.", zones.TypeSOA)
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
@@ -316,7 +312,7 @@ var _ = Describe("zone", func() {
 					case *zones.CurrentRecordList:
 						v.AddItem(zones.Record{
 							AttributeMeta: zones.AttributeMeta{
-								ZoneId: "m1",
+								ZoneID: "m1",
 							},
 							Id:     "r2",
 							Name:   "example.jp.",
@@ -335,7 +331,7 @@ var _ = Describe("zone", func() {
 					}
 					return "", nil
 				}
-				r2, err = apiutils.GetRecordFromZoneId(c, "m1", "example.jp.", zones.TypeSOA)
+				r2, err = apiutils.GetRecordFromZoneID(context.Background(), c, "m1", "example.jp.", zones.TypeSOA)
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())

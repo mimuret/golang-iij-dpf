@@ -9,6 +9,11 @@ import (
 )
 
 var _ = Describe("Action", func() {
+	Context("Actions", func() {
+		It("returns actions", func() {
+			Expect(api.Actions()).NotTo(BeEmpty())
+		})
+	})
 	Context("ToMethod", func() {
 		When("ActionCreate", func() {
 			It("returns http.MethodPost", func() {

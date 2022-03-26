@@ -6,26 +6,25 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"path"
 	"strconv"
 	"time"
 
-	"path"
-
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
 )
 
 func WaitJob(ctx context.Context, c api.ClientInterface, jobId string, interval time.Duration) (*core.Job, error) {
 	job := &core.Job{
-		RequestId: jobId,
+		RequestID: jobId,
 	}
-	if _, err := c.Read(job); err != nil {
+	if _, err := c.Read(ctx, job); err != nil {
 		return nil, fmt.Errorf("failed to read Job: %w", err)
 	}
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
 	for job.Status == core.JobStatusRunning {
-		job.RequestId = jobId
+		job.RequestID = jobId
 		if err := c.WatchRead(ctx, interval, job); err != nil {
 			return nil, err
 		}

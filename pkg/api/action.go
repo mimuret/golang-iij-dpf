@@ -4,7 +4,7 @@ import "net/http"
 
 type Action string
 
-var (
+const (
 	ActionCreate Action = "Create"
 	ActionRead   Action = "Read"
 	ActionList   Action = "List"
@@ -13,8 +13,10 @@ var (
 	ActionCount  Action = "Count"
 	ActionCancel Action = "Cancel"
 	ActionApply  Action = "Apply"
+)
 
-	Actions = []Action{
+func Actions() []Action {
+	return []Action{
 		ActionCreate,
 		ActionRead,
 		ActionList,
@@ -24,7 +26,7 @@ var (
 		ActionCancel,
 		ActionApply,
 	}
-)
+}
 
 func (a Action) ToMethod() string {
 	switch a {

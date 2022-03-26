@@ -8,6 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
+	"github.com/mimuret/golang-iij-dpf/pkg/schema"
 )
 
 var _ api.Spec = &TestSpec{}
@@ -20,7 +21,7 @@ type TestSpec struct {
 	Number int64  `read:"number" update:"number" create:"number" apply:"number"`
 }
 
-func (t *TestSpec) GetGroup() string { return "test" }
+func (t *TestSpec) GetGroup() string { return groupName }
 func (t *TestSpec) GetName() string  { return "tests" }
 func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
 	switch action {
@@ -35,6 +36,22 @@ func (t *TestSpec) GetPathMethod(action api.Action) (string, string) {
 	}
 	return "", ""
 }
+
+func (t *TestSpec) SetPathParams(args ...interface{}) error {
+	if len(args) == 0 {
+		return nil
+	}
+	if len(args) != 1 {
+		return fmt.Errorf("args must be string")
+	}
+	id, ok := args[0].(string)
+	if !ok {
+		return fmt.Errorf("args must be string")
+	}
+	t.Id = id
+	return nil
+}
+
 func (t *TestSpec) DeepCopyTestSpec() *TestSpec {
 	if t == nil {
 		return nil
@@ -68,7 +85,7 @@ func (t *TestSpecList) DeepCopyObject() api.Object {
 	return res
 }
 
-func (t *TestSpecList) GetGroup() string        { return "test" }
+func (t *TestSpecList) GetGroup() string        { return groupName }
 func (t *TestSpecList) GetName() string         { return "tests" }
 func (t *TestSpecList) GetItems() interface{}   { return &t.Items }
 func (c *TestSpecList) Len() int                { return len(c.Items) }
@@ -84,12 +101,16 @@ func (c *TestSpecList) AddItem(v interface{}) bool {
 }
 
 func (t *TestSpecList) GetPathMethod(action api.Action) (string, string) {
-	switch action {
-	case api.ActionList:
+	if action == api.ActionList {
 		return action.ToMethod(), "/tests"
 	}
 	return "", ""
 }
+
+func (t *TestSpecList) SetPathParams(args ...interface{}) error {
+	return nil
+}
+
 func (t *TestSpecList) Init() {}
 
 var _ api.CountableListSpec = &TestSpecCountableList{}
@@ -125,9 +146,7 @@ func (t *TestSpecCountableList) DeepCopyObject() api.Object {
 // for api.Object
 func TestDeepCopyObject(s api.Object, nilSpec api.Object) {
 	Context("DeepCopyObject", func() {
-		var (
-			o api.Object
-		)
+		var o api.Object
 		BeforeEach(func() {
 			o = nil
 		})
@@ -149,9 +168,7 @@ func TestDeepCopyObject(s api.Object, nilSpec api.Object) {
 		})
 	})
 	Context("DeepCopyObject", func() {
-		var (
-			o api.Object
-		)
+		var o api.Object
 		BeforeEach(func() {
 			o = nil
 		})
@@ -176,9 +193,7 @@ func TestDeepCopyObject(s api.Object, nilSpec api.Object) {
 
 // for api.Spec
 func TestGetPathMethod(spec api.Spec, action api.Action, matchMethod string, matchPath string) {
-	var (
-		method, path string
-	)
+	var method, path string
 	When("action test", func() {
 		BeforeEach(func() {
 			method, path = spec.GetPathMethod(action)
@@ -218,6 +233,7 @@ func TestGetPathMethodForList(spec api.ListSpec, listPath string) {
 		TestGetPathMethod(spec, api.ActionCount, "", "")
 	})
 }
+
 func TestGetPathMethodForCountableList(spec api.CountableListSpec, listPath string) {
 	When("action is ActionList", func() {
 		TestGetPathMethod(spec, api.ActionList, http.MethodGet, listPath)
@@ -237,6 +253,7 @@ func TestGetName(s api.Spec, name string) {
 		})
 	})
 }
+
 func TestGetGroup(s api.Spec, name string) {
 	Context("GetGroup", func() {
 		It("returns group name", func() {
@@ -270,6 +287,7 @@ func TestGetMaxLimit(s api.CountableListSpec, limit int32) {
 		})
 	})
 }
+
 func TestClearItems(s api.CountableListSpec) {
 	Context("GetMaxLimit", func() {
 		BeforeEach(func() {
@@ -281,34 +299,43 @@ func TestClearItems(s api.CountableListSpec) {
 		})
 	})
 }
+
 func TestAddItem(s api.CountableListSpec, validData interface{}) {
 	Context("AddItem", func() {
 		var (
-			copy api.CountableListSpec
-			len  int
-			ok   bool
+			copySpec api.CountableListSpec
+			l        int
+			ok       bool
 		)
 		BeforeEach(func() {
-			copy = s.DeepCopyObject().(api.CountableListSpec)
-			len = copy.Len()
+			copySpec = api.DeepCopyCountableListSpec(s)
+			l = copySpec.Len()
 		})
 		When("add Item", func() {
 			BeforeEach(func() {
-				ok = copy.AddItem(validData)
+				ok = copySpec.AddItem(validData)
 			})
 			It("can add into list", func() {
 				Expect(ok).To((BeTrue()))
-				Expect(copy.Len()).To(Equal(len + 1))
+				Expect(copySpec.Len()).To(Equal(l + 1))
 			})
 		})
 		When("add other", func() {
 			BeforeEach(func() {
-				ok = copy.AddItem(&TestSpec{})
+				ok = copySpec.AddItem(&TestSpec{})
 			})
 			It("can not add", func() {
 				Expect(ok).To((BeFalse()))
-				Expect(copy.Len()).To(Equal(len))
+				Expect(copySpec.Len()).To(Equal(l))
 			})
 		})
 	})
+}
+
+const groupName = "test.api.dns-platform.jp/v1"
+
+func init() {
+	schema.NewRegister(groupName).Add(&TestSpec{})
+	schema.NewRegister(groupName).Add(&TestSpecList{})
+	schema.NewRegister(groupName).Add(&TestSpecCountableList{})
 }

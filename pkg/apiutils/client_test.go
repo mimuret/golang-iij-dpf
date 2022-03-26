@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
-	"github.com/mimuret/golang-iij-dpf/pkg/apis/core"
+	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
 	"github.com/mimuret/golang-iij-dpf/pkg/apiutils"
 	"github.com/mimuret/golang-iij-dpf/pkg/testtool"
 
@@ -38,7 +38,7 @@ var _ = Describe("client.go", func() {
 				}
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = id
+					job.RequestID = id
 					job.Status = core.JobStatusSuccessful
 					return id, nil
 				}
@@ -64,7 +64,7 @@ var _ = Describe("client.go", func() {
 			}
 			c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 				job := s.(*core.Job)
-				job.RequestId = id
+				job.RequestID = id
 				job.Status = core.JobStatusFailed
 				return id, nil
 			}
@@ -101,7 +101,7 @@ var _ = Describe("client.go", func() {
 				}
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = id
+					job.RequestID = id
 					job.Status = core.JobStatusSuccessful
 					return id, nil
 				}
@@ -127,7 +127,7 @@ var _ = Describe("client.go", func() {
 			}
 			c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 				job := s.(*core.Job)
-				job.RequestId = id
+				job.RequestID = id
 				job.Status = core.JobStatusFailed
 				return id, nil
 			}
@@ -164,7 +164,7 @@ var _ = Describe("client.go", func() {
 				}
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = id
+					job.RequestID = id
 					job.Status = core.JobStatusSuccessful
 					return id, nil
 				}
@@ -190,7 +190,7 @@ var _ = Describe("client.go", func() {
 			}
 			c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 				job := s.(*core.Job)
-				job.RequestId = id
+				job.RequestID = id
 				job.Status = core.JobStatusFailed
 				return id, nil
 			}
@@ -227,7 +227,7 @@ var _ = Describe("client.go", func() {
 				}
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = id
+					job.RequestID = id
 					job.Status = core.JobStatusSuccessful
 					return id, nil
 				}
@@ -253,7 +253,7 @@ var _ = Describe("client.go", func() {
 			}
 			c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 				job := s.(*core.Job)
-				job.RequestId = id
+				job.RequestID = id
 				job.Status = core.JobStatusFailed
 				return id, nil
 			}
@@ -290,7 +290,7 @@ var _ = Describe("client.go", func() {
 				}
 				c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 					job := s.(*core.Job)
-					job.RequestId = id
+					job.RequestID = id
 					job.Status = core.JobStatusSuccessful
 					return id, nil
 				}
@@ -316,7 +316,7 @@ var _ = Describe("client.go", func() {
 			}
 			c.ReadFunc = func(s api.Spec) (requestId string, err error) {
 				job := s.(*core.Job)
-				job.RequestId = id
+				job.RequestID = id
 				job.Status = core.JobStatusFailed
 				return id, nil
 			}

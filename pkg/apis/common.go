@@ -11,7 +11,7 @@ type Params interface {
 	SetPathParams(...interface{}) error
 }
 
-// for ctl
+// for ctl.
 func SetPathParams(args []interface{}, ids ...interface{}) error {
 	if len(args) == 0 {
 		return nil

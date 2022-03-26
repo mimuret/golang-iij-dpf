@@ -74,12 +74,12 @@ var _ = Describe("json", func() {
 			})
 			It("can read `name`", func() {
 				Expect(err).To(Succeed())
-				Expect(string(bs)).To(Equal(`{"kind":"JsonTest","apiVersion":"tests","spec":{"name":"hogehoge"}}`))
+				Expect(string(bs)).To(MatchJSON(`{"kind":"JsonTest","apiVersion":"tests","resource":{"name":"hogehoge"}}`))
 			})
 		})
 		Context("UnMarshalInput(tag name is `json`)", func() {
 			BeforeEach(func() {
-				err = api.UnMarshalInput([]byte(`{"kind": "JsonTest", "apiVersion": "tests", "spec": {"name": "book"}}`), &value)
+				err = api.UnMarshalInput([]byte(`{"kind": "JsonTest", "apiVersion": "tests", "resource": {"name": "book"}}`), &value)
 			})
 			It("can read `name`", func() {
 				Expect(err).To(Succeed())

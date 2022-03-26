@@ -62,7 +62,7 @@ var _ = Describe("apis", func() {
 		When("ids is not *int64 or *string", func() {
 			var v int32
 			It("raise panic", func() {
-				Expect(func() { apis.SetPathParams([]interface{}{10}, &v) }).To(Panic())
+				Expect(func() { _ = apis.SetPathParams([]interface{}{10}, &v) }).To(Panic())
 			})
 		})
 		When("success", func() {

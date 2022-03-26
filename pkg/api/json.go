@@ -8,14 +8,33 @@ import (
 )
 
 var (
-	jsonAdapter    = &JsonAPIAdapter{}
-	UnmarshalRead  = jsonAdapter.UnmarshalRead
-	MarshalCreate  = jsonAdapter.MarshalCreate
-	MarshalUpdate  = jsonAdapter.MarshalUpdate
-	MarshalApply   = jsonAdapter.MarshalApply
-	MarshalOutput  = jsonAdapter.MarshalOutput
-	UnMarshalInput = jsonAdapter.UnMarshalInput
+	jsonAPIAdapter  JsonApiInterface  = &JsonAPIAdapter{}
+	jsonFileAdapter JsonFileInterface = &JsonAPIAdapter{}
 )
+
+func UnmarshalRead(bs []byte, o interface{}) error {
+	return jsonAPIAdapter.UnmarshalRead(bs, o)
+}
+
+func MarshalCreate(body interface{}) ([]byte, error) {
+	return jsonAPIAdapter.MarshalCreate(body)
+}
+
+func MarshalUpdate(body interface{}) ([]byte, error) {
+	return jsonAPIAdapter.MarshalUpdate(body)
+}
+
+func MarshalApply(body interface{}) ([]byte, error) {
+	return jsonAPIAdapter.MarshalApply(body)
+}
+
+func MarshalOutput(spec Spec) ([]byte, error) {
+	return jsonFileAdapter.MarshalOutput(spec)
+}
+
+func UnMarshalInput(bs []byte, obj Object) error {
+	return jsonFileAdapter.UnMarshalInput(bs, obj)
+}
 
 type JsonApiInterface interface {
 	UnmarshalRead(bs []byte, o interface{}) error
@@ -24,15 +43,14 @@ type JsonApiInterface interface {
 	MarshalApply(body interface{}) ([]byte, error)
 }
 
-type JsonFileInerface interface {
+type JsonFileInterface interface {
 	MarshalOutput(spec Spec) ([]byte, error)
 	UnMarshalInput(bs []byte, obj Object) error
 }
 
-type JsonAPIAdapter struct {
-}
+type JsonAPIAdapter struct{}
 
-// Unmarshal api response
+// Unmarshal api response.
 func (j *JsonAPIAdapter) UnmarshalRead(bs []byte, o interface{}) error {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -43,7 +61,7 @@ func (j *JsonAPIAdapter) UnmarshalRead(bs []byte, o interface{}) error {
 	}.Froze().Unmarshal(bs, o)
 }
 
-// Marshal for create request
+// Marshal for create request.
 func (j *JsonAPIAdapter) MarshalCreate(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -54,7 +72,7 @@ func (j *JsonAPIAdapter) MarshalCreate(body interface{}) ([]byte, error) {
 	}.Froze().Marshal(body)
 }
 
-// Marshal for update request
+// Marshal for update request.
 func (j *JsonAPIAdapter) MarshalUpdate(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -65,7 +83,7 @@ func (j *JsonAPIAdapter) MarshalUpdate(body interface{}) ([]byte, error) {
 	}.Froze().Marshal(body)
 }
 
-// Marshal for apply request
+// Marshal for apply request.
 func (j *JsonAPIAdapter) MarshalApply(body interface{}) ([]byte, error) {
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -76,13 +94,13 @@ func (j *JsonAPIAdapter) MarshalApply(body interface{}) ([]byte, error) {
 	}.Froze().Marshal(body)
 }
 
-// file format frame
+// file format frame.
 type OutputFrame struct {
 	meta.KindVersion `json:",inline"`
-	Spec             Object `json:"spec"`
+	Resource         Object `json:"resource"`
 }
 
-// Marshal for file format
+// Marshal for file format.
 func (j *JsonAPIAdapter) MarshalOutput(spec Spec) ([]byte, error) {
 	t := reflect.TypeOf(spec)
 	t = t.Elem()
@@ -91,7 +109,7 @@ func (j *JsonAPIAdapter) MarshalOutput(spec Spec) ([]byte, error) {
 			Kind:       t.Name(),
 			APIVersion: spec.GetGroup(),
 		},
-		Spec: spec,
+		Resource: spec,
 	}
 	return jsoniter.Config{
 		EscapeHTML:             true,
@@ -102,10 +120,10 @@ func (j *JsonAPIAdapter) MarshalOutput(spec Spec) ([]byte, error) {
 	}.Froze().Marshal(out)
 }
 
-// UnMarshal for file format
+// UnMarshal for file format.
 func (j *JsonAPIAdapter) UnMarshalInput(bs []byte, obj Object) error {
 	out := &OutputFrame{
-		Spec: obj,
+		Resource: obj,
 	}
 
 	return jsoniter.Config{

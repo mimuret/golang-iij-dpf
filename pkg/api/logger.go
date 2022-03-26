@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// logger interface
+// logger interface.
 type Logger interface {
 	Tracef(format string, args ...interface{})
 	Debugf(format string, args ...interface{})
@@ -41,16 +41,19 @@ func (s *StdLogger) Tracef(format string, args ...interface{}) {
 		s.Printf(format, args...)
 	}
 }
+
 func (s *StdLogger) Debugf(format string, args ...interface{}) {
 	if s.LogLevel <= 1 {
 		s.Printf(format, args...)
 	}
 }
+
 func (s *StdLogger) Infof(format string, args ...interface{}) {
 	if s.LogLevel <= 2 {
 		s.Printf(format, args...)
 	}
 }
+
 func (s *StdLogger) Errorf(format string, args ...interface{}) {
 	if s.LogLevel <= 4 {
 		s.Printf(format, args...)
