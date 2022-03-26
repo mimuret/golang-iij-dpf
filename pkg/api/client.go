@@ -291,7 +291,7 @@ func (c *Client) Cancel(ctx context.Context, s Spec) (requestID string, err erro
 	return c.Do(ctx, s, ActionCancel, nil, nil)
 }
 
-func (c *Client) watch(ctx context.Context, interval time.Duration, f func() (keep bool, err error)) error {
+func (c *Client) watch(ctx context.Context, interval time.Duration, f func(context.Context) (keep bool, err error)) error {
 	if interval < time.Second {
 		return fmt.Errorf("interval must greater than equals to 1s")
 	}
@@ -301,7 +301,7 @@ LOOP:
 	for {
 		select {
 		case <-ticker.C:
-			loopBreak, err := f()
+			loopBreak, err := f(ctx)
 			if err != nil {
 				return err
 			}
@@ -319,13 +319,9 @@ LOOP:
 // interval must be grater than equals to 1s
 // s is Readable Spec.
 func (c *Client) WatchRead(ctx context.Context, interval time.Duration, s Spec) error {
-	obj := s.DeepCopyObject()
-	org, ok := obj.(Spec)
-	if !ok {
-		panic("")
-	}
-	return c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.Read(ctx, s)
+	org := DeepCopySpec(s)
+	return c.watch(ctx, interval, func(cctx context.Context) (bool, error) {
+		_, err := c.Read(cctx, s)
 		if err != nil {
 			return true, err
 		}
@@ -341,8 +337,8 @@ func (c *Client) WatchRead(ctx context.Context, interval time.Duration, s Spec) 
 // s is ListAble Spec.
 func (c *Client) WatchList(ctx context.Context, interval time.Duration, s ListSpec, keyword SearchParams) error {
 	org := DeepCopyListSpec(s)
-	return c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.List(ctx, s, keyword)
+	return c.watch(ctx, interval, func(cctx context.Context) (bool, error) {
+		_, err := c.List(cctx, s, keyword)
 		if err != nil {
 			return true, err
 		}
@@ -359,8 +355,8 @@ func (c *Client) WatchList(ctx context.Context, interval time.Duration, s ListSp
 func (c *Client) WatchListAll(ctx context.Context, interval time.Duration, s CountableListSpec, keyword SearchParams) error {
 	copySpec := DeepCopyCountableListSpec(s)
 	copySpec.ClearItems()
-	err := c.watch(ctx, interval, func() (bool, error) {
-		_, err := c.ListAll(ctx, copySpec, keyword)
+	err := c.watch(ctx, interval, func(cctx context.Context) (bool, error) {
+		_, err := c.ListAll(cctx, copySpec, keyword)
 		if err != nil {
 			return true, err
 		}
