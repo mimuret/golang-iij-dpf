@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/json-iterator/go v1.1.12
-	github.com/miekg/dns v1.1.43
+	github.com/miekg/dns v1.1.47
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.18.1
 )
