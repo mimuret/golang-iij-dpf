@@ -239,13 +239,9 @@ func (c *Client) ListAll(ctx context.Context, s CountableListSpec, keywords Sear
 	}
 
 	count := s.GetCount()
-	cpObj := s.DeepCopyObject()
+	cList := DeepCopyCountableListSpec(s)
 
 	for offset := int32(0); offset < count; offset += keywords.GetLimit() {
-		cList, ok := cpObj.DeepCopyObject().(ListSpec)
-		if !ok {
-			panic("s is not CountableListSpec")
-		}
 		keywords.SetOffset(offset)
 		req, err = c.List(ctx, cList, keywords)
 		if err != nil {
