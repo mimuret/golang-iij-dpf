@@ -16,9 +16,10 @@ var _ apis.Spec = &TestSpec{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 
 type TestSpec struct {
-	Id     string `read:"id"`
-	Name   string `read:"name"`
-	Number int64  `read:"number"`
+	Id                 string `read:"id"`
+	Name               string `read:"name"`
+	Number             int64  `read:"number"`
+	deepCopyObjectFunc func(*TestSpec) api.Object
 }
 
 func (t *TestSpec) GetGroup() string { return "test" }
@@ -44,6 +45,9 @@ func (t *TestSpec) DeepCopyTestSpec() *TestSpec {
 }
 
 func (t *TestSpec) DeepCopyObject() api.Object {
+	if t.deepCopyObjectFunc != nil {
+		return t.deepCopyObjectFunc(t)
+	}
 	return t.DeepCopyTestSpec()
 }
 
@@ -162,6 +166,21 @@ var _ = Describe("Register", func() {
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(MatchRegexp("failed to parse resource:"))
+			})
+		})
+		When("invalid DeepCopyObject", func() {
+			var (
+				set = schema.NewSchemaSet()
+			)
+			BeforeEach(func() {
+				s := &TestSpec{}
+				s.deepCopyObjectFunc = func(ts *TestSpec) api.Object { return nil }
+				set.Add("test", []apis.Spec{s})
+				obj, err = set.Parse([]byte(`{"apiVersion": "test", "kind": "TestSpec", "resource": {"Id": 0}}`))
+			})
+			It("returns error", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("DeepCopyObject is invalid"))
 			})
 		})
 		When("successful", func() {
