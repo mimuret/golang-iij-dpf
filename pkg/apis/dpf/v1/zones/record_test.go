@@ -30,7 +30,7 @@ var _ = Describe("records", func() {
 			AttributeMeta: zones.AttributeMeta{
 				ZoneID: "m1",
 			},
-			Id:     "r1",
+			ID:     "r1",
 			Name:   "www.example.jp.",
 			TTL:    30,
 			RRType: zones.TypeA,
@@ -46,7 +46,7 @@ var _ = Describe("records", func() {
 			AttributeMeta: zones.AttributeMeta{
 				ZoneID: "m1",
 			},
-			Id:     "r2",
+			ID:     "r2",
 			Name:   "www.example.jp.",
 			TTL:    30,
 			RRType: zones.TypeAAAA,
@@ -118,7 +118,7 @@ var _ = Describe("records", func() {
 						AttributeMeta: zones.AttributeMeta{
 							ZoneID: "m1",
 						},
-						Id: "r1",
+						ID: "r1",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -134,7 +134,7 @@ var _ = Describe("records", func() {
 						AttributeMeta: zones.AttributeMeta{
 							ZoneID: "m1",
 						},
-						Id: "r2",
+						ID: "r2",
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -329,7 +329,7 @@ var _ = Describe("records", func() {
 					Expect(s1.GetZoneID()).To(Equal("m10"))
 				})
 				It("can set RecordId", func() {
-					Expect(s1.Id).To(Equal("r10"))
+					Expect(s1.ID).To(Equal("r10"))
 				})
 			})
 			When("not enough arguments", func() {

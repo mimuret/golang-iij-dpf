@@ -18,15 +18,15 @@ type TestClient struct {
 	RequestHeaders map[string]http.Header
 	RequestBody    map[string]string
 
-	ReadFunc         func(s api.Spec) (requestId string, err error)
-	ListFunc         func(s api.ListSpec, keywords api.SearchParams) (requestId string, err error)
-	ListAllFunc      func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error)
-	CountFunc        func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error)
-	UpdateFunc       func(s api.Spec, body interface{}) (requestId string, err error)
-	CreateFunc       func(s api.Spec, body interface{}) (requestId string, err error)
-	ApplyFunc        func(s api.Spec, body interface{}) (requestId string, err error)
-	DeleteFunc       func(s api.Spec) (requestId string, err error)
-	CancelFunc       func(s api.Spec) (requestId string, err error)
+	ReadFunc         func(s api.Spec) (requestID string, err error)
+	ListFunc         func(s api.ListSpec, keywords api.SearchParams) (requestID string, err error)
+	ListAllFunc      func(s api.CountableListSpec, keywords api.SearchParams) (requestID string, err error)
+	CountFunc        func(s api.CountableListSpec, keywords api.SearchParams) (requestID string, err error)
+	UpdateFunc       func(s api.Spec, body interface{}) (requestID string, err error)
+	CreateFunc       func(s api.Spec, body interface{}) (requestID string, err error)
+	ApplyFunc        func(s api.Spec, body interface{}) (requestID string, err error)
+	DeleteFunc       func(s api.Spec) (requestID string, err error)
+	CancelFunc       func(s api.Spec) (requestID string, err error)
 	WatchReadFunc    func(ctx context.Context, interval time.Duration, s api.Spec) error
 	WatchListFunc    func(ctx context.Context, interval time.Duration, s api.ListSpec, keyword api.SearchParams) error
 	WatchListAllFunc func(ctx context.Context, interval time.Duration, s api.CountableListSpec, keyword api.SearchParams) error
@@ -61,7 +61,7 @@ func (n *TestClient) RoundTrip(req *http.Request) (*http.Response, error) {
 	return httpmock.DefaultTransport.RoundTrip(req)
 }
 
-func (n *TestClient) Read(ctx context.Context, s api.Spec) (requestId string, err error) {
+func (n *TestClient) Read(ctx context.Context, s api.Spec) (requestID string, err error) {
 	if n.ReadFunc == nil {
 		if n.Client != nil {
 			return n.Client.Read(ctx, s)
@@ -71,7 +71,7 @@ func (n *TestClient) Read(ctx context.Context, s api.Spec) (requestId string, er
 	return n.ReadFunc(s)
 }
 
-func (n *TestClient) List(ctx context.Context, s api.ListSpec, keywords api.SearchParams) (requestId string, err error) {
+func (n *TestClient) List(ctx context.Context, s api.ListSpec, keywords api.SearchParams) (requestID string, err error) {
 	if n.ListFunc == nil {
 		if n.Client != nil {
 			return n.Client.List(ctx, s, keywords)
@@ -81,7 +81,7 @@ func (n *TestClient) List(ctx context.Context, s api.ListSpec, keywords api.Sear
 	return n.ListFunc(s, keywords)
 }
 
-func (n *TestClient) ListAll(ctx context.Context, s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
+func (n *TestClient) ListAll(ctx context.Context, s api.CountableListSpec, keywords api.SearchParams) (requestID string, err error) {
 	if n.ListAllFunc == nil {
 		if n.Client != nil {
 			return n.Client.ListAll(ctx, s, keywords)
@@ -91,7 +91,7 @@ func (n *TestClient) ListAll(ctx context.Context, s api.CountableListSpec, keywo
 	return n.ListAllFunc(s, keywords)
 }
 
-func (n *TestClient) Count(ctx context.Context, s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
+func (n *TestClient) Count(ctx context.Context, s api.CountableListSpec, keywords api.SearchParams) (requestID string, err error) {
 	if n.CountFunc == nil {
 		if n.Client != nil {
 			return n.Client.Count(ctx, s, keywords)
@@ -101,7 +101,7 @@ func (n *TestClient) Count(ctx context.Context, s api.CountableListSpec, keyword
 	return n.CountFunc(s, keywords)
 }
 
-func (n *TestClient) Update(ctx context.Context, s api.Spec, body interface{}) (requestId string, err error) {
+func (n *TestClient) Update(ctx context.Context, s api.Spec, body interface{}) (requestID string, err error) {
 	if n.UpdateFunc == nil {
 		if n.Client != nil {
 			return n.Client.Update(ctx, s, body)
@@ -111,7 +111,7 @@ func (n *TestClient) Update(ctx context.Context, s api.Spec, body interface{}) (
 	return n.UpdateFunc(s, body)
 }
 
-func (n *TestClient) Create(ctx context.Context, s api.Spec, body interface{}) (requestId string, err error) {
+func (n *TestClient) Create(ctx context.Context, s api.Spec, body interface{}) (requestID string, err error) {
 	if n.CreateFunc == nil {
 		if n.Client != nil {
 			return n.Client.Create(ctx, s, body)
@@ -121,7 +121,7 @@ func (n *TestClient) Create(ctx context.Context, s api.Spec, body interface{}) (
 	return n.CreateFunc(s, body)
 }
 
-func (n *TestClient) Apply(ctx context.Context, s api.Spec, body interface{}) (requestId string, err error) {
+func (n *TestClient) Apply(ctx context.Context, s api.Spec, body interface{}) (requestID string, err error) {
 	if n.ApplyFunc == nil {
 		if n.Client != nil {
 			return n.Client.Apply(ctx, s, body)
@@ -131,7 +131,7 @@ func (n *TestClient) Apply(ctx context.Context, s api.Spec, body interface{}) (r
 	return n.ApplyFunc(s, body)
 }
 
-func (n *TestClient) Delete(ctx context.Context, s api.Spec) (requestId string, err error) {
+func (n *TestClient) Delete(ctx context.Context, s api.Spec) (requestID string, err error) {
 	if n.DeleteFunc == nil {
 		if n.Client != nil {
 			return n.Client.Delete(ctx, s)
@@ -141,7 +141,7 @@ func (n *TestClient) Delete(ctx context.Context, s api.Spec) (requestId string, 
 	return n.DeleteFunc(s)
 }
 
-func (n *TestClient) Cancel(ctx context.Context, s api.Spec) (requestId string, err error) {
+func (n *TestClient) Cancel(ctx context.Context, s api.Spec) (requestID string, err error) {
 	if n.CancelFunc == nil {
 		if n.Client != nil {
 			return n.Client.Cancel(ctx, s)

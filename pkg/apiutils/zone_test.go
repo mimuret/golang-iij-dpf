@@ -24,7 +24,7 @@ var _ = Describe("zone", func() {
 	)
 	BeforeEach(func() {
 		z = &core.Zone{
-			Id:               "m1",
+			ID:               "m1",
 			CommonConfigID:   1,
 			ServiceCode:      "dpm0000001",
 			State:            1,
@@ -38,7 +38,7 @@ var _ = Describe("zone", func() {
 			AttributeMeta: zones.AttributeMeta{
 				ZoneID: "m1",
 			},
-			Id:     "r1",
+			ID:     "r1",
 			Name:   "example.jp.",
 			TTL:    3600,
 			RRType: zones.TypeSOA,
@@ -67,7 +67,7 @@ var _ = Describe("zone", func() {
 				c.ListAllFunc = func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
 					s.AddItem(*z)
 					s.AddItem(core.Zone{
-						Id:   "m2",
+						ID:   "m2",
 						Name: "hoge.example.jp.",
 					})
 					return "", nil
@@ -83,7 +83,7 @@ var _ = Describe("zone", func() {
 			BeforeEach(func() {
 				c.ListAllFunc = func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
 					s.AddItem(core.Zone{
-						Id:   "m2",
+						ID:   "m2",
 						Name: "hoge.example.jp.",
 					})
 					return "", nil
@@ -113,7 +113,7 @@ var _ = Describe("zone", func() {
 				c.ListAllFunc = func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
 					s.AddItem(*z)
 					s.AddItem(core.Zone{
-						Id:   "m2",
+						ID:   "m2",
 						Name: "hoge.example.jp.",
 					})
 					return "", nil
@@ -129,7 +129,7 @@ var _ = Describe("zone", func() {
 			BeforeEach(func() {
 				c.ListAllFunc = func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
 					s.AddItem(core.Zone{
-						Id:   "m2",
+						ID:   "m2",
 						Name: "hoge.example.jp.",
 					})
 					return "", nil
@@ -159,11 +159,11 @@ var _ = Describe("zone", func() {
 					switch v := s.(type) {
 					case *core.ZoneList:
 						v.AddItem(core.Zone{
-							Id:   "m1",
+							ID:   "m1",
 							Name: "example.jp.",
 						})
 						v.AddItem(core.Zone{
-							Id:   "m2",
+							ID:   "m2",
 							Name: "hoge.example.jp.",
 						})
 					case *zones.CurrentRecordList:
@@ -184,7 +184,7 @@ var _ = Describe("zone", func() {
 					switch v := s.(type) {
 					case *core.ZoneList:
 						v.AddItem(core.Zone{
-							Id:   "m2",
+							ID:   "m2",
 							Name: "hoge.example.jp.",
 						})
 					}
@@ -203,11 +203,11 @@ var _ = Describe("zone", func() {
 					switch v := s.(type) {
 					case *core.ZoneList:
 						v.AddItem(core.Zone{
-							Id:   "m1",
+							ID:   "m1",
 							Name: "example.jp.",
 						})
 						v.AddItem(core.Zone{
-							Id:   "m2",
+							ID:   "m2",
 							Name: "hoge.example.jp.",
 						})
 					case *zones.CurrentRecordList:
@@ -215,7 +215,7 @@ var _ = Describe("zone", func() {
 							AttributeMeta: zones.AttributeMeta{
 								ZoneID: "m1",
 							},
-							Id:     "r2",
+							ID:     "r2",
 							Name:   "example.jp.",
 							TTL:    3600,
 							RRType: zones.TypeNS,
@@ -258,11 +258,11 @@ var _ = Describe("zone", func() {
 					switch v := s.(type) {
 					case *core.ZoneList:
 						v.AddItem(core.Zone{
-							Id:   "m1",
+							ID:   "m1",
 							Name: "example.jp.",
 						})
 						v.AddItem(core.Zone{
-							Id:   "m2",
+							ID:   "m2",
 							Name: "hoge.example.jp.",
 						})
 					case *zones.CurrentRecordList:
@@ -283,7 +283,7 @@ var _ = Describe("zone", func() {
 					switch v := s.(type) {
 					case *core.ZoneList:
 						v.AddItem(core.Zone{
-							Id:   "m2",
+							ID:   "m2",
 							Name: "hoge.example.jp.",
 						})
 					}
@@ -302,11 +302,11 @@ var _ = Describe("zone", func() {
 					switch v := s.(type) {
 					case *core.ZoneList:
 						v.AddItem(core.Zone{
-							Id:   "m1",
+							ID:   "m1",
 							Name: "example.jp.",
 						})
 						v.AddItem(core.Zone{
-							Id:   "m2",
+							ID:   "m2",
 							Name: "hoge.example.jp.",
 						})
 					case *zones.CurrentRecordList:
@@ -314,7 +314,7 @@ var _ = Describe("zone", func() {
 							AttributeMeta: zones.AttributeMeta{
 								ZoneID: "m1",
 							},
-							Id:     "r2",
+							ID:     "r2",
 							Name:   "example.jp.",
 							TTL:    3600,
 							RRType: zones.TypeNS,

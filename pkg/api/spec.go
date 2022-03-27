@@ -42,7 +42,7 @@ func DeepCopySpec(s Spec) Spec {
 	}
 	ret, ok := s.DeepCopyObject().(Spec)
 	if !ok {
-		return nil
+		panic("s is not Spec")
 	}
 	return ret
 }
@@ -53,7 +53,7 @@ func DeepCopyListSpec(s ListSpec) ListSpec {
 	}
 	ret, ok := s.DeepCopyObject().(ListSpec)
 	if !ok {
-		return nil
+		panic("s is not ListSpec")
 	}
 	return ret
 }
@@ -64,7 +64,7 @@ func DeepCopyCountableListSpec(s CountableListSpec) CountableListSpec {
 	}
 	ret, ok := s.DeepCopyObject().(CountableListSpec)
 	if !ok {
-		return nil
+		panic("s is not CountableListSpec")
 	}
 	return ret
 }

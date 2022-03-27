@@ -42,7 +42,7 @@ var _ apis.Spec = &Contract{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type Contract struct {
 	AttributeMeta
-	Id          string         `read:"id"`
+	ID          string         `read:"id"`
 	ServiceCode string         `read:"service_code"`
 	State       types.State    `read:"state"`
 	Favorite    types.Favorite `read:"favorite" update:"favorite"`
@@ -54,13 +54,13 @@ func (c *Contract) GetName() string { return "contracts" }
 func (c *Contract) GetPathMethod(action api.Action) (string, string) {
 	switch action {
 	case api.ActionRead, api.ActionUpdate:
-		return action.ToMethod(), fmt.Sprintf("/contracts/%s", c.Id)
+		return action.ToMethod(), fmt.Sprintf("/contracts/%s", c.ID)
 	}
 	return "", ""
 }
 
 func (c *Contract) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.Id)
+	return apis.SetPathParams(args, &c.ID)
 }
 
 var _ apis.CountableListSpec = &ContractList{}

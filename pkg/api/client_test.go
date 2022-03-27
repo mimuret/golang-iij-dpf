@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
+	"testing/iotest"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -68,12 +70,10 @@ var _ = Describe("Client", func() {
 		listTestSpec  *TestSpecList
 		countableList *TestSpecCountableList
 		c             *api.Client
-		ctx           context.Context
 		reqId         string
 		err           error
 	)
 	BeforeEach(func() {
-		ctx = context.Background()
 		testSpec = &TestSpec{}
 		errSpec = &ErrSpec{}
 		listTestSpec = &TestSpecList{}
@@ -109,8 +109,8 @@ var _ = Describe("Client", func() {
 		})
 		When("the API succesfully", func() {
 			BeforeEach(func() {
-				testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
-				reqId, err = c.Do(ctx, testSpec, api.ActionRead, nil, nil)
+				testSpec.ID = "F2246BD8617444329A40470AEC7B00B9"
+				reqId, err = c.Do(context.Background(), testSpec, api.ActionRead, nil, nil)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("0CAC3AEFB6334ECCA7B70AF76D73508B"))
@@ -122,7 +122,7 @@ var _ = Describe("Client", func() {
 		When("action is ActionCount", func() {
 			When("spec is not CountableListSpec", func() {
 				BeforeEach(func() {
-					reqId, err = c.Do(ctx, listTestSpec, api.ActionCount, nil, nil)
+					reqId, err = c.Do(context.Background(), listTestSpec, api.ActionCount, nil, nil)
 				})
 				It("reqId is empty", func() {
 					Expect(reqId).Should(Equal(""))
@@ -135,7 +135,7 @@ var _ = Describe("Client", func() {
 		})
 		When("spec.GetPathMethod is empty", func() {
 			BeforeEach(func() {
-				reqId, err = c.Do(ctx, listTestSpec, api.ActionApply, nil, nil)
+				reqId, err = c.Do(context.Background(), listTestSpec, api.ActionApply, nil, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -148,7 +148,7 @@ var _ = Describe("Client", func() {
 		When("SearchParams.GetValues() is error", func() {
 			BeforeEach(func() {
 				param := &TestParams{Err: fmt.Errorf("err")}
-				reqId, err = c.Do(ctx, testSpec, api.ActionApply, nil, param)
+				reqId, err = c.Do(context.Background(), testSpec, api.ActionApply, nil, param)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -160,7 +160,7 @@ var _ = Describe("Client", func() {
 		})
 		When("body is not nil, but action is not any of ActionCreate, ActionUpdate and ActionApply.", func() {
 			BeforeEach(func() {
-				reqId, err = c.Do(ctx, testSpec, api.ActionRead, testSpec, nil)
+				reqId, err = c.Do(context.Background(), testSpec, api.ActionRead, testSpec, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -173,7 +173,7 @@ var _ = Describe("Client", func() {
 		When("action is ActionCreate. body is not nil,but failed to encode to json", func() {
 			BeforeEach(func() {
 				errSpec.ErrMarshalJSON = fmt.Errorf("fail")
-				reqId, err = c.Do(ctx, errSpec, api.ActionCreate, errSpec, nil)
+				reqId, err = c.Do(context.Background(), errSpec, api.ActionCreate, errSpec, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -186,7 +186,7 @@ var _ = Describe("Client", func() {
 		When("action is ActionUpdate. body is not nil. but but failed to encode to json", func() {
 			BeforeEach(func() {
 				errSpec.ErrMarshalJSON = fmt.Errorf("fail")
-				reqId, err = c.Do(ctx, errSpec, api.ActionUpdate, errSpec, nil)
+				reqId, err = c.Do(context.Background(), errSpec, api.ActionUpdate, errSpec, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -199,7 +199,7 @@ var _ = Describe("Client", func() {
 		When("action ActionApply. body is not nil. but failed to encode to json", func() {
 			BeforeEach(func() {
 				errSpec.ErrMarshalJSON = fmt.Errorf("fail")
-				reqId, err = c.Do(ctx, errSpec, api.ActionApply, errSpec, nil)
+				reqId, err = c.Do(context.Background(), errSpec, api.ActionApply, errSpec, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -213,7 +213,7 @@ var _ = Describe("Client", func() {
 			BeforeEach(func() {
 				cl := api.NewClient("", "", nil)
 				cl.Endpoint = "\n"
-				reqId, err = cl.Do(ctx, errSpec, api.ActionRead, nil, nil)
+				reqId, err = cl.Do(context.Background(), errSpec, api.ActionRead, nil, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -227,7 +227,7 @@ var _ = Describe("Client", func() {
 			BeforeEach(func() {
 				httpmock.Reset()
 				cl := api.NewClient("", "https://localhost/hoge", nil)
-				reqId, err = cl.Do(ctx, errSpec, api.ActionRead, nil, nil)
+				reqId, err = cl.Do(context.Background(), errSpec, api.ActionRead, nil, nil)
 			})
 			It("reqId is empty", func() {
 				Expect(reqId).Should(Equal(""))
@@ -237,12 +237,30 @@ var _ = Describe("Client", func() {
 				Expect(err.Error()).To(MatchRegexp("failed to get http response"))
 			})
 		})
+		When("failed to get http response body", func() {
+			BeforeEach(func() {
+				httpmock.Reset()
+				httpmock.RegisterResponder(http.MethodGet, "https://localhost/hoge/tests/fuga", func(r *http.Request) (*http.Response, error) {
+					return &http.Response{StatusCode: 200, Body: io.NopCloser(iotest.ErrReader(fmt.Errorf("error")))}, nil
+				})
+				errSpec.ID = "fuga"
+				cl := api.NewClient("", "https://localhost/hoge", nil)
+				reqId, err = cl.Do(context.Background(), errSpec, api.ActionRead, nil, nil)
+			})
+			It("reqId is empty", func() {
+				Expect(reqId).Should(Equal(""))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to get http response body:"))
+			})
+		})
 		Context("status code >= 400", func() {
 			When("recv body is not json format", func() {
 				BeforeEach(func() {
 					httpmock.RegisterResponder(http.MethodGet, "http://localhost/tests/Unavailable", httpmock.NewBytesResponder(503, []byte(`Service Unavailable`)))
-					testSpec.Id = "Unavailable"
-					reqId, err = c.Do(ctx, testSpec, api.ActionRead, nil, nil)
+					testSpec.ID = "Unavailable"
+					reqId, err = c.Do(context.Background(), testSpec, api.ActionRead, nil, nil)
 				})
 				It("reqId is empty", func() {
 					Expect(reqId).Should(Equal(""))
@@ -259,8 +277,8 @@ var _ = Describe("Client", func() {
 						"error_type": "fail",
 						"error_message": "error message"
 					}`)))
-					testSpec.Id = "ERROR-BAD_REQUEST"
-					reqId, err = c.Do(ctx, testSpec, api.ActionRead, nil, nil)
+					testSpec.ID = "ERROR-BAD_REQUEST"
+					reqId, err = c.Do(context.Background(), testSpec, api.ActionRead, nil, nil)
 				})
 				It("reqId is not empty", func() {
 					Expect(reqId).Should(Equal("F96C25C6B13E49E59F0093BCD8D731AB"))
@@ -328,7 +346,7 @@ var _ = Describe("Client", func() {
 		})
 		When("response timeout", func() {
 			BeforeEach(func() {
-				testSpec.Id = "TIMEOUT"
+				testSpec.ID = "TIMEOUT"
 				ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 				defer cancel()
 				_, err = c.Read(ctx, testSpec)
@@ -338,10 +356,22 @@ var _ = Describe("Client", func() {
 				Expect(err).To(MatchError(context.DeadlineExceeded))
 			})
 		})
+		When("cancel", func() {
+			BeforeEach(func() {
+				testSpec.ID = "TIMEOUT"
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+				cancel()
+				_, err = c.Read(ctx, testSpec)
+			})
+			It("is timeout", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err).To(MatchError(context.Canceled))
+			})
+		})
 		When("resource is exist", func() {
 			BeforeEach(func() {
-				testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "F2246BD8617444329A40470AEC7B00B9"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("0CAC3AEFB6334ECCA7B70AF76D73508B"))
@@ -350,15 +380,15 @@ var _ = Describe("Client", func() {
 				Expect(err).To(Succeed())
 			})
 			It("can get values", func() {
-				Expect(testSpec.Id).To(Equal("F2246BD8617444329A40470AEC7B00B9"))
+				Expect(testSpec.ID).To(Equal("F2246BD8617444329A40470AEC7B00B9"))
 				Expect(testSpec.Name).To(Equal("test1"))
 				Expect(testSpec.Number).To(Equal(int64(1)))
 			})
 		})
 		When("resource is exist, but schema error", func() {
 			BeforeEach(func() {
-				testSpec.Id = "86E5EB52E2294614B35F01943AB7239A"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "86E5EB52E2294614B35F01943AB7239A"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("86E5EB52E2294614B35F01943AB7239A"))
@@ -370,8 +400,8 @@ var _ = Describe("Client", func() {
 		})
 		When("resource is exist, but response is list format", func() {
 			BeforeEach(func() {
-				testSpec.Id = "41874381FD914D88B24A759155B5F0F8"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "41874381FD914D88B24A759155B5F0F8"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("41874381FD914D88B24A759155B5F0F8"))
@@ -383,22 +413,22 @@ var _ = Describe("Client", func() {
 		})
 		When("response is no frame format", func() {
 			BeforeEach(func() {
-				testSpec.Id = "83870F11B3F24AE89888C86F497EF697"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "83870F11B3F24AE89888C86F497EF697"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("83870F11B3F24AE89888C86F497EF697"))
 			})
 			It("err is not empty", func() {
-				Expect(testSpec.Id).To(Equal("83870F11B3F24AE89888C86F497EF697"))
+				Expect(testSpec.ID).To(Equal("83870F11B3F24AE89888C86F497EF697"))
 				Expect(testSpec.Name).To(Equal("failed"))
 				Expect(testSpec.Number).To(Equal(int64(1)))
 			})
 		})
 		When("response is no frame format, but invalid schema", func() {
 			BeforeEach(func() {
-				testSpec.Id = "72AA019055524D09A4C367DD96DCE0F9"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "72AA019055524D09A4C367DD96DCE0F9"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("72AA019055524D09A4C367DD96DCE0F9"))
@@ -410,8 +440,8 @@ var _ = Describe("Client", func() {
 		})
 		When("resource is not exist", func() {
 			BeforeEach(func() {
-				testSpec.Id = "NOTFOUND"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "NOTFOUND"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("F96C25C6B13E49E59F0093BCD8D731AB"))
@@ -423,8 +453,8 @@ var _ = Describe("Client", func() {
 		})
 		When("response is not json", func() {
 			BeforeEach(func() {
-				testSpec.Id = "NOT_JSON"
-				reqId, err = c.Read(ctx, testSpec)
+				testSpec.ID = "NOT_JSON"
+				reqId, err = c.Read(context.Background(), testSpec)
 			})
 			It("err is not empty", func() {
 				Expect(err).To(HaveOccurred())
@@ -450,7 +480,7 @@ var _ = Describe("Client", func() {
 						}
 					]
 				}`)))
-				reqId, err = c.List(ctx, listTestSpec, nil)
+				reqId, err = c.List(context.Background(), listTestSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -465,12 +495,12 @@ var _ = Describe("Client", func() {
 				Expect(*listTestSpec).To(Equal(TestSpecList{
 					Items: []TestSpec{
 						{
-							Id:     "F2246BD8617444329A40470AEC7B00B9",
+							ID:     "F2246BD8617444329A40470AEC7B00B9",
 							Name:   "test1",
 							Number: 1,
 						},
 						{
-							Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+							ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 							Name:   "test2",
 							Number: 2,
 						},
@@ -495,7 +525,7 @@ var _ = Describe("Client", func() {
 						}
 					]
 				}`)))
-				reqId, err = c.List(ctx, listTestSpec, nil)
+				reqId, err = c.List(context.Background(), listTestSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -515,7 +545,7 @@ var _ = Describe("Client", func() {
 					"error_type": "NotFound",
 					"error_message": "Specified resource not found."
 				}`)))
-				reqId, err = c.List(ctx, listTestSpec, nil)
+				reqId, err = c.List(context.Background(), listTestSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -563,7 +593,7 @@ var _ = Describe("Client", func() {
 		})
 		When("resource exist", func() {
 			BeforeEach(func() {
-				reqId, err = c.ListAll(ctx, countableList, &api.CommonSearchParams{Limit: 1})
+				reqId, err = c.ListAll(context.Background(), countableList, &api.CommonSearchParams{Limit: 1})
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("5F234DDF1D8E47D1BB26745D13FAE459"))
@@ -577,12 +607,12 @@ var _ = Describe("Client", func() {
 					TestSpecList: TestSpecList{
 						Items: []TestSpec{
 							{
-								Id:     "F2246BD8617444329A40470AEC7B00B9",
+								ID:     "F2246BD8617444329A40470AEC7B00B9",
 								Name:   "test1",
 								Number: 1,
 							},
 							{
-								Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+								ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 								Name:   "test2",
 								Number: 2,
 							},
@@ -598,7 +628,7 @@ var _ = Describe("Client", func() {
 					"error_type": "NotFound",
 					"error_message": "Specified resource not found."
 				}`)))
-				reqId, err = c.ListAll(ctx, countableList, nil)
+				reqId, err = c.ListAll(context.Background(), countableList, nil)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("F96C25C6B13E49E59F0093BCD8D731AB"))
@@ -616,7 +646,7 @@ var _ = Describe("Client", func() {
 						"count": "2"
 					}
 				}`)))
-				reqId, err = c.ListAll(ctx, countableList, nil)
+				reqId, err = c.ListAll(context.Background(), countableList, nil)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("E5173B43AE7F4F8AB71168CDBEC75605"))
@@ -635,7 +665,7 @@ var _ = Describe("Client", func() {
 						"count": 4
 					}
 				}`)))
-				reqId, err = c.Count(ctx, countableList, &api.CommonSearchParams{Limit: 1})
+				reqId, err = c.Count(context.Background(), countableList, &api.CommonSearchParams{Limit: 1})
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -658,7 +688,7 @@ var _ = Describe("Client", func() {
 						"count": "4"
 					}
 				}`)))
-				reqId, err = c.Count(ctx, countableList, &api.CommonSearchParams{Limit: 1})
+				reqId, err = c.Count(context.Background(), countableList, &api.CommonSearchParams{Limit: 1})
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -673,7 +703,7 @@ var _ = Describe("Client", func() {
 		})
 		When("resource not exist", func() {
 			BeforeEach(func() {
-				reqId, err = c.Count(ctx, countableList, nil)
+				reqId, err = c.Count(context.Background(), countableList, nil)
 			})
 			It("reqId is not empty", func() {
 				Expect(reqId).Should(Equal("F96C25C6B13E49E59F0093BCD8D731AB"))
@@ -694,7 +724,7 @@ var _ = Describe("Client", func() {
 					"request_id": "8C246D4DF69F4473AD9F90ADE0D4DAF2",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/8C246D4DF69F4473AD9F90ADE0D4DAF2"
 				}`)))
-				reqId, err = c.Create(ctx, testSpec, nil)
+				reqId, err = c.Create(context.Background(), testSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -719,7 +749,7 @@ var _ = Describe("Client", func() {
 						}
 					]				
 				}`)))
-				reqId, err = c.Create(ctx, testSpec, nil)
+				reqId, err = c.Create(context.Background(), testSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -738,7 +768,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "F2BF2DCC-D94C-4436-B199-7C7377184D06"
+			testSpec.ID = "F2BF2DCC-D94C-4436-B199-7C7377184D06"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -746,7 +776,7 @@ var _ = Describe("Client", func() {
 					"request_id": "70F6B7C158BE4D31AB5201CEB9175185",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/70F6B7C158BE4D31AB5201CEB9175185"
 				}`)))
-				reqId, err = c.Update(ctx, testSpec, nil)
+				reqId, err = c.Update(context.Background(), testSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -771,7 +801,7 @@ var _ = Describe("Client", func() {
 						}
 					]				
 				}`)))
-				reqId, err = c.Update(ctx, testSpec, nil)
+				reqId, err = c.Update(context.Background(), testSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -790,7 +820,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B"
+			testSpec.ID = "665DB8DD-0280-44B6-B4C6-FEAFCDD90E8B"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -798,7 +828,7 @@ var _ = Describe("Client", func() {
 					"request_id": "64D5485D09F2440C880609406F2257DE",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/64D5485D09F2440C880609406F2257DE"
 				}`)))
-				reqId, err = c.Delete(ctx, testSpec)
+				reqId, err = c.Delete(context.Background(), testSpec)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -823,7 +853,7 @@ var _ = Describe("Client", func() {
 						}
 					]				
 				}`)))
-				reqId, err = c.Delete(ctx, testSpec)
+				reqId, err = c.Delete(context.Background(), testSpec)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -842,7 +872,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "BD1BC291-5763-408B-9D2E-A70434E4A810"
+			testSpec.ID = "BD1BC291-5763-408B-9D2E-A70434E4A810"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -850,7 +880,7 @@ var _ = Describe("Client", func() {
 					"request_id": "EE891520C5894EC2B75B6002F01AA76F",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/EE891520C5894EC2B75B6002F01AA76F"
 				}`)))
-				reqId, err = c.Cancel(ctx, testSpec)
+				reqId, err = c.Cancel(context.Background(), testSpec)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -875,7 +905,7 @@ var _ = Describe("Client", func() {
 						}
 					]				
 				}`)))
-				reqId, err = c.Cancel(ctx, testSpec)
+				reqId, err = c.Cancel(context.Background(), testSpec)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -894,7 +924,7 @@ var _ = Describe("Client", func() {
 			httpmock.Reset()
 		})
 		BeforeEach(func() {
-			testSpec.Id = "BD1BC291-5763-408B-9D2E-A70434E4A810"
+			testSpec.ID = "BD1BC291-5763-408B-9D2E-A70434E4A810"
 		})
 		When("request is successful", func() {
 			BeforeEach(func() {
@@ -902,7 +932,7 @@ var _ = Describe("Client", func() {
 					"request_id": "EE891520C5894EC2B75B6002F01AA76F",
 					"jobs_url": "https://dpi.dns-platform.jp/v1/jobs/EE891520C5894EC2B75B6002F01AA76F"
 				}`)))
-				reqId, err = c.Apply(ctx, testSpec, nil)
+				reqId, err = c.Apply(context.Background(), testSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -927,7 +957,7 @@ var _ = Describe("Client", func() {
 						}
 					]				
 				}`)))
-				reqId, err = c.Apply(ctx, testSpec, nil)
+				reqId, err = c.Apply(context.Background(), testSpec, nil)
 			})
 			AfterEach(func() {
 				httpmock.Reset()
@@ -951,25 +981,19 @@ var _ = Describe("Client", func() {
 					"number": 1
 				}
 			}`)))
-			testSpec.Id = "F2246BD8617444329A40470AEC7B00B9"
+			testSpec.ID = "F2246BD8617444329A40470AEC7B00B9"
 		})
 		AfterEach(func() {
 			httpmock.Reset()
 		})
-		var (
-			ctx    context.Context
-			cancel context.CancelFunc
-		)
 		When("change value", func() {
 			BeforeEach(func() {
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchRead(ctx, time.Second, testSpec)
+				err = c.WatchRead(context.Background(), time.Second, testSpec)
 			})
 			It("get change value", func() {
 				Expect(err).To(Succeed())
 				Expect(*testSpec).To(Equal(TestSpec{
-					Id:     "F2246BD8617444329A40470AEC7B00B9",
+					ID:     "F2246BD8617444329A40470AEC7B00B9",
 					Name:   "test1",
 					Number: 1,
 				}))
@@ -977,9 +1001,9 @@ var _ = Describe("Client", func() {
 		})
 		When("timeout", func() {
 			BeforeEach(func() {
-				_, err = c.Read(ctx, testSpec)
+				_, err = c.Read(context.Background(), testSpec)
 				Expect(err).To(Succeed())
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchRead(ctx, time.Second, testSpec)
 			})
@@ -990,9 +1014,7 @@ var _ = Describe("Client", func() {
 		})
 		When("interval less than 1s", func() {
 			BeforeEach(func() {
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchRead(ctx, time.Microsecond, testSpec)
+				err = c.WatchRead(context.Background(), time.Microsecond, testSpec)
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
@@ -1001,10 +1023,8 @@ var _ = Describe("Client", func() {
 		})
 		When("read error", func() {
 			BeforeEach(func() {
-				testSpec.Id = "NOT_FOUND"
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchRead(ctx, time.Second, testSpec)
+				testSpec.ID = "NOT_FOUND"
+				err = c.WatchRead(context.Background(), time.Second, testSpec)
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())
@@ -1033,27 +1053,21 @@ var _ = Describe("Client", func() {
 		AfterEach(func() {
 			httpmock.Reset()
 		})
-		var (
-			ctx    context.Context
-			cancel context.CancelFunc
-		)
 		When("change value", func() {
 			BeforeEach(func() {
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchList(ctx, time.Second, listTestSpec, nil)
+				err = c.WatchList(context.Background(), time.Second, listTestSpec, nil)
 			})
 			It("get change value", func() {
 				Expect(err).To(Succeed())
 				Expect(*listTestSpec).To(Equal(TestSpecList{
 					Items: []TestSpec{
 						{
-							Id:     "F2246BD8617444329A40470AEC7B00B9",
+							ID:     "F2246BD8617444329A40470AEC7B00B9",
 							Name:   "test1",
 							Number: 1,
 						},
 						{
-							Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+							ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 							Name:   "test2",
 							Number: 2,
 						},
@@ -1063,9 +1077,9 @@ var _ = Describe("Client", func() {
 		})
 		When("timeout", func() {
 			BeforeEach(func() {
-				_, err = c.List(ctx, listTestSpec, nil)
+				_, err = c.List(context.Background(), listTestSpec, nil)
 				Expect(err).To(Succeed())
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchList(ctx, time.Second, listTestSpec, nil)
 			})
@@ -1081,9 +1095,7 @@ var _ = Describe("Client", func() {
 					"error_type": "NotFound",
 					"error_message": "Specified resource not found."
 				}`)))
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchList(ctx, time.Second, listTestSpec, nil)
+				err = c.WatchList(context.Background(), time.Second, listTestSpec, nil)
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())
@@ -1123,15 +1135,9 @@ var _ = Describe("Client", func() {
 		AfterEach(func() {
 			httpmock.Reset()
 		})
-		var (
-			ctx    context.Context
-			cancel context.CancelFunc
-		)
 		When("change value", func() {
 			BeforeEach(func() {
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchListAll(ctx, time.Second, countableList, &api.CommonSearchParams{Limit: 1})
+				err = c.WatchListAll(context.Background(), time.Second, countableList, &api.CommonSearchParams{Limit: 1})
 			})
 			It("get change value", func() {
 				Expect(err).To(Succeed())
@@ -1140,12 +1146,12 @@ var _ = Describe("Client", func() {
 					TestSpecList: TestSpecList{
 						Items: []TestSpec{
 							{
-								Id:     "F2246BD8617444329A40470AEC7B00B9",
+								ID:     "F2246BD8617444329A40470AEC7B00B9",
 								Name:   "test1",
 								Number: 1,
 							},
 							{
-								Id:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
+								ID:     "C79CE3B1C87B47FA9BC618E6C40C3BD1",
 								Name:   "test2",
 								Number: 2,
 							},
@@ -1156,9 +1162,9 @@ var _ = Describe("Client", func() {
 		})
 		When("timeout", func() {
 			BeforeEach(func() {
-				_, err = c.ListAll(ctx, countableList, &api.CommonSearchParams{Limit: 1})
+				_, err = c.ListAll(context.Background(), countableList, &api.CommonSearchParams{Limit: 1})
 				Expect(err).To(Succeed())
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*1)
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 				defer cancel()
 				err = c.WatchListAll(ctx, time.Second, countableList, &api.CommonSearchParams{Limit: 1})
 			})
@@ -1174,9 +1180,7 @@ var _ = Describe("Client", func() {
 					"error_type": "NotFound",
 					"error_message": "Specified resource not found."
 				}`)))
-				ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
-				defer cancel()
-				err = c.WatchListAll(ctx, time.Second, countableList, &api.CommonSearchParams{Limit: 1})
+				err = c.WatchListAll(context.Background(), time.Second, countableList, &api.CommonSearchParams{Limit: 1})
 			})
 			It("return err", func() {
 				Expect(err).To(HaveOccurred())

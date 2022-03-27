@@ -79,7 +79,7 @@ func (s schemaSet) Parse(bs []byte) (apis.Spec, error) {
 	}
 	obj, ok := spec.DeepCopyObject().(apis.Spec)
 	if !ok {
-		return nil, fmt.Errorf("kind value `%s` is not apis.Spec", kv.Kind)
+		return nil, fmt.Errorf("kind value `%s` DeepCopyObject is invalid", kv.Kind)
 	}
 	if err := api.UnMarshalInput(bs, obj); err != nil {
 		return nil, fmt.Errorf("failed to parse resource: %w", err)

@@ -29,7 +29,7 @@ var _ = Describe("tsigs", func() {
 			AttributeMeta: contracts.AttributeMeta{
 				ContractID: "f1",
 			},
-			Id:          1,
+			ID:          1,
 			Name:        "hogehoge1",
 			Algorithm:   contracts.TsigAlgorithmHMACSHA256,
 			Secret:      "PDeNDXwzjh0OKbQLaVIZIQe6QR8La1uvfPiCCm3HL8Y=",
@@ -39,7 +39,7 @@ var _ = Describe("tsigs", func() {
 			AttributeMeta: contracts.AttributeMeta{
 				ContractID: "f1",
 			},
-			Id:          2,
+			ID:          2,
 			Name:        "hogehoge2",
 			Algorithm:   contracts.TsigAlgorithmHMACSHA256,
 			Secret:      "dplF06cJHAiSdZoe0IldzfF5FYq7U5+INTmb/esvXSo=",
@@ -85,7 +85,7 @@ var _ = Describe("tsigs", func() {
 						AttributeMeta: contracts.AttributeMeta{
 							ContractID: "f1",
 						},
-						Id: 1,
+						ID: 1,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -101,7 +101,7 @@ var _ = Describe("tsigs", func() {
 						AttributeMeta: contracts.AttributeMeta{
 							ContractID: "f1",
 						},
-						Id: 2,
+						ID: 2,
 					}
 					reqId, err = cl.Read(context.Background(), &c)
 				})
@@ -238,7 +238,7 @@ var _ = Describe("tsigs", func() {
 		Context("contracts.ChildSpec common test", func() {
 			Context("GetID", func() {
 				It("returns Id", func() {
-					Expect(s1.GetID()).To(Equal(s1.Id))
+					Expect(s1.GetID()).To(Equal(s1.ID))
 				})
 			})
 			Context("SetID", func() {

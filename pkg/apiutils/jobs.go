@@ -14,9 +14,9 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/core"
 )
 
-func WaitJob(ctx context.Context, c api.ClientInterface, jobId string, interval time.Duration) (*core.Job, error) {
+func WaitJob(ctx context.Context, c api.ClientInterface, jobID string, interval time.Duration) (*core.Job, error) {
 	job := &core.Job{
-		RequestID: jobId,
+		RequestID: jobID,
 	}
 	if _, err := c.Read(ctx, job); err != nil {
 		return nil, fmt.Errorf("failed to read Job: %w", err)
@@ -24,18 +24,18 @@ func WaitJob(ctx context.Context, c api.ClientInterface, jobId string, interval 
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
 	for job.Status == core.JobStatusRunning {
-		job.RequestID = jobId
+		job.RequestID = jobID
 		if err := c.WatchRead(ctx, interval, job); err != nil {
 			return nil, err
 		}
 	}
 	if job.Status == core.JobStatusFailed {
-		return job, fmt.Errorf("JobId %s job failed: type: %s msg: %s", jobId, job.ErrorType, job.ErrorMessage)
+		return job, fmt.Errorf("JobID %s job failed: type: %s msg: %s", jobID, job.ErrorType, job.ErrorMessage)
 	}
 	return job, nil
 }
 
-func ParseeResourceSystemId(job *core.Job) (string, error) {
+func ParseeResourceSystemID(job *core.Job) (string, error) {
 	u, err := url.Parse(job.ResourceUrl)
 	if err != nil {
 		return "", fmt.Errorf("failed to parse resource-url: %s , %w", job.ResourceUrl, err)
@@ -44,8 +44,8 @@ func ParseeResourceSystemId(job *core.Job) (string, error) {
 	return id, nil
 }
 
-func ParseeResourceId(job *core.Job) (int64, error) {
-	idStr, err := ParseeResourceSystemId(job)
+func ParseeResourceID(job *core.Job) (int64, error) {
+	idStr, err := ParseeResourceSystemID(job)
 	if err != nil {
 		return 0, err
 	}

@@ -26,7 +26,7 @@ func (c TsigAlgorithm) String() string {
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type Tsig struct {
 	AttributeMeta
-	Id          int64         `read:"id"`
+	ID          int64         `read:"id"`
 	Name        string        `read:"name" create:"name"`
 	Algorithm   TsigAlgorithm `read:"algorithm"`
 	Secret      string        `read:"secret"`
@@ -34,14 +34,14 @@ type Tsig struct {
 }
 
 func (c *Tsig) GetName() string { return "tsigs" }
-func (c *Tsig) GetID() int64    { return c.Id }
-func (c *Tsig) SetID(id int64)  { c.Id = id }
+func (c *Tsig) GetID() int64    { return c.ID }
+func (c *Tsig) SetID(id int64)  { c.ID = id }
 func (c *Tsig) GetPathMethod(action api.Action) (string, string) {
 	return GetPathMethodForChildSpec(action, c)
 }
 
 func (c *Tsig) SetPathParams(args ...interface{}) error {
-	return apis.SetPathParams(args, &c.ContractID, &c.Id)
+	return apis.SetPathParams(args, &c.ContractID, &c.ID)
 }
 
 var _ ListSpec = &TsigList{}

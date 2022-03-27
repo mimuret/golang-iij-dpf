@@ -25,7 +25,7 @@ var _ = Describe("contract_zones", func() {
 	BeforeEach(func() {
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = core.Zone{
-			Id:               "m1",
+			ID:               "m1",
 			CommonConfigID:   1,
 			ServiceCode:      "dpm0000001",
 			State:            types.StateBeforeStart,
@@ -36,7 +36,7 @@ var _ = Describe("contract_zones", func() {
 			ZoneProxyEnabled: types.Disabled,
 		}
 		s2 = core.Zone{
-			Id:               "m2",
+			ID:               "m2",
 			CommonConfigID:   2,
 			ServiceCode:      "dpm0000002",
 			State:            types.StateRunning,

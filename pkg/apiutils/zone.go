@@ -15,7 +15,7 @@ func GetZoneIDFromZonename(ctx context.Context, cl api.ClientInterface, zonename
 	if err != nil {
 		return "", err
 	}
-	return z.Id, nil
+	return z.ID, nil
 }
 
 func GetZoneFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (*core.Zone, error) {
@@ -40,17 +40,17 @@ func GetRecordFromZoneName(ctx context.Context, cl api.ClientInterface, zonename
 	if err != nil {
 		return nil, err
 	}
-	return GetRecordFromZoneID(ctx, cl, z.Id, recordName, rrtype)
+	return GetRecordFromZoneID(ctx, cl, z.ID, recordName, rrtype)
 }
 
-func GetRecordFromZoneID(ctx context.Context, cl api.ClientInterface, zoneId string, recordName string, rrtype zones.Type) (*zones.Record, error) {
+func GetRecordFromZoneID(ctx context.Context, cl api.ClientInterface, zoneID string, recordName string, rrtype zones.Type) (*zones.Record, error) {
 	recordName = dns.CanonicalName(recordName)
 	keywords := &zones.RecordListSearchKeywords{
 		Name: api.KeywordsString{recordName},
 	}
 	currentList := &zones.CurrentRecordList{
 		AttributeMeta: zones.AttributeMeta{
-			ZoneID: zoneId,
+			ZoneID: zoneID,
 		},
 	}
 	if _, err := cl.ListAll(ctx, currentList, keywords); err != nil {

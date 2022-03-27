@@ -3,8 +3,10 @@ package testtool_test
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"regexp"
+	"testing/iotest"
 	"time"
 
 	"github.com/jarcoal/httpmock"
@@ -31,7 +33,7 @@ var _ = Describe("testclient.go", func() {
 			ctx = context.TODO()
 			ok = false
 			s = testtool.TestSpec{
-				Id: "1",
+				ID: "1",
 			}
 			slist = testtool.TestSpecCountableList{}
 			cl = testtool.NewTestClient("token", "http://localhost", nil)
@@ -40,6 +42,23 @@ var _ = Describe("testclient.go", func() {
 			httpmock.RegisterRegexpResponder(http.MethodPatch, regexp.MustCompile(".*"), httpmock.NewErrorResponder(fmt.Errorf("error")))
 			httpmock.RegisterRegexpResponder(http.MethodPost, regexp.MustCompile(".*"), httpmock.NewErrorResponder(fmt.Errorf("error")))
 			httpmock.RegisterRegexpResponder(http.MethodDelete, regexp.MustCompile(".*"), httpmock.NewErrorResponder(fmt.Errorf("error")))
+		})
+		Context("RoundTrip", func() {
+			var req *http.Request
+			BeforeEach(func() {
+				req = &http.Request{}
+			})
+			When("req.Body is set", func() {
+				When("failed to read req.Body", func() {
+					BeforeEach(func() {
+						req.Body = io.NopCloser(iotest.ErrReader(fmt.Errorf("error")))
+						_, err = cl.RoundTrip(req)
+					})
+					It("return error", func() {
+						Expect(err).To(HaveOccurred())
+					})
+				})
+			})
 		})
 		Context("Read", func() {
 			When("exist ReadFunc", func() {

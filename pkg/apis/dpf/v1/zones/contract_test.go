@@ -30,7 +30,7 @@ var _ = Describe("contracts", func() {
 				ZoneID: "m1",
 			},
 			Contract: core.Contract{
-				Id:          "f1",
+				ID:          "f1",
 				ServiceCode: "dpf0000001",
 				State:       types.StateBeforeStart,
 				Favorite:    types.FavoriteHighPriority,

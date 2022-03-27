@@ -39,12 +39,12 @@ var _ = Describe("test spec", func() {
 		ctx = context.Background()
 		cl = testtool.NewTestClient("", "http://localhost", nil)
 		s1 = testtool.TestSpec{
-			Id:     "1",
+			ID:     "1",
 			Name:   "name1",
 			Number: 100,
 		}
 		s2 = testtool.TestSpec{
-			Id:     "2",
+			ID:     "2",
 			Name:   "",
 			Number: 0,
 		}
@@ -76,7 +76,7 @@ var _ = Describe("test spec", func() {
 			When("returns id=r1", func() {
 				BeforeEach(func() {
 					c = testtool.TestSpec{
-						Id: "1",
+						ID: "1",
 					}
 					reqId, err = cl.Read(ctx, &c)
 				})
@@ -89,7 +89,7 @@ var _ = Describe("test spec", func() {
 			When("returns id=r2", func() {
 				BeforeEach(func() {
 					c = testtool.TestSpec{
-						Id: "2",
+						ID: "2",
 					}
 					reqId, err = cl.Read(ctx, &c)
 				})
@@ -108,7 +108,7 @@ var _ = Describe("test spec", func() {
 			When("create", func() {
 				BeforeEach(func() {
 					s := testtool.TestSpec{
-						Id:     "3",
+						ID:     "3",
 						Name:   "name 3",
 						Number: 3,
 					}
@@ -128,7 +128,7 @@ var _ = Describe("test spec", func() {
 			When("create empty", func() {
 				BeforeEach(func() {
 					s := testtool.TestSpec{
-						Id:     "3",
+						ID:     "3",
 						Name:   "",
 						Number: 0,
 					}
@@ -287,7 +287,7 @@ var _ = Describe("test spec", func() {
 					Expect(err).To(Succeed())
 				})
 				It("can set ZonetId", func() {
-					Expect(s1.Id).To(Equal("m100"))
+					Expect(s1.ID).To(Equal("m100"))
 				})
 			})
 			When("arguments has extra value", func() {
@@ -311,6 +311,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpec
 			testtool.TestDeepCopyObject(&s1, nilSpec)
 			testtool.TestGetName(&s1, "tests")
+			testtool.TestGetGroup(&s1, "test.api.dns-platform.jp/v1")
 
 			Context("", func() {
 				When("action is ActionCreate", func() {
