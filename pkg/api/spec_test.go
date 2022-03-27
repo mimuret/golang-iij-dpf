@@ -7,6 +7,18 @@ import (
 	. "github.com/onsi/gomega"
 )
 
+type countableListErr testtool.TestSpecCountableList
+
+func (c *countableListErr) DeepCopyObject() api.Object {
+	return &dummyObject{}
+}
+
+type dummyObject struct{}
+
+func (c *dummyObject) DeepCopyObject() api.Object {
+	return &dummyObject{}
+}
+
 var _ = Describe("spec.go", func() {
 	Describe("DeepCopySpec", func() {
 		var (
@@ -27,6 +39,11 @@ var _ = Describe("spec.go", func() {
 			})
 			It("retruns nil", func() {
 				Expect(ret).To(BeNil())
+			})
+		})
+		When("DeepCopyObject returns invalid", func() {
+			It("raise panic", func() {
+				Expect(func() { _ = api.DeepCopySpec(&countableListErr{}) }).To(Panic())
 			})
 		})
 		When("param is not nil", func() {
@@ -59,6 +76,11 @@ var _ = Describe("spec.go", func() {
 				Expect(ret).To(BeNil())
 			})
 		})
+		When("DeepCopyObject returns invalid", func() {
+			It("raise panic", func() {
+				Expect(func() { _ = api.DeepCopyListSpec(&countableListErr{}) }).To(Panic())
+			})
+		})
 		When("param is not nil", func() {
 			BeforeEach(func() {
 				ret = api.DeepCopyListSpec(&testtool.TestSpecList{})
@@ -87,6 +109,11 @@ var _ = Describe("spec.go", func() {
 			})
 			It("retruns nil", func() {
 				Expect(ret).To(BeNil())
+			})
+		})
+		When("DeepCopyObject returns invalid", func() {
+			It("raise panic", func() {
+				Expect(func() { _ = api.DeepCopyCountableListSpec(&countableListErr{}) }).To(Panic())
 			})
 		})
 		When("param is not nil", func() {
