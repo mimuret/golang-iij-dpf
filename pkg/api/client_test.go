@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
+	"testing/iotest"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -233,6 +235,24 @@ var _ = Describe("Client", func() {
 			It("err is not empty", func() {
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(MatchRegexp("failed to get http response"))
+			})
+		})
+		When("failed to get http response body", func() {
+			BeforeEach(func() {
+				httpmock.Reset()
+				httpmock.RegisterResponder(http.MethodGet, "https://localhost/hoge/tests/fuga", func(r *http.Request) (*http.Response, error) {
+					return &http.Response{StatusCode: 200, Body: io.NopCloser(iotest.ErrReader(fmt.Errorf("error")))}, nil
+				})
+				errSpec.ID = "fuga"
+				cl := api.NewClient("", "https://localhost/hoge", nil)
+				reqId, err = cl.Do(context.Background(), errSpec, api.ActionRead, nil, nil)
+			})
+			It("reqId is empty", func() {
+				Expect(reqId).Should(Equal(""))
+			})
+			It("err is not empty", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to get http response body:"))
 			})
 		})
 		Context("status code >= 400", func() {

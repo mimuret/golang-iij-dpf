@@ -311,6 +311,7 @@ var _ = Describe("test spec", func() {
 			var nilSpec *testtool.TestSpec
 			testtool.TestDeepCopyObject(&s1, nilSpec)
 			testtool.TestGetName(&s1, "tests")
+			testtool.TestGetGroup(&s1, "test.api.dns-platform.jp/v1")
 
 			Context("", func() {
 				When("action is ActionCreate", func() {

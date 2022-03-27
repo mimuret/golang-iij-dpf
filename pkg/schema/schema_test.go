@@ -169,9 +169,7 @@ var _ = Describe("Register", func() {
 			})
 		})
 		When("invalid DeepCopyObject", func() {
-			var (
-				set = schema.NewSchemaSet()
-			)
+			set := schema.NewSchemaSet()
 			BeforeEach(func() {
 				s := &TestSpec{}
 				s.deepCopyObjectFunc = func(ts *TestSpec) api.Object { return nil }
