@@ -10,6 +10,36 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/zones"
 )
 
+func getZoneFromSearchKeyWords(ctx context.Context, cl api.ClientInterface, keywords *core.ZoneListSearchKeywords) (*core.Zone, error) {
+	zoneList := &core.ZoneList{}
+	if _, err := cl.ListAll(ctx, zoneList, keywords); err != nil {
+		return nil, fmt.Errorf("failed to search zone: %w", err)
+	}
+	for _, zone := range zoneList.Items {
+		if len(keywords.Name) > 0 && keywords.Name[0] == zone.Name {
+			return &zone, nil
+		}
+		if len(keywords.ServiceCode) > 0 && keywords.ServiceCode[0] == zone.ServiceCode {
+			return &zone, nil
+		}
+	}
+	return nil, fmt.Errorf("not found zone")
+}
+
+func GetZoneIdFromServiceCode(ctx context.Context, cl api.ClientInterface, serviceCode string) (string, error) {
+	z, err := GetZoneFromServiceCode(ctx, cl, serviceCode)
+	if err != nil {
+		return "", err
+	}
+	return z.ID, nil
+}
+
+func GetZoneFromServiceCode(ctx context.Context, cl api.ClientInterface, serviceCode string) (*core.Zone, error) {
+	return getZoneFromSearchKeyWords(ctx, cl, &core.ZoneListSearchKeywords{
+		ServiceCode: api.KeywordsString{serviceCode},
+	})
+}
+
 func GetZoneIDFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (string, error) {
 	z, err := GetZoneFromZonename(ctx, cl, zonename)
 	if err != nil {
@@ -19,20 +49,9 @@ func GetZoneIDFromZonename(ctx context.Context, cl api.ClientInterface, zonename
 }
 
 func GetZoneFromZonename(ctx context.Context, cl api.ClientInterface, zonename string) (*core.Zone, error) {
-	zonename = dns.CanonicalName(zonename)
-	keywords := &core.ZoneListSearchKeywords{
+	return getZoneFromSearchKeyWords(ctx, cl, &core.ZoneListSearchKeywords{
 		Name: api.KeywordsString{zonename},
-	}
-	zoneList := &core.ZoneList{}
-	if _, err := cl.ListAll(ctx, zoneList, keywords); err != nil {
-		return nil, fmt.Errorf("failed to search zone: %w", err)
-	}
-	for _, zone := range zoneList.Items {
-		if zonename == zone.Name {
-			return &zone, nil
-		}
-	}
-	return nil, fmt.Errorf("not found zone: %s", zonename)
+	})
 }
 
 func GetRecordFromZoneName(ctx context.Context, cl api.ClientInterface, zonename string, recordName string, rrtype zones.Type) (*zones.Record, error) {

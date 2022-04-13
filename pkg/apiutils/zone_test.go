@@ -52,6 +52,50 @@ var _ = Describe("zone", func() {
 
 		c = testtool.NewTestClient("token", "http://localhost", nil)
 	})
+	Context("GetZoneIDFromServiceCode", func() {
+		When("failed to read", func() {
+			BeforeEach(func() {
+				zoneId, err = apiutils.GetZoneIdFromServiceCode(context.Background(), c, "dpm0000001")
+			})
+			It("return empty error", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("failed to search zone"))
+			})
+		})
+		When("find", func() {
+			BeforeEach(func() {
+				c.ListAllFunc = func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
+					s.AddItem(*z)
+					s.AddItem(core.Zone{
+						ID:   "m2",
+						Name: "hoge.example.jp.",
+					})
+					return "", nil
+				}
+				zoneId, err = apiutils.GetZoneIdFromServiceCode(context.Background(), c, "dpm0000001")
+			})
+			It("returns zoneId", func() {
+				Expect(err).To(Succeed())
+				Expect(zoneId).To(Equal("m1"))
+			})
+		})
+		When("not find", func() {
+			BeforeEach(func() {
+				c.ListAllFunc = func(s api.CountableListSpec, keywords api.SearchParams) (requestId string, err error) {
+					s.AddItem(core.Zone{
+						ID:   "m2",
+						Name: "hoge.example.jp.",
+					})
+					return "", nil
+				}
+				zoneId, err = apiutils.GetZoneIdFromServiceCode(context.Background(), c, "dpm0000001")
+			})
+			It("returns err", func() {
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("not found zone"))
+			})
+		})
+	})
 	Context("GetZoneIDFromZonename", func() {
 		When("failed to read", func() {
 			BeforeEach(func() {
