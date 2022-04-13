@@ -10,7 +10,7 @@ deep_copy_files = pkg/types/ZZ_deepcopy_generated.go \
 	pkg/apis/dpf/v1/zones/ZZ_deepcopy_generated.go \
 	pkg/apis/dpf/v1/common_configs/ZZ_deepcopy_generated.go
 
-all: deepcopy checks test fmt
+all: deepcopy fmt checks test
 
 checks: golangci-lint
 	$(GOLANGCI_LINT) run
@@ -38,7 +38,7 @@ pkg/apis/dpf/v1/common_configs/ZZ_deepcopy_generated.go: deepcopy-gen $(v1_zones
 DEEPCOPY_GEN = $(PROJECT_DIR)/bin/deepcopy-gen
 deepcopy-gen: ## Download deepcopy-gen locally if necessary.
 	mkdir -p $(PROJECT_DIR)/bin
-	$(call go-get-tool,$(DEEPCOPY_GEN),k8s.io/code-generator/cmd/deepcopy-gen)
+	$(call go-get-tool,$(DEEPCOPY_GEN),k8s.io/code-generator/cmd/deepcopy-gen@latest)
 
 GOFUMPT = $(PROJECT_DIR)/bin/gofumpt
 gofumpt:
