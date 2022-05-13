@@ -102,7 +102,7 @@ type Record struct {
 
 	ID          string           `read:"id"`
 	Name        string           `read:"name" create:"name"`
-	TTL         int32            `read:"ttl"  create:"ttl" update:"ttl"`
+	TTL         int32            `read:"ttl"  create:"ttl,omitempty" update:"ttl,omitempty"`
 	RRType      Type             `read:"rrtype"  create:"rrtype"`
 	RData       RecordRDATASlice `read:"rdata"  create:"rdata" update:"rdata"`
 	State       RecordState      `read:"state"`
