@@ -48,7 +48,7 @@ var _ = Describe("records", func() {
 			},
 			ID:     "r2",
 			Name:   "www.example.jp.",
-			TTL:    30,
+			TTL:    0,
 			RRType: zones.TypeAAAA,
 			RData: []zones.RecordRDATA{
 				{Value: "2001:db8::1"},
@@ -93,7 +93,7 @@ var _ = Describe("records", func() {
 					"result": {
 						"id": "r2",
 						"name": "www.example.jp.",
-						"ttl": 30,
+						"ttl": null,
 						"rrtype": "AAAA",
 						"rdata": [
 							{
@@ -160,7 +160,7 @@ var _ = Describe("records", func() {
 							ZoneID: "m2",
 						},
 						Name:   "s1.example.jp.",
-						TTL:    30,
+						TTL:    0,
 						RRType: zones.TypeMX,
 						RData: []zones.RecordRDATA{
 							{Value: "10 mx1.example.jp."},
@@ -177,7 +177,7 @@ var _ = Describe("records", func() {
 				It("post json", func() {
 					Expect(cl.RequestBody["/zones/m2/records"]).To(MatchJSON(`{
 							"name": "s1.example.jp.",
-							"ttl": 30,
+							"ttl": null,
 							"rrtype": "MX",
 							"rdata": [
 								{"value": "10 mx1.example.jp."},
@@ -233,7 +233,7 @@ var _ = Describe("records", func() {
 				})
 				It("post json", func() {
 					Expect(cl.RequestBody["/zones/m1/records/r2"]).To(MatchJSON(`{
-						"ttl": 30,
+						"ttl": null,
 						"rdata": [
 							{
 								"value": "2001:db8::1"
@@ -419,7 +419,7 @@ var _ = Describe("records", func() {
 						{
 							"id": "r2",
 							"name": "www.example.jp.",
-							"ttl": 30,
+							"ttl": null,
 							"rrtype": "AAAA",
 							"rdata": [
 								{
@@ -554,7 +554,7 @@ var _ = Describe("records", func() {
 						{
 							"id": "r2",
 							"name": "www.example.jp.",
-							"ttl": 30,
+							"ttl": null,
 							"rrtype": "AAAA",
 							"rdata": [
 								{

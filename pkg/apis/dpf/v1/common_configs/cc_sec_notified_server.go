@@ -5,6 +5,7 @@ import (
 
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
+	"github.com/mimuret/golang-iij-dpf/pkg/types"
 )
 
 // for IDE.
@@ -13,9 +14,9 @@ var _ ChildSpec = &CcSecNotifiedServer{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CcSecNotifiedServer struct {
 	AttributeMeta `read:"-" create:"-" update:"-"`
-	ID            int64  `read:"id" create:"-" update:"-"  id:"2,required"`
-	Address       net.IP `read:"address" create:"address" update:"address"`
-	TsigID        int64  `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
+	ID            int64                       `read:"id" create:"-" update:"-"  id:"2,required"`
+	Address       net.IP                      `read:"address" create:"address" update:"address"`
+	TsigID        types.NullablePositiveInt64 `read:"tsig_id"  create:"tsig_id" update:"tsig_id"`
 }
 
 func (c *CcSecNotifiedServer) SetPathParams(args ...interface{}) error {

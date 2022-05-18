@@ -55,7 +55,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 					"result": {
 						"id": 1,
 						"address": "192.168.0.1",
-						"tsig_id": 0
+						"tsig_id": null
 					}
 				}`)))
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_notified_servers/2", httpmock.NewBytesResponder(200, []byte(`{
@@ -153,7 +153,8 @@ var _ = Describe("cc_sec_notified_servers", func() {
 				})
 				It("post json", func() {
 					Expect(cl.RequestBody["/common_configs/3/cc_sec_notified_servers"]).To(MatchJSON(`{
-							"address": "2001:db8::1"
+							"address": "2001:db8::1",
+							"tsig_id": null
 						}`))
 				})
 			})
@@ -180,7 +181,8 @@ var _ = Describe("cc_sec_notified_servers", func() {
 				})
 				It("post json", func() {
 					Expect(cl.RequestBody["/common_configs/1/cc_sec_notified_servers/1"]).To(MatchJSON(`{
-							"address": "192.168.0.1"
+							"address": "192.168.0.1",
+							"tsig_id": null
 						}`))
 				})
 			})
@@ -319,7 +321,7 @@ var _ = Describe("cc_sec_notified_servers", func() {
 						{
 							"id": 1,
 							"address": "192.168.0.1",
-							"tsig_id": 0
+							"tsig_id": null
 						},
 						{
 							"id": 2,

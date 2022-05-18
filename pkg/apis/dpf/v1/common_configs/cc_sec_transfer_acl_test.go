@@ -54,7 +54,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 					"result": {
 						"id": 1,
 						"network": "192.168.1.0/24",
-						"tsig_id": 0
+						"tsig_id": null
 						}
 				}`)))
 				httpmock.RegisterResponder(http.MethodGet, "http://localhost/common_configs/1/cc_sec_transfer_acls/2", httpmock.NewBytesResponder(200, []byte(`{
@@ -152,7 +152,8 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				})
 				It("post json", func() {
 					Expect(cl.RequestBody["/common_configs/3/cc_sec_transfer_acls"]).To(MatchJSON(`{
-							"network": "2001:db8::/48"
+							"network": "2001:db8::/48",
+							"tsig_id": null
 						}`))
 				})
 			})
@@ -179,7 +180,8 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 				})
 				It("post json", func() {
 					Expect(cl.RequestBody["/common_configs/1/cc_sec_transfer_acls/1"]).To(MatchJSON(`{
-							"network": "192.168.1.0/24"
+							"network": "192.168.1.0/24",
+							"tsig_id": null
 						}`))
 				})
 			})
@@ -318,7 +320,7 @@ var _ = Describe("cc_sec_transfer_acls", func() {
 						{
 							"id": 1,
 							"network": "192.168.1.0/24",
-							"tsig_id": 0
+							"tsig_id": null
 							},
 						{
 							"id": 2,

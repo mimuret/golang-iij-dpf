@@ -14,10 +14,10 @@ var _ ChildSpec = &CcPrimary{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CcPrimary struct {
 	AttributeMeta
-	ID      int64         `read:"id,omitempty" id:"2,required"`
-	Address net.IP        `read:"address" create:"address" update:"address"`
-	TsigID  int64         `read:"tsig_id,omitempty" create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
-	Enabled types.Boolean `read:"enabled" update:"enabled"`
+	ID      int64                       `read:"id,omitempty" id:"2,required"`
+	Address net.IP                      `read:"address" create:"address" update:"address"`
+	TsigID  types.NullablePositiveInt64 `read:"tsig_id"  create:"tsig_id" update:"tsig_id"`
+	Enabled types.Boolean               `read:"enabled" update:"enabled"`
 }
 
 func (c *CcPrimary) SetPathParams(args ...interface{}) error {
