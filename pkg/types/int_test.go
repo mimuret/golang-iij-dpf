@@ -64,3 +64,62 @@ var _ = Describe("types.NullablePositiveInt32", func() {
 		})
 	})
 })
+
+var _ = Describe("types.NullablePositiveInt64", func() {
+	Context("UnMarshalJSON", func() {
+		var (
+			err error
+			p64 types.NullablePositiveInt64
+		)
+		When("failed to parse int64", func() {
+			BeforeEach(func() {
+				err = p64.UnMarshalJSON([]byte("/"))
+			})
+			It("returns err", func() {
+				Expect(err).To(HaveOccurred())
+			})
+		})
+		When("args is null", func() {
+			BeforeEach(func() {
+				err = p64.UnMarshalJSON([]byte("null"))
+			})
+			It("returns 0 value", func() {
+				Expect(err).To(Succeed())
+				Expect(p64).To(Equal(types.NullablePositiveInt64(0)))
+			})
+		})
+		When("parse successfull", func() {
+			BeforeEach(func() {
+				err = p64.UnMarshalJSON([]byte("1"))
+			})
+			It("returns value", func() {
+				Expect(err).To(Succeed())
+				Expect(p64).To(Equal(types.NullablePositiveInt64(1)))
+			})
+		})
+	})
+	Context("MarshalJSON", func() {
+		var (
+			err error
+			bs  []byte
+		)
+		When("value is zero", func() {
+			BeforeEach(func() {
+				bs, err = types.NullablePositiveInt64(0).MarshalJSON()
+			})
+			It("returns err", func() {
+				Expect(err).To(Succeed())
+				Expect(bs).To(Equal([]byte("null")))
+			})
+		})
+		When("value is not null", func() {
+			BeforeEach(func() {
+				bs, err = types.NullablePositiveInt64(1).MarshalJSON()
+			})
+			It("returns 0 value", func() {
+				Expect(err).To(Succeed())
+				Expect(bs).To(Equal([]byte("1")))
+			})
+		})
+	})
+})
