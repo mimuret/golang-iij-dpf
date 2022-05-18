@@ -69,7 +69,7 @@ var _ = Describe("records/diffs", func() {
 				TTL:    300,
 				RRType: zones.TypeTXT,
 				RData: []zones.RecordRDATA{
-					{Value: "new"},
+					{Value: `"new"`},
 				},
 				State:       zones.RecordStateToBeAdded,
 				Description: "SERVER(TXT)",
@@ -84,7 +84,7 @@ var _ = Describe("records/diffs", func() {
 				TTL:    300,
 				RRType: zones.TypeTXT,
 				RData: []zones.RecordRDATA{
-					{Value: "old"},
+					{Value: `"old"`},
 				},
 				State:       zones.RecordStateToBeAdded,
 				Description: "SERVER(TXT)",
@@ -150,7 +150,7 @@ var _ = Describe("records/diffs", func() {
 								"rrtype": "TXT",
 								"rdata": [
 									{
-										"value": "new"
+										"value": "\"new\""
 									}
 								],
 								"state": 1,
@@ -164,7 +164,7 @@ var _ = Describe("records/diffs", func() {
 								"rrtype": "TXT",
 								"rdata": [
 									{
-										"value": "old"
+										"value": "\"old\""
 									}
 								],
 								"state": 1,
