@@ -10,6 +10,11 @@ import (
 	"github.com/mimuret/golang-iij-dpf/pkg/apis/dpf/v1/zones"
 )
 
+var (
+	ErrZoneNotFound   = fmt.Errorf("zone not found")
+	ErrRecordNotFound = fmt.Errorf("record not found")
+)
+
 func getZoneFromSearchKeyWords(ctx context.Context, cl api.ClientInterface, keywords *core.ZoneListSearchKeywords) (*core.Zone, error) {
 	zoneList := &core.ZoneList{}
 	if _, err := cl.ListAll(ctx, zoneList, keywords); err != nil {
@@ -23,7 +28,7 @@ func getZoneFromSearchKeyWords(ctx context.Context, cl api.ClientInterface, keyw
 			return &zone, nil
 		}
 	}
-	return nil, fmt.Errorf("not found zone")
+	return nil, ErrZoneNotFound
 }
 
 func GetZoneIdFromServiceCode(ctx context.Context, cl api.ClientInterface, serviceCode string) (string, error) {
@@ -80,5 +85,5 @@ func GetRecordFromZoneID(ctx context.Context, cl api.ClientInterface, zoneID str
 			return &record, nil
 		}
 	}
-	return nil, fmt.Errorf("not found record: %s", recordName)
+	return nil, ErrRecordNotFound
 }

@@ -92,7 +92,7 @@ var _ = Describe("zone", func() {
 			})
 			It("returns err", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found zone"))
+				Expect(err).To(Equal(apiutils.ErrZoneNotFound))
 			})
 		})
 	})
@@ -136,7 +136,7 @@ var _ = Describe("zone", func() {
 			})
 			It("returns err", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found zone"))
+				Expect(err).To(Equal(apiutils.ErrZoneNotFound))
 			})
 		})
 	})
@@ -182,7 +182,7 @@ var _ = Describe("zone", func() {
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found zone"))
+				Expect(err).To(Equal(apiutils.ErrZoneNotFound))
 			})
 		})
 	})
@@ -238,7 +238,7 @@ var _ = Describe("zone", func() {
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found zone"))
+				Expect(err).To(Equal(apiutils.ErrZoneNotFound))
 			})
 		})
 		When("not find records", func() {
@@ -280,7 +280,7 @@ var _ = Describe("zone", func() {
 			})
 			It("return error", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found record"))
+				Expect(err).To(Equal(apiutils.ErrRecordNotFound))
 				Expect(r1).To(BeNil())
 			})
 		})
@@ -337,7 +337,7 @@ var _ = Describe("zone", func() {
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found record"))
+				Expect(err).To(Equal(apiutils.ErrRecordNotFound))
 			})
 		})
 		When("not find records", func() {
@@ -379,7 +379,7 @@ var _ = Describe("zone", func() {
 			})
 			It("returns error", func() {
 				Expect(err).To(HaveOccurred())
-				Expect(err.Error()).To(MatchRegexp("not found record"))
+				Expect(err).To(Equal(apiutils.ErrRecordNotFound))
 			})
 		})
 	})
