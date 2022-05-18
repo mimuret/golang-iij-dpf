@@ -1,0 +1,66 @@
+package types_test
+
+import (
+	"github.com/mimuret/golang-iij-dpf/pkg/types"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+)
+
+var _ = Describe("types.NullablePositiveInt32", func() {
+	Context("UnMarshalJSON", func() {
+		var (
+			err error
+			p32 types.NullablePositiveInt32
+		)
+		When("failed to parse int32", func() {
+			BeforeEach(func() {
+				err = p32.UnMarshalJSON([]byte("/"))
+			})
+			It("returns err", func() {
+				Expect(err).To(HaveOccurred())
+			})
+		})
+		When("args is null", func() {
+			BeforeEach(func() {
+				err = p32.UnMarshalJSON([]byte("null"))
+			})
+			It("returns 0 value", func() {
+				Expect(err).To(Succeed())
+				Expect(p32).To(Equal(types.NullablePositiveInt32(0)))
+			})
+		})
+		When("parse successfull", func() {
+			BeforeEach(func() {
+				err = p32.UnMarshalJSON([]byte("1"))
+			})
+			It("returns value", func() {
+				Expect(err).To(Succeed())
+				Expect(p32).To(Equal(types.NullablePositiveInt32(1)))
+			})
+		})
+	})
+	Context("MarshalJSON", func() {
+		var (
+			err error
+			bs  []byte
+		)
+		When("value is zero", func() {
+			BeforeEach(func() {
+				bs, err = types.NullablePositiveInt32(0).MarshalJSON()
+			})
+			It("returns err", func() {
+				Expect(err).To(Succeed())
+				Expect(bs).To(Equal([]byte("null")))
+			})
+		})
+		When("value is not null", func() {
+			BeforeEach(func() {
+				bs, err = types.NullablePositiveInt32(1).MarshalJSON()
+			})
+			It("returns 0 value", func() {
+				Expect(err).To(Succeed())
+				Expect(bs).To(Equal([]byte("1")))
+			})
+		})
+	})
+})

@@ -7,6 +7,7 @@ import (
 	"github.com/miekg/dns"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
 	"github.com/mimuret/golang-iij-dpf/pkg/apis"
+	"github.com/mimuret/golang-iij-dpf/pkg/types"
 )
 
 type RecordState int
@@ -100,14 +101,14 @@ var _ Spec = &Record{}
 type Record struct {
 	AttributeMeta
 
-	ID          string           `read:"id"`
-	Name        string           `read:"name" create:"name"`
-	TTL         int32            `read:"ttl"  create:"ttl,omitempty" update:"ttl,omitempty"`
-	RRType      Type             `read:"rrtype"  create:"rrtype"`
-	RData       RecordRDATASlice `read:"rdata"  create:"rdata" update:"rdata"`
-	State       RecordState      `read:"state"`
-	Description string           `read:"description"  create:"description" update:"description"`
-	Operator    string           `read:"operator"`
+	ID          string                      `read:"id"`
+	Name        string                      `read:"name" create:"name"`
+	TTL         types.NullablePositiveInt32 `read:"ttl"  create:"ttl" update:"ttl"`
+	RRType      Type                        `read:"rrtype"  create:"rrtype"`
+	RData       RecordRDATASlice            `read:"rdata"  create:"rdata" update:"rdata"`
+	State       RecordState                 `read:"state"`
+	Description string                      `read:"description"  create:"description" update:"description"`
+	Operator    string                      `read:"operator"`
 }
 
 func (c *Record) GetName() string { return "records" }
