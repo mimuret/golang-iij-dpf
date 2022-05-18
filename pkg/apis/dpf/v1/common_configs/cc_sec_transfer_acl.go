@@ -12,9 +12,9 @@ var _ ChildSpec = &CcSecTransferAcl{}
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type CcSecTransferAcl struct {
 	AttributeMeta
-	ID      int64        `read:"id" id:"2,required"`
-	Network *types.IPNet `read:"network" create:"network" update:"network"`
-	TsigID  int64        `read:"tsig_id,omitempty"  create:"tsig_id,omitempty" update:"tsig_id,omitempty"`
+	ID      int64                       `read:"id" id:"2,required"`
+	Network *types.IPNet                `read:"network" create:"network" update:"network"`
+	TsigID  types.NullablePositiveInt64 `read:"tsig_id"  create:"tsig_id" update:"tsig_id"`
 }
 
 func (c *CcSecTransferAcl) SetPathParams(args ...interface{}) error {

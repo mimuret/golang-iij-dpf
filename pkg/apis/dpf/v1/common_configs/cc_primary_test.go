@@ -58,7 +58,7 @@ var _ = Describe("cc_primaries", func() {
 					"result": {
 						"id": 1,
 						"address": "192.168.0.1",
-						"tsig_id": 0,
+						"tsig_id": null,
 						"enabled": 0
 						}
 				}`)))
@@ -158,7 +158,8 @@ var _ = Describe("cc_primaries", func() {
 				})
 				It("post json", func() {
 					Expect(cl.RequestBody["/common_configs/3/cc_primaries"]).To(MatchJSON(`{
-							"address": "2001:db8::1"
+							"address": "2001:db8::1",
+							"tsig_id": null
 						}`))
 				})
 			})
@@ -186,7 +187,8 @@ var _ = Describe("cc_primaries", func() {
 				It("post json", func() {
 					Expect(cl.RequestBody["/common_configs/1/cc_primaries/1"]).To(MatchJSON(`{
 							"address": "192.168.0.1",
-							"enabled": 0
+							"enabled": 0,
+							"tsig_id": null
 						}`))
 				})
 			})
@@ -326,7 +328,7 @@ var _ = Describe("cc_primaries", func() {
 						{
 							"id": 1,
 							"address": "192.168.0.1",
-							"tsig_id": 0,
+							"tsig_id": null,
 							"enabled": 0
 						},
 						{
