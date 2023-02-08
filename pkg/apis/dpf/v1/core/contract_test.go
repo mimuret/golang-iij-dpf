@@ -169,7 +169,7 @@ var _ = Describe("contract", func() {
 					testtool.TestGetPathMethod(&s1, api.ActionRead, http.MethodGet, "/contracts/f1")
 				})
 				When("action is ActionUpdate", func() {
-					testtool.TestGetPathMethod(&s1, api.ActionRead, http.MethodGet, "/contracts/f1")
+					testtool.TestGetPathMethod(&s1, api.ActionUpdate, http.MethodPatch, "/contracts/f1")
 				})
 				When("action is other", func() {
 					testtool.TestGetPathMethod(&s1, api.ActionApply, "", "")
