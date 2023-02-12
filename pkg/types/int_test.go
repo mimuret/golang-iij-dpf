@@ -7,14 +7,14 @@ import (
 )
 
 var _ = Describe("types.NullablePositiveInt32", func() {
-	Context("UnMarshalJSON", func() {
+	Context("UnmarshalJSON", func() {
 		var (
 			err error
 			p32 types.NullablePositiveInt32
 		)
 		When("failed to parse int32", func() {
 			BeforeEach(func() {
-				err = p32.UnMarshalJSON([]byte("/"))
+				err = p32.UnmarshalJSON([]byte("/"))
 			})
 			It("returns err", func() {
 				Expect(err).To(HaveOccurred())
@@ -22,7 +22,7 @@ var _ = Describe("types.NullablePositiveInt32", func() {
 		})
 		When("args is null", func() {
 			BeforeEach(func() {
-				err = p32.UnMarshalJSON([]byte("null"))
+				err = p32.UnmarshalJSON([]byte("null"))
 			})
 			It("returns 0 value", func() {
 				Expect(err).To(Succeed())
@@ -31,7 +31,7 @@ var _ = Describe("types.NullablePositiveInt32", func() {
 		})
 		When("parse successfull", func() {
 			BeforeEach(func() {
-				err = p32.UnMarshalJSON([]byte("1"))
+				err = p32.UnmarshalJSON([]byte("1"))
 			})
 			It("returns value", func() {
 				Expect(err).To(Succeed())
@@ -66,14 +66,14 @@ var _ = Describe("types.NullablePositiveInt32", func() {
 })
 
 var _ = Describe("types.NullablePositiveInt64", func() {
-	Context("UnMarshalJSON", func() {
+	Context("UnmarshalJSON", func() {
 		var (
 			err error
 			p64 types.NullablePositiveInt64
 		)
 		When("failed to parse int64", func() {
 			BeforeEach(func() {
-				err = p64.UnMarshalJSON([]byte("/"))
+				err = p64.UnmarshalJSON([]byte("/"))
 			})
 			It("returns err", func() {
 				Expect(err).To(HaveOccurred())
@@ -81,7 +81,7 @@ var _ = Describe("types.NullablePositiveInt64", func() {
 		})
 		When("args is null", func() {
 			BeforeEach(func() {
-				err = p64.UnMarshalJSON([]byte("null"))
+				err = p64.UnmarshalJSON([]byte("null"))
 			})
 			It("returns 0 value", func() {
 				Expect(err).To(Succeed())
@@ -90,7 +90,7 @@ var _ = Describe("types.NullablePositiveInt64", func() {
 		})
 		When("parse successfull", func() {
 			BeforeEach(func() {
-				err = p64.UnMarshalJSON([]byte("1"))
+				err = p64.UnmarshalJSON([]byte("1"))
 			})
 			It("returns value", func() {
 				Expect(err).To(Succeed())

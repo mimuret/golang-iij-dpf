@@ -46,7 +46,7 @@ func (t *TestParams) SetLimit(int32) {
 type ErrSpec struct {
 	TestSpec
 	ErrMarshalJSON   error
-	ErrUnMarshalJSON error
+	ErrUnmarshalJSON error
 }
 
 func (t *ErrSpec) MarshalJSON() ([]byte, error) {
@@ -57,8 +57,8 @@ func (t *ErrSpec) MarshalJSON() ([]byte, error) {
 }
 
 func (t *ErrSpec) UnmarshalJSON(bs []byte) error {
-	if t.ErrUnMarshalJSON != nil {
-		return t.ErrUnMarshalJSON
+	if t.ErrUnmarshalJSON != nil {
+		return t.ErrUnmarshalJSON
 	}
 	return json.Unmarshal(bs, &t.TestSpec)
 }

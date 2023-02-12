@@ -1,0 +1,150 @@
+{
+  "request_id": "76D7462F50E3417C96898A827E0D1EC1",
+  "result": {
+    "sites": [
+      {
+        "resource_name": "site-a",
+        "name": "site(A)",
+        "description": "site(A) comment",
+        "rrtype": "A",
+        "live_status": "down",
+        "endpoints": [
+          {
+            "resource_name": "endpoint-1",
+            "name": "host-1",
+            "monitoring_target": "www.example.jp.",
+            "description": "endpoint#1",
+            "weight": 1,
+            "manual_failback": false,
+            "manual_failover": false,
+            "enabled": false,
+            "live_status": "up",
+            "ready_status": "down",
+            "rdata": [
+              "192.168.0.1",
+              "192.168.1.1"
+            ],
+            "monitorings": [
+              {
+                "resource_name": "id1",
+                "enabled": true,
+                "name": "monitoring-1",
+                "mtype": "ping",
+                "description": "comment 1",
+                "props": {
+                  "location": "all",
+                  "interval": 30,
+                  "holdtime": 0,
+                  "timeout": 1
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "resource_name": "site-aaaa",
+        "name": "site(AAAA)",
+        "description": "site(AAAA) comment",
+        "rrtype": "AAAA",
+        "live_status": "up",
+        "endpoints": [
+          {
+            "resource_name": "endpoint-2",
+            "name": "host-2",
+            "monitoring_target": "2001:db8::1",
+            "description": "endpoint#2",
+            "weight": 255,
+            "manual_failback": true,
+            "manual_failover": true,
+            "enabled": true,
+            "live_status": "down",
+            "ready_status": "down",
+            "rdata": [
+              "2001:db8::1",
+              "2001:db8::2"
+            ],
+            "monitorings": [
+              {
+                "resource_name": "id1",
+                "enabled": true,
+                "name": "monitoring-1",
+                "mtype": "ping",
+                "description": "comment 1",
+                "props": {
+                  "location": "all",
+                  "interval": 30,
+                  "holdtime": 0,
+                  "timeout": 1
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "monitorings": [
+      {
+        "resource_name": "id1",
+        "name": "monitoring-1",
+        "mtype": "ping",
+        "description": "comment 1",
+        "props": {
+          "location": "all",
+          "interval": 30,
+          "holdtime": 0,
+          "timeout": 1
+        }
+      }
+    ],
+    "rules": [
+      {
+        "resource_name": "rule-a",
+        "name": "default",
+        "description": "default rule",
+        "methods": [
+          {
+            "method": {
+              "resource_name": "entry-a-1",
+              "mtype": "entry_a",
+              "enabled": true,
+              "live_status": "up",
+              "ready_status": "down"
+            }
+          },
+          {
+            "method": {
+              "resource_name": "entry-aaaa-1",
+              "mtype": "entry_aaaa",
+              "enabled": true,
+              "live_status": "up",
+              "ready_status": "down"
+            }
+          },
+          {
+            "method": {
+              "resource_name": "exit-a-1",
+              "parent_resource_name": "entry-a-1",
+              "site_resource_name": "site-a",
+              "mtype": "exit_site",
+              "enabled": true,
+              "live_status": "up",
+              "ready_status": "down"
+            }
+          },
+          {
+            "method": {
+              "resource_name": "exit-aaaa-1",
+              "parent_resource_name": "entry-aaaa-1",
+              "site_resource_name": "site-aaaa",
+              "mtype": "exit_site",
+              "enabled": true,
+              "live_status": "up",
+              "ready_status": "down"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

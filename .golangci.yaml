@@ -84,9 +84,16 @@ linters:
     - varnamelen
     - nlreturn
     - godot
-    
     - revive
-
+    - exhaustruct
+    - interfacebloat
+    - varcheck
+    - ifshort
+    - nosnakecase
+    - deadcode
+    - structcheck
+    - rowserrcheck
+    - wastedassign
 issues:
   exclude-rules:
     - path: pkg/api/json.go|pkg/schema/schema.go
@@ -94,4 +101,13 @@ issues:
         - gochecknoglobals
     - path: pkg/testtool/spec.go
       linters:
+        - "stylecheck"
+    - path: pkg/testtool/spec.go
+      linters:
         - gci
+    - path: pkg/apis/dpf/v1/lb_domains/monitoring.go
+      linters:
+        - musttag
+linters-settings:
+  stylecheck:
+    checks: ["all", "-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022"]
