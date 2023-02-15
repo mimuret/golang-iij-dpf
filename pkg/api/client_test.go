@@ -12,6 +12,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"golang.org/x/time/rate"
 
 	"github.com/jarcoal/httpmock"
 	"github.com/mimuret/golang-iij-dpf/pkg/api"
@@ -84,6 +85,7 @@ var _ = Describe("Client", func() {
 				"error_type": "NotFound",
 				"error_message": "Specified resource not found."
 			}`)))
+		c.SetRoundTripper(api.NewRateRoundTripper(nil, rate.NewLimiter(rate.Inf, 0)))
 	})
 	Context("NewClient", func() {
 		BeforeEach(func() {
