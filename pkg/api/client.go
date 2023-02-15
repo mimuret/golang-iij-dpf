@@ -10,11 +10,14 @@ import (
 	"os"
 	"reflect"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 const DefaultEndpoint = "https://api.dns-platform.jp/dpf/v1"
 
 type ClientInterface interface {
+	SetRoundTripper(rt http.RoundTripper)
 	Read(ctx context.Context, s Spec) (string, error)
 	List(ctx context.Context, s ListSpec, keywords SearchParams) (string, error)
 	ListAll(ctx context.Context, s CountableListSpec, keywords SearchParams) (string, error)
@@ -34,9 +37,10 @@ var _ ClientInterface = &Client{}
 type Client struct {
 	Endpoint string
 	Token    string
-	logger   Logger
 
-	Client       *http.Client
+	logger Logger
+	client *http.Client
+
 	LastRequest  *RequestInfo
 	LastResponse *ResponseInfo
 }
@@ -52,6 +56,31 @@ type ResponseInfo struct {
 	Body     []byte
 }
 
+type RateRoundTripper struct {
+	RroundTripper http.RoundTripper
+	Limiter       *rate.Limiter
+}
+
+func NewRateRoundTripper(rt http.RoundTripper, limiter *rate.Limiter) *RateRoundTripper {
+	return &RateRoundTripper{
+		RroundTripper: rt,
+		Limiter:       limiter,
+	}
+}
+
+func (r *RateRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	if r.Limiter == nil {
+		r.Limiter = rate.NewLimiter(rate.Limit(1.0), 5)
+	}
+	if r.RroundTripper == nil {
+		r.RroundTripper = http.DefaultTransport
+	}
+	if err := r.Limiter.Wait(req.Context()); err != nil {
+		return nil, fmt.Errorf("request rate-limit by client side: %w", err)
+	}
+	return r.RroundTripper.RoundTrip(req)
+}
+
 func NewClient(token string, endpoint string, logger Logger) *Client {
 	if endpoint == "" {
 		endpoint = DefaultEndpoint
@@ -59,7 +88,11 @@ func NewClient(token string, endpoint string, logger Logger) *Client {
 	if logger == nil {
 		logger = NewStdLogger(os.Stderr, "dpf-client", 0, 4)
 	}
-	return &Client{Endpoint: endpoint, Token: token, logger: logger, Client: http.DefaultClient}
+	return &Client{Endpoint: endpoint, Token: token, logger: logger, client: &http.Client{Transport: NewRateRoundTripper(nil, nil)}}
+}
+
+func (c *Client) SetRoundTripper(rt http.RoundTripper) {
+	c.client.Transport = rt
 }
 
 func (c *Client) marshalJSON(action Action, body interface{}) ([]byte, error) {
@@ -138,7 +171,7 @@ func (c *Client) Do(ctx context.Context, spec Spec, action Action, body interfac
 		return "", err
 	}
 	// request
-	resp, err := c.Client.Do(req)
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to get http response: %w", err)
 	}

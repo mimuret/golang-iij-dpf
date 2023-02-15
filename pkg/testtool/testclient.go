@@ -44,9 +44,13 @@ func NewTestClient(token, endpoint string, logger api.Logger) *TestClient {
 		RequestHeaders: make(map[string]http.Header),
 		RequestBody:    make(map[string]string),
 	}
-	cl.Client.Transport = nop
+	cl.SetRoundTripper(nop)
 	nop.Client = cl
 	return nop
+}
+
+func (n *TestClient) SetRoundTripper(rt http.RoundTripper) {
+	n.Client.SetRoundTripper(rt)
 }
 
 func (n *TestClient) RoundTrip(req *http.Request) (*http.Response, error) {
