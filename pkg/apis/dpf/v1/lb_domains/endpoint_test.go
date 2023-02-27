@@ -41,7 +41,7 @@ var _ = Describe("Endpoint", func() {
 			Enabled:          false,
 			LiveStatus:       lb_domains.StatusUp,
 			ReadyStatus:      lb_domains.StatusDown,
-			Rdata:            []string{"192.168.0.1", "192.168.1.1"},
+			Rdata:            []lb_domains.EndpointRdata{{Value: "192.168.0.1"}, {Value: "192.168.1.1"}},
 			Monitorings: []lb_domains.MonitoringEndpoint{
 				{
 					MonitoringResourceName: "id1",
@@ -85,7 +85,7 @@ var _ = Describe("Endpoint", func() {
 			Enabled:          true,
 			LiveStatus:       lb_domains.StatusDown,
 			ReadyStatus:      lb_domains.StatusDown,
-			Rdata:            []string{"192.168.0.2", "192.168.1.2"},
+			Rdata:            []lb_domains.EndpointRdata{{Value: "192.168.0.2"}, {Value: "192.168.1.2"}},
 			Monitorings:      []lb_domains.MonitoringEndpoint{},
 		}
 		slist = lb_domains.EndpointList{
@@ -114,7 +114,14 @@ var _ = Describe("Endpoint", func() {
 						"enabled": false,
 						"live_status": "up",
 						"ready_status": "down",
-						"rdata": ["192.168.0.1","192.168.1.1"],
+						"rdata": [
+							{
+								"value": "192.168.0.1"
+							},
+							{
+								"value": "192.168.1.1"
+							}
+						],
 						"monitorings": [
 							{
 								"resource_name": "id1",
@@ -145,7 +152,14 @@ var _ = Describe("Endpoint", func() {
 						"enabled": true,
 						"live_status": "down",
 						"ready_status": "down",
-						"rdata": ["192.168.0.2","192.168.1.2"],
+						"rdata": [
+							{
+								"value": "192.168.0.2"
+							},
+							{
+								"value": "192.168.1.2"
+							}
+						],
 						"monitorings": []
 					}
 				}`)))
@@ -215,7 +229,14 @@ var _ = Describe("Endpoint", func() {
 					"manual_failback": false,
 					"manual_failover": false,
 					"enabled": false,
-					"rdata": ["192.168.0.1","192.168.1.1"],
+					"rdata": [
+						{
+							"value": "192.168.0.1"
+						},
+						{
+							"value": "192.168.1.1"
+						}
+					],
 					"monitorings": [
 						{"resource_name": "id1", "enabled": true}
 					]
@@ -244,7 +265,14 @@ var _ = Describe("Endpoint", func() {
 					"manual_failback": false,
 					"manual_failover": false,
 					"enabled": false,
-					"rdata": ["192.168.0.1","192.168.1.1"],
+					"rdata": [
+						{
+							"value": "192.168.0.1"
+						},
+						{
+							"value": "192.168.1.1"
+						}
+					],
 					"monitorings": [
 						{"resource_name": "id1", "enabled": true}
 					]
@@ -332,7 +360,15 @@ var _ = Describe("Endpoint", func() {
 							"enabled": false,
 							"live_status": "up",
 							"ready_status": "down",
-							"rdata": ["192.168.0.1","192.168.1.1"],
+							"enabled": false,
+							"rdata": [
+								{
+									"value": "192.168.0.1"
+								},
+								{
+									"value": "192.168.1.1"
+								}
+							],
 							"monitorings": [
 								{
 									"resource_name": "id1",
@@ -360,7 +396,14 @@ var _ = Describe("Endpoint", func() {
 							"enabled": true,
 							"live_status": "down",
 							"ready_status": "down",
-							"rdata": ["192.168.0.2","192.168.1.2"],
+							"rdata": [
+								{
+									"value": "192.168.0.2"
+								},
+								{
+									"value": "192.168.1.2"
+								}
+							],
 							"monitorings": []
 							}
 					]

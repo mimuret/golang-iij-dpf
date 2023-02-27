@@ -61,7 +61,7 @@ var _ = Describe("Config", func() {
 							Enabled:          false,
 							LiveStatus:       lb_domains.StatusUp,
 							ReadyStatus:      lb_domains.StatusDown,
-							Rdata:            []string{"192.168.0.1", "192.168.1.1"},
+							Rdata:            []lb_domains.EndpointRdata{{Value: "192.168.0.1"}, {Value: "192.168.1.1"}},
 							Monitorings: []lb_domains.MonitoringEndpoint{
 								{
 									MonitoringResourceName: "id1",
@@ -117,7 +117,7 @@ var _ = Describe("Config", func() {
 							Enabled:          true,
 							LiveStatus:       lb_domains.StatusDown,
 							ReadyStatus:      lb_domains.StatusDown,
-							Rdata:            []string{"2001:db8::1", "2001:db8::2"},
+							Rdata:            []lb_domains.EndpointRdata{{Value: "2001:db8::1"}, {Value: "2001:db8::2"}},
 							Monitorings: []lb_domains.MonitoringEndpoint{
 								{
 									MonitoringResourceName: "id1",
