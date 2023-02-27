@@ -16,8 +16,12 @@
           "manual_failover": false,
           "enabled": false,
           "rdata": [
-            "192.168.0.1",
-            "192.168.1.1"
+            {
+              "value": "192.168.0.1"
+            },
+            {
+              "value": "192.168.1.1"
+            }
           ],
           "monitorings": [
             {
@@ -44,8 +48,12 @@
           "manual_failover": true,
           "enabled": true,
           "rdata": [
-            "2001:db8::1",
-            "2001:db8::2"
+            {
+              "value": "2001:db8::1"
+            },
+            {
+              "value": "2001:db8::2"
+            }
           ],
           "monitorings": [
             {

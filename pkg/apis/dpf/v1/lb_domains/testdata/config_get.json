@@ -21,8 +21,12 @@
             "live_status": "up",
             "ready_status": "down",
             "rdata": [
-              "192.168.0.1",
-              "192.168.1.1"
+              {
+                "value": "192.168.0.1"
+              },
+              {
+                "value": "192.168.1.1"
+              }
             ],
             "monitorings": [
               {
@@ -61,8 +65,12 @@
             "live_status": "down",
             "ready_status": "down",
             "rdata": [
-              "2001:db8::1",
-              "2001:db8::2"
+              {
+                "value": "2001:db8::1"
+              },
+              {
+                "value": "2001:db8::2"
+              }
             ],
             "monitorings": [
               {

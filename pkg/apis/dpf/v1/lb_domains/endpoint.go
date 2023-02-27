@@ -39,6 +39,10 @@ func (m *MonitoringEndpoint) UnmarshalJSON(bs []byte) error {
 	return nil
 }
 
+type EndpointRdata struct {
+	Value string `read:"value" create:"value" update:"value" apply:"value"`
+}
+
 // +k8s:deepcopy-gen:interfaces=github.com/mimuret/golang-iij-dpf/pkg/api.Object
 type Endpoint struct {
 	SiteAttributeMeta
@@ -52,7 +56,7 @@ type Endpoint struct {
 	Enabled          bool                 `read:"enabled" create:"enabled" update:"enabled" apply:"enabled"`
 	LiveStatus       Status               `read:"live_status"`
 	ReadyStatus      Status               `read:"ready_status"`
-	Rdata            []string             `read:"rdata" create:"rdata" update:"rdata" apply:"rdata"`
+	Rdata            []EndpointRdata      `read:"rdata" create:"rdata" update:"rdata" apply:"rdata"`
 	Monitorings      []MonitoringEndpoint `read:"monitorings" create:"monitorings" update:"monitorings" apply:"monitorings"`
 }
 
